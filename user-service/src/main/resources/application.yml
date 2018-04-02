@@ -1,0 +1,22 @@
+management:
+  endpoint:
+    health.show-details: always
+  endpoints:
+    web.exposure.include: health, httptrace
+
+spring:
+  jpa:
+    hibernate.ddl-auto: create
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_ADDR:localhost}:3306/userdb?autoReconnect=true&useSSL=false&&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: secret
+  cloud:
+    stream.bindings:
+      user:
+        destination: com.mycompany.userservice.user
+        content-type: application/*+avro
+  sleuth:
+    sampler.probability: 1.0
+#    web.skipPattern: (^cleanup.*|.+favicon.*)

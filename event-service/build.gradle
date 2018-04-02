@@ -1,0 +1,58 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.mycompany'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url "https://repo.spring.io/milestone" }
+}
+
+ext {
+	springfoxSwaggerVersion = '2.8.0'
+	cassandraUnitSpringVersion = '3.3.0.2'
+	modelMapperVersion = '1.1.2'
+	springCloudVersion = 'Finchley.M9'
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-data-cassandra')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+	compile('org.springframework.cloud:spring-cloud-starter-zipkin')
+	compile('org.springframework.cloud:spring-cloud-stream-schema')
+	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
+	compile('org.springframework.kafka:spring-kafka')
+	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
+	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
+	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
+	compile('com.mycompany:commons:0.0.1-SNAPSHOT')
+	compileOnly('org.projectlombok:lombok')
+	testCompile("org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}")
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
