@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/events/users")
 public class UserEventController {
 
     private final ModelMapper modelMapper;
@@ -26,7 +26,7 @@ public class UserEventController {
         this.userEventService = userEventService;
     }
 
-    @GetMapping("/events/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<UserEventDto>> getUserEventByUserId(@PathVariable Long id) {
         List<UserEvent> userEvents = userEventService.getAllUserEventsByUserId(id);
 

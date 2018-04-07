@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -36,7 +36,7 @@ public class UserController {
         this.userStream = userStream;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : userService.getAllUsers()) {
@@ -46,14 +46,14 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) throws UserNotFoundException {
         User user = userService.validateAndGetUserById(id);
 
         return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) throws UserEmailDuplicatedException {
         userService.validateUserExistsByEmail(createUserDto.getEmail());
 
@@ -65,7 +65,7 @@ public class UserController {
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.CREATED);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException, UserEmailDuplicatedException {
         User user = userService.validateAndGetUserById(id);
 
@@ -83,7 +83,7 @@ public class UserController {
         return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable Long id) throws UserNotFoundException {
         User user = userService.validateAndGetUserById(id);
 

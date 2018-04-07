@@ -6,7 +6,7 @@ management:
 
 spring:
   jpa:
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: create-drop
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://${MYSQL_ADDR:localhost}:3306/userdb?autoReconnect=true&useSSL=false&&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC

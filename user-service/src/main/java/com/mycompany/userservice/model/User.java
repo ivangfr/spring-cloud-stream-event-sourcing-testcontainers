@@ -29,7 +29,7 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedOn;
 
