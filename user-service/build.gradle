@@ -1,30 +1,11 @@
-buildscript {
-	ext {
-		springBootVersion = '2.0.0.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+plugins {
+	id 'org.springframework.boot' version '2.0.2.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 group = 'com.mycompany'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-
-repositories {
-	mavenLocal()
-	mavenCentral()
-	maven { url "https://repo.spring.io/milestone" }
-}
-
 
 ext {
 	springfoxSwaggerVersion = '2.8.0'
@@ -69,6 +50,14 @@ sourceSets {
 			runtimeClasspath += main.output + test.output
 			srcDir file('src/integration-test/java')
 		}
+		resources.srcDir file('src/integration-test/resources')
+	}
+}
+
+idea {
+	module {
+		testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
+		testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
 	}
 }
 

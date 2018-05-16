@@ -1,6 +1,4 @@
 plugins {
-    id 'java'
-    id 'idea'
     id 'maven'
     id "com.commercehub.gradle.plugin.avro" version "0.9.1"
 }
@@ -11,11 +9,6 @@ version = '0.0.1-SNAPSHOT'
 dependencies {
     compile "org.apache.avro:avro:1.8.2"
     testImplementation 'junit:junit:4.12'
-}
-
-repositories {
-    jcenter()
-    mavenCentral()
 }
 
 avro {
