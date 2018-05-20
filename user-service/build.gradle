@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.0.2.RELEASE'
+	id 'org.springframework.boot' version '2.0.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
 
@@ -11,7 +11,7 @@ ext {
 	springfoxSwaggerVersion = '2.8.0'
 	modelMapperVersion = '1.1.2'
 	gsonVersion = '2.8.2'
-	springCloudVersion = 'Finchley.M9'
+	springCloudVersion = 'Finchley.RC1'
 }
 
 dependencies {

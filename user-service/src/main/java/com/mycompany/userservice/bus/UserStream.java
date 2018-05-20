@@ -5,8 +5,7 @@ import com.mycompany.commons.avro.UserEventBus;
 import com.mycompany.commons.avro.event_type;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -14,11 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Slf4j
 @Component
 @EnableBinding(UserSource.class)
 public class UserStream {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(UserStream.class);
 
     private static final long SEND_BUS_TIMEOUT = 3000;
 
@@ -71,9 +69,9 @@ public class UserStream {
 
         boolean send = userSource.output().send(userEventBusMessage, SEND_BUS_TIMEOUT);
         if (send) {
-            LOGGER.info("Event sent to bus. {}", userEventBus);
+            log.info("Event sent to bus. {}", userEventBus);
         } else {
-            LOGGER.error("An error occurred while sending event {} to bus.", userEventBus);
+            log.error("An error occurred while sending event {} to bus.", userEventBus);
         }
     }
 

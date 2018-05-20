@@ -39,14 +39,14 @@ gradle event-service:bootRun
 
 ## How to use
 
-1. Open `user-service` swagger link: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
+1. Open `user-service` swagger link: http://localhost:8081/swagger-ui.html
 
 2. Create a new user (`POST /api/users`)
 
-3. Open `event-service` swagger link: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
+3. Open `event-service` swagger link: http://localhost:8082/swagger-ui.html
 
 4. Get user-events related to the used created (`GET /api/events/users/{id}`) informing the user id;
 
-5. You can also check how the event was sent by `user-service` and listened by `event-service` using `Zipkin` [http://localhost:9411](http://localhost:9411)
+5. You can also check how the event was sent by `user-service` and listened by `event-service` using `Zipkin`: http://localhost:9411
 
 6. Create new users and update/delete existing ones in order to see how the application works. 

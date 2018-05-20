@@ -2,7 +2,7 @@ version: '3.5'
 services:
 
   user-mysql:
-    image: mysql:5.7.21
+    image: mysql:5.7.22
     container_name: user-mysql
     restart: unless-stopped
     ports:

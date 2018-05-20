@@ -1,8 +1,7 @@
 management:
-  endpoint:
-    health.show-details: always
-  endpoints:
-    web.exposure.include: health, httptrace
+  security.enabled: false
+  endpoints.web.exposure.include: "*"
+  endpoint.health.show-details: always
 
 spring:
   jpa:
