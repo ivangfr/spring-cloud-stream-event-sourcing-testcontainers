@@ -21,20 +21,20 @@ docker-compose up -d
 > docker-compose down
 > ```
 
-## Start user-service
+## Start `user-service`
 
 - Open a new terminal
 - Inside `/springboot-kafka-mysql-cassandra` root folder run
 ```
-gradle user-service:bootRun
+gradle clean user-service:bootRun
 ```
 
-## Start event-service
+## Start `event-service`
 
 - Open a new terminal
 - Inside `/springboot-kafka-mysql-cassandra` root folder run
 ```
-gradle event-service:bootRun
+gradle clean event-service:bootRun
 ```
 
 ## How to use

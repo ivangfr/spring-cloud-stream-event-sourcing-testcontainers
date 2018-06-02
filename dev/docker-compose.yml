@@ -2,8 +2,8 @@ version: '3.5'
 services:
 
   user-mysql:
-    image: mysql:5.7.22
     container_name: user-mysql
+    image: mysql:5.7.22
     restart: unless-stopped
     ports:
       - 3306:3306
@@ -12,6 +12,9 @@ services:
      - MYSQL_DATABASE=userdb
      - MYSQL_USERNAME=root
      - MYSQL_PASSWORD=secret
+#  healthcheck:
+#    test: ???
+#    start_period: 20s
 
   event-cassandra:
     image: cassandra:3
@@ -21,6 +24,9 @@ services:
       - 9042:9042
       - 7199:7199
       - 9160:9160
+#  healthcheck:
+#    test: ???
+#    start_period: 20s
 
   zookeeper:
     image: confluentinc/cp-zookeeper:4.1.0
@@ -32,11 +38,11 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     healthcheck:
       test: "echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT"
-      start_period: 30s
+      start_period: 20s
 
   kafka:
-    image: confluentinc/cp-kafka:4.1.0
     container_name: kafka
+    image: confluentinc/cp-kafka:4.1.0
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -50,13 +56,14 @@ services:
       KAFKA_ADVERTISED_HOST_NAME:
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
-      start_period: 30s
+      start_period: 20s
 
   zipkin:
-    image: openzipkin/zipkin:2.7.0
     container_name: zipkin
-    hostname: zipkin
+    image: openzipkin/zipkin:2.7.0
+    restart: unless-stopped
     ports:
       - 9411:9411
     healthcheck:
       test: "curl -f http://localhost:9411 || exit 1"
+      start_period: 20s
