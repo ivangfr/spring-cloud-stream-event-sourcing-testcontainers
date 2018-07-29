@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "users", indexes = {@Index(name = "idxEmail", columnList = "email", unique = true)})
 public class User {
