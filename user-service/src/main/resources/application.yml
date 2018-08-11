@@ -12,10 +12,17 @@ spring:
     username: root
     password: secret
   cloud:
-    stream.bindings:
-      user:
-        destination: com.mycompany.userservice.user
-        content-type: application/*+avro
+    stream:
+      kafka:
+        binder:
+          auto-add-partitions: true
+      bindings:
+        user-output:
+          destination: com.mycompany.userservice.user
+          content-type: application/*+avro
+          producer:
+            partition-key-expression: headers['partitionKey']
+            partition-count: 2
   sleuth:
     sampler.probability: 1.0
 #    web.skipPattern: (^cleanup.*|.+favicon.*)

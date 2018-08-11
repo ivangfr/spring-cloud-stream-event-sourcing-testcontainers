@@ -5,9 +5,9 @@ import org.springframework.messaging.MessageChannel;
 
 public interface UserSource {
 
-    String USER = "user";
+    String USER_OUTPUT = "user-output";
 
-    @Output(UserSource.USER)
+    @Output(UserSource.USER_OUTPUT)
     MessageChannel output();
 
 }

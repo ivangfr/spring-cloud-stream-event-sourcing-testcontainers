@@ -14,7 +14,7 @@ Once one user is created/updated/deleted, one event is sent on a [`Kafka`](https
 
 - Open a terminal
 
-- Inside `/springboot-kafka-mysql-cassandra/dev` folder run
+- Inside `/springboot-kafka-mysql-cassandra` root folder run
 ```
 docker-compose up -d
 ```
@@ -37,6 +37,14 @@ user-mysql        docker-entrypoint.sh mysqld      Up (healthy)   0.0.0.0:3306->
 zipkin            /bin/sh -c test -n "$STORA ...   Up (healthy)   9410/tcp, 0.0.0.0:9411->9411/tcp
 zookeeper         /etc/confluent/docker/run        Up (healthy)   0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
 ```
+
+## Generate NewsEvent
+
+Inside `//springboot-kafka-mysql-cassandra` root folder run
+```
+gradle clean commons:install
+```
+It will install `commons-0.0.1-SNAPSHOT.jar` in you local maven repository, so that it can be visible by user-service and event-service.
 
 ## Start user-service
 

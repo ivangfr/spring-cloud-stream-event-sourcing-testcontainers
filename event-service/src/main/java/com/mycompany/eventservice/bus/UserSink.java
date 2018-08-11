@@ -5,9 +5,9 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface UserSink {
 
-    String INPUT = "user";
+    String USER_INPUT = "user-input";
 
-    @Input(UserSink.INPUT)
+    @Input(UserSink.USER_INPUT)
     SubscribableChannel input();
 
 }

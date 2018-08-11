@@ -10,10 +10,16 @@ spring:
       port: 9042
       keyspace: mycompany
   cloud:
-    stream.bindings:
-      user:
-        destination: com.mycompany.userservice.user
-        content-type: application/*+avro
+    stream:
+      kafka:
+        binder:
+          auto-add-partitions: true
+          min-partition-count: 2
+      bindings:
+        user-input:
+          destination: com.mycompany.userservice.user
+          content-type: application/*+avro
+          group: eventServiceGroup
   sleuth:
     sampler.probability: 1.0
 #    web.skipPattern: (^cleanup.*|.+favicon.*)

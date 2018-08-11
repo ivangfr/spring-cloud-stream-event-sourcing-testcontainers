@@ -65,7 +65,9 @@ public class UserStream {
     }
 
     private void sendToBus(UserEventBus userEventBus) {
-        Message<UserEventBus> userEventBusMessage = MessageBuilder.withPayload(userEventBus).build();
+        Message<UserEventBus> userEventBusMessage = MessageBuilder.withPayload(userEventBus)
+                .setHeader("partitionKey", userEventBus.getEventId())
+                .build();
 
         boolean send = userSource.output().send(userEventBusMessage, SEND_BUS_TIMEOUT);
         if (send) {
