@@ -38,9 +38,9 @@ zipkin            /bin/sh -c test -n "$STORA ...   Up (healthy)   9410/tcp, 0.0.
 zookeeper         /etc/confluent/docker/run        Up (healthy)   0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
 ```
 
-## Generate NewsEvent
+## Generate UserEventBus
 
-Inside `//springboot-kafka-mysql-cassandra` root folder run
+Inside `/springboot-kafka-mysql-cassandra` root folder run
 ```
 gradle clean commons:install
 ```
