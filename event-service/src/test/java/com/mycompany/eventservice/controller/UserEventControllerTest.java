@@ -4,19 +4,19 @@ import com.mycompany.eventservice.config.ModelMapperConfig;
 import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.model.UserEventKey;
 import com.mycompany.eventservice.service.UserEventService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import static com.mycompany.eventservice.util.MyLocalDateHandler.fromDateToString;
@@ -26,9 +26,11 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(UserEventController.class)
 @Import(ModelMapperConfig.class)
 public class UserEventControllerTest {
@@ -40,11 +42,11 @@ public class UserEventControllerTest {
     private UserEventService userEventService;
 
     @Test
-    public void given_noUserEvents_when_getUserEventByUserId_then_returnEmptyJsonArray() throws Exception {
+    void given_noUserEvents_when_getUserEventByUserId_then_returnEmptyJsonArray() throws Exception {
         Long userId = 1L;
         given(userEventService.getAllUserEventsByUserId(userId)).willReturn(new ArrayList<>());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/events/users/"+ userId)
+        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());
 
@@ -54,16 +56,16 @@ public class UserEventControllerTest {
     }
 
     @Test
-    public void given_oneUserEvent_when_getUserEventByUserId_then_returnArrayWithUserEventJson() throws Exception {
+    void given_oneUserEvent_when_getUserEventByUserId_then_returnArrayWithUserEventJson() throws Exception {
         Long userId = 1L;
-        Date datetime = fromStringToDate("2018-12-03T10:15:30+0100");
+        Date datetime = fromStringToDate("2018-12-03T10:15:30.000+0100");
         String data = "data123";
         String type = "type123";
         UserEvent userEvent = new UserEvent(new UserEventKey(userId, datetime), type, data);
 
-        given(userEventService.getAllUserEventsByUserId(userId)).willReturn(Arrays.asList(userEvent));
+        given(userEventService.getAllUserEventsByUserId(userId)).willReturn(Collections.singletonList(userEvent));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/events/users/"+ userId)
+        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());
 

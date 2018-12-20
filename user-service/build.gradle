@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.0.3.RELEASE'
+	id 'org.springframework.boot' version '2.1.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
 
@@ -8,10 +8,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 ext {
-	springfoxSwaggerVersion = '2.8.0'
+	springfoxSwaggerVersion = '2.9.2'
 	modelMapperVersion = '1.1.2'
 	gsonVersion = '2.8.2'
-	springCloudVersion = 'Finchley.RELEASE'
+	springCloudVersion = 'Greenwich.M3'
 }
 
 dependencies {
@@ -33,6 +33,8 @@ dependencies {
 	runtime('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
+	testCompile('org.junit.jupiter:junit-jupiter-api')
+	testRuntime('org.junit.jupiter:junit-jupiter-engine')
 }
 
 dependencyManagement {

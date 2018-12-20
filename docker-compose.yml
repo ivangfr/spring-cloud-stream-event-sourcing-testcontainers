@@ -3,21 +3,21 @@ services:
 
   user-mysql:
     container_name: user-mysql
-    image: mysql:5.7.22
+    image: mysql:5.7.24
     restart: unless-stopped
     ports:
       - 3306:3306
     environment:
-     - MYSQL_ROOT_PASSWORD=secret
-     - MYSQL_DATABASE=userdb
-     - MYSQL_USERNAME=root
-     - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=userdb
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=secret
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
       start_period: 20s
 
   event-cassandra:
-    image: cassandra:3
+    image: cassandra:3.11.3
     container_name: event-cassandra
     restart: unless-stopped
     ports:
@@ -29,7 +29,7 @@ services:
       start_period: 20s
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:4.1.0
+    image: confluentinc/cp-zookeeper:5.0.0
     container_name: zookeeper
     restart: unless-stopped
     ports:
@@ -42,7 +42,7 @@ services:
 
   kafka:
     container_name: kafka
-    image: confluentinc/cp-kafka:4.1.0
+    image: confluentinc/cp-kafka:5.0.0
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -60,10 +60,26 @@ services:
 
   zipkin:
     container_name: zipkin
-    image: openzipkin/zipkin:2.11
+    image: openzipkin/zipkin:2.11.7
     restart: unless-stopped
     ports:
       - 9411:9411
     healthcheck:
       test: "curl -f http://localhost:9411 || exit 1"
       start_period: 20s
+
+  kafka-manager:
+    container_name: kafka-manager
+    image: hlebalbau/kafka-manager:1.3.3.18
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - 9000:9000
+    environment:
+      ZK_HOSTS: "zookeeper:2181"
+      APPLICATION_SECRET: "random-secret"
+    command: -Dpidfile.path=/dev/null
+#    healthcheck:
+#      test: ""
+#      start_period: 20s

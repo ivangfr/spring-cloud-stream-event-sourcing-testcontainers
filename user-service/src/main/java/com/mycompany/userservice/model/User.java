@@ -1,10 +1,17 @@
 package com.mycompany.userservice.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -24,18 +31,17 @@ public class User {
     @Column(nullable = false)
     private Boolean active;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedOn;
-
-    public User(Long id, String email, String fullName, Boolean active) {
-        this.id = id;
-        this.email = email;
-        this.fullName = fullName;
-        this.active = active;
+    @PrePersist
+    public void onPrePersist() {
+        createdAt = updatedAt = LocalDateTime.now();
     }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
 }

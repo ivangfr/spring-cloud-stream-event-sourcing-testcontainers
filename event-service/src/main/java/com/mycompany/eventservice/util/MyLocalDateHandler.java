@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class MyLocalDateHandler {
 
-    private static final String PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static final String PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private static final String ZONE_ID = "UTC";
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern(PATTERN);
 

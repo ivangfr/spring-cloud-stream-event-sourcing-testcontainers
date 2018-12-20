@@ -10,7 +10,7 @@ import org.springframework.data.cassandra.core.cql.keyspace.DropKeyspaceSpecific
 import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -58,11 +58,12 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
                         .ifNotExists()
                         .with(KeyspaceOption.DURABLE_WRITES, true)
                         .withSimpleReplication();
-        return Arrays.asList(specification);
+        return Collections.singletonList(specification);
     }
 
     @Override
     protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-        return Arrays.asList(DropKeyspaceSpecification.dropKeyspace(keyspace));
+        return Collections.singletonList(DropKeyspaceSpecification.dropKeyspace(keyspace));
     }
+
 }

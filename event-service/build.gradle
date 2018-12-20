@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.0.3.RELEASE'
+	id 'org.springframework.boot' version '2.1.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
 
@@ -8,10 +8,11 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 ext {
-	springfoxSwaggerVersion = '2.8.0'
+	springfoxSwaggerVersion = '2.9.2'
 	cassandraUnitSpringVersion = '3.3.0.2'
 	modelMapperVersion = '1.1.2'
-	springCloudVersion = 'Finchley.RELEASE'
+	dropwizardMetricsVersion = '3.2.6'
+	springCloudVersion = 'Greenwich.M3'
 }
 
 dependencies {
@@ -26,11 +27,14 @@ dependencies {
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
 	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
+	compile("io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}") // this dependency is needed by Cassandra
 	compile('com.mycompany:commons:0.0.1-SNAPSHOT')
 	compileOnly('org.projectlombok:lombok')
 	testCompile("org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
+	testCompile('org.junit.jupiter:junit-jupiter-api')
+	testRuntime('org.junit.jupiter:junit-jupiter-engine')
 }
 
 dependencyManagement {

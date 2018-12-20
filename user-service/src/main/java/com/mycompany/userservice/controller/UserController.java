@@ -8,15 +8,22 @@ import com.mycompany.userservice.exception.UserEmailDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,37 +43,61 @@ public class UserController {
         this.userStream = userStream;
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : userService.getAllUsers()) {
             userDtos.add(modelMapper.map(user, UserDto.class));
         }
 
-        return ResponseEntity.ok(userDtos);
+        return userDtos;
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) throws UserNotFoundException {
+    public UserDto getUserById(@PathVariable Long id) throws UserNotFoundException {
         User user = userService.validateAndGetUserById(id);
 
-        return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
+        return modelMapper.map(user, UserDto.class);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) throws UserEmailDuplicatedException {
+    public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) throws UserEmailDuplicatedException {
         userService.validateUserExistsByEmail(createUserDto.getEmail());
 
+        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         User user = modelMapper.map(createUserDto, User.class);
         user = userService.saveUser(user);
 
         userStream.userCreated(user.getId(), createUserDto);
+        //--
 
-        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.CREATED);
+        return modelMapper.map(user, UserDto.class);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException, UserEmailDuplicatedException {
+    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException, UserEmailDuplicatedException {
         User user = userService.validateAndGetUserById(id);
 
         String userEmail = user.getEmail();
@@ -75,33 +106,33 @@ public class UserController {
             userService.validateUserExistsByEmail(updateUserDtoEmail);
         }
 
+        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         modelMapper.map(updateUserDto, user);
         user = userService.saveUser(user);
 
         userStream.userUpdated(user.getId(), updateUserDto);
+        //--
 
-        return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
+        return modelMapper.map(user, UserDto.class);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserDto> deleteUser(@PathVariable Long id) throws UserNotFoundException {
+    public UserDto deleteUser(@PathVariable Long id) throws UserNotFoundException {
         User user = userService.validateAndGetUserById(id);
 
+        //-- Deleting from MySQL and sending event to Kafka is not an atomic transaction!
         userService.deleteUser(user);
 
         userStream.userDeleted(user.getId());
+        //--
 
-        return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
-    }
-
-    @ExceptionHandler({UserNotFoundException.class})
-    public void handleNotFoundException(Exception e, HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());
-    }
-
-    @ExceptionHandler(UserEmailDuplicatedException.class)
-    public void handleBadRequestException(Exception e, HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return modelMapper.map(user, UserDto.class);
     }
 
 }

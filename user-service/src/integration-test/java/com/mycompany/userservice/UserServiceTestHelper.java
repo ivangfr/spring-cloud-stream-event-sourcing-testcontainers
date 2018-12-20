@@ -19,7 +19,12 @@ public class UserServiceTestHelper {
     }
 
     public static User getAnUser(Long id, String email, String fullName, Boolean active) {
-        return new User(id, email, fullName, active);
+        User user = new User();
+        user.setId(id);
+        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setActive(active);
+        return user;
     }
 
     /* UserDto */
@@ -29,10 +34,10 @@ public class UserServiceTestHelper {
     /* CreateUserDto */
 
     public static CreateUserDto getDefaultCreateUserDto() {
-        return getAnCreateUserDto(EMAIL, FULLNAME, ACTIVE);
+        return getACreateUserDto(EMAIL, FULLNAME, ACTIVE);
     }
 
-    public static CreateUserDto getAnCreateUserDto(String email, String fullName, Boolean active) {
+    public static CreateUserDto getACreateUserDto(String email, String fullName, Boolean active) {
         return new CreateUserDto(email, fullName, active);
     }
 
