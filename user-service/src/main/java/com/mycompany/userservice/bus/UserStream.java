@@ -38,7 +38,7 @@ public class UserStream {
                 .setUserJson(gson.toJson(createUserDto))
                 .build();
 
-        sendToBus(userEventBus);
+        sendToBus(id, userEventBus);
     }
 
     public void userUpdated(Long id, UpdateUserDto updateUserDto) {
@@ -50,7 +50,7 @@ public class UserStream {
                 .setUserJson(gson.toJson(updateUserDto))
                 .build();
 
-        sendToBus(userEventBus);
+        sendToBus(id, userEventBus);
     }
 
     public void userDeleted(Long id) {
@@ -61,12 +61,12 @@ public class UserStream {
                 .setUserId(id)
                 .build();
 
-        sendToBus(userEventBus);
+        sendToBus(id, userEventBus);
     }
 
-    private void sendToBus(UserEventBus userEventBus) {
+    private void sendToBus(Object partitionKey, UserEventBus userEventBus) {
         Message<UserEventBus> userEventBusMessage = MessageBuilder.withPayload(userEventBus)
-                .setHeader("partitionKey", userEventBus.getEventId())
+                .setHeader("partitionKey", partitionKey)
                 .build();
 
         boolean send = userSource.output().send(userEventBusMessage, SEND_BUS_TIMEOUT);
