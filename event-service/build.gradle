@@ -12,7 +12,7 @@ ext {
 	cassandraUnitSpringVersion = '3.3.0.2'
 	modelMapperVersion = '1.1.2'
 	dropwizardMetricsVersion = '3.2.6'
-	springCloudVersion = 'Greenwich.M3'
+	springCloudVersion = 'Greenwich.RC2'
 }
 
 dependencies {

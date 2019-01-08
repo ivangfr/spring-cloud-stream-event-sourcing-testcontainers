@@ -11,7 +11,7 @@ ext {
 	springfoxSwaggerVersion = '2.9.2'
 	modelMapperVersion = '1.1.2'
 	gsonVersion = '2.8.2'
-	springCloudVersion = 'Greenwich.M3'
+	springCloudVersion = 'Greenwich.RC2'
 }
 
 dependencies {

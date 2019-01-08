@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -25,19 +26,10 @@ public class UserStream {
     }
 
     @StreamListener(UserSink.USER_INPUT)
-    public void userEventInput(Message<UserEventBus> message/*,
-                               @Payload UserEventBus userEventBus,
+    public void userEventInput(@Payload UserEventBus userEventBus,
                                @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                                @Header(KafkaHeaders.RECEIVED_PARTITION_ID) Integer partition,
-                               @Header(KafkaHeaders.OFFSET) Long offset*/) {
-
-        // Getting payload and headers from message because an exception is thrown when the annotation @Header is used.
-        // The annotation @Payload works fine.
-        UserEventBus userEventBus = message.getPayload();
-        String topic = message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC, String.class);
-        Integer partition = message.getHeaders().get(KafkaHeaders.RECEIVED_PARTITION_ID, Integer.class);
-        Long offset = message.getHeaders().get(KafkaHeaders.OFFSET, Long.class);
-
+                               @Header(KafkaHeaders.OFFSET) Long offset) {
         log.info("New user event bus: {}. topic: {}, partition: {}, offset: {}", userEventBus, topic, partition, offset);
 
         UserEvent userEvent = new UserEvent();
