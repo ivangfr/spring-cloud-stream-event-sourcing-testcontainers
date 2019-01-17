@@ -21,7 +21,6 @@ public class UserStream {
     private static final long SEND_BUS_TIMEOUT = 3000;
 
     private Gson gson;
-
     private UserSource userSource;
 
     public UserStream(Gson gson, UserSource userSource) {

@@ -23,11 +23,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findUserById(id);
-    }
-
-    @Override
     public User saveUser(User user) {
         return userRepository.save(user);
     }
@@ -38,21 +33,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User validateAndGetUserById(Long id) throws UserNotFoundException {
-        User user = getUserById(id);
-        if (user == null) {
-            String message = String.format("User with id '%d' doesn't exist.", id);
-            throw new UserNotFoundException(message);
-        }
-        return user;
+    public User validateAndGetUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id '%d' doesn't exist.", id)));
     }
 
     @Override
-    public void validateUserExistsByEmail(String email) throws UserEmailDuplicatedException {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null) {
-            String message = String.format("User with email '%s' already exist.", email);
-            throw new UserEmailDuplicatedException(message);
-        }
+    public void validateUserExistsByEmail(String email) {
+        userRepository.findUserByEmail(email).ifPresent(user -> {
+            throw new UserEmailDuplicatedException(String.format("User with email '%s' already exist.", email));
+        });
     }
 }

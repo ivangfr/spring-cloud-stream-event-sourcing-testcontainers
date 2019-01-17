@@ -1,18 +1,10 @@
-management:
-  security.enabled: false
-  endpoints:
-    web:
-      exposure.include: "*"
-  endpoint:
-    health:
-      show-details: always
-
 spring:
   data:
     cassandra:
-      contactpoints: localhost
+      keyspace-name: mycompany
+      contact-points: localhost
       port: 9042
-      keyspace: mycompany
+      schema-action: CREATE_IF_NOT_EXISTS
   cloud:
     stream:
       kafka:
@@ -23,8 +15,17 @@ spring:
       bindings:
         user-input:
           destination: com.mycompany.userservice.user
-          content-type: application/*+avro
+          content-type: application/avro
           group: eventServiceGroup
   sleuth:
     sampler.probability: 1.0
 #    web.skipPattern: (^cleanup.*|.+favicon.*)
+
+management:
+  security.enabled: false
+  endpoints:
+    web:
+      exposure.include: "*"
+  endpoint:
+    health:
+      show-details: always

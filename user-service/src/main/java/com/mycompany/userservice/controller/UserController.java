@@ -4,8 +4,6 @@ import com.mycompany.userservice.bus.UserStream;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
-import com.mycompany.userservice.exception.UserEmailDuplicatedException;
-import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
 import io.swagger.annotations.ApiResponse;
@@ -47,7 +45,6 @@ public class UserController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<UserDto> getAllUsers() {
         List<UserDto> userDtos = new ArrayList<>();
@@ -63,9 +60,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Long id) throws UserNotFoundException {
+    public UserDto getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
 
         return modelMapper.map(user, UserDto.class);
@@ -73,11 +69,13 @@ public class UserController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 409, message = "Conflict"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) throws UserEmailDuplicatedException {
+    public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         userService.validateUserExistsByEmail(createUserDto.getEmail());
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
@@ -92,12 +90,13 @@ public class UserController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 409, message = "Conflict"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException, UserEmailDuplicatedException {
+    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) {
         User user = userService.validateAndGetUserById(id);
 
         String userEmail = user.getEmail();
@@ -121,9 +120,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable Long id) throws UserNotFoundException {
+    public UserDto deleteUser(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
 
         //-- Deleting from MySQL and sending event to Kafka is not an atomic transaction!

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -15,14 +15,12 @@ import javax.validation.constraints.NotNull;
 public class CreateUserDto {
 
     @ApiModelProperty(value = "User's email", example = "ivan.franchin@test.com")
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
 
     @ApiModelProperty(position = 2, value = "User's full name", example = "Ivan Franchin")
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private String fullName;
 
     @ApiModelProperty(position = 3, value = "User's status", example = "true")

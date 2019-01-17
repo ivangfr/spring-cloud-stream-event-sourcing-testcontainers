@@ -10,17 +10,20 @@ Furthermore, we will implement a service that will listen for those events and s
 
 ![project-diagram](images/project-diagram.png)
 
-## Modules
+## Micro-services
 
 - `user-service`: spring-boot application responsible for handling users (create/update/delete). The users information
-will be stored in [`MySQL`](https://www.mysql.com) database. Once one user is created/updated/deleted, one event is sent
+will be stored in [`MySQL`](https://www.mysql.com) database. Once an user is created/updated/deleted, one event is sent
 to Kafka bus;
 
 - `event-service`: spring-boot application responsible for listening events from `Kafka` bus and saving those events in
 Cassandra database;
 
-- `commons`: module responsible for generating the common [`Avro`](https://avro.apache.org) user-event that is used by
-`user-service` and `event-service`.
+## Serialization/Deserialization format
+
+We are using [`Avro`](https://avro.apache.org) format to serialize/deserialize event from/to Kafka. The `commons` module
+is responsible for reading the `user-event.avsc` file and generating the `com.mycompany.commons.avro.UserEventBus` Java
+class that is used by `user-service` and `event-service`.
 
 ## Start Environment
 
@@ -61,7 +64,8 @@ Inside `/springboot-kafka-mysql-cassandra` root folder run
 ```
 gradle clean commons:install
 ```
-It will install `commons-0.0.1-SNAPSHOT.jar` in you local maven repository, so that it can be visible by user-service and event-service.
+It will install `commons-0.0.1-SNAPSHOT.jar` library in you local maven repository, so that it can be visible by
+`user-service` and `event-service`.
 
 ## Start user-service
 
@@ -93,10 +97,10 @@ gradle event-service:bootRun
 
 ![event-service](images/event-service.png)
 
-- Get user-events related to the used created `GET /api/events/users/{id}` informing the user id;
+- Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
 
-- You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image below)
-using [`Zipkin`](https://zipkin.io): http://localhost:9411
+- You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
+below) using [`Zipkin`](https://zipkin.io): http://localhost:9411
 
 ![zipkin](images/zipkin.png)
 
@@ -107,24 +111,22 @@ using [`Zipkin`](https://zipkin.io): http://localhost:9411
 ### MySQL Database
 ```
 docker exec -it user-mysql bash -c 'mysql -uroot -psecret'
-
 use userdb;
-
 select * from users;
 ```
 
 ### Cassandra Database
 ```
 docker exec -it event-cassandra cqlsh
-
 USE mycompany;
-
 SELECT * FROM user_events; 
 ```
 
 ### Kafka Topics UI
 
 - Kafka Topics UI can be accessed at http://localhost:8085
+
+![kafka-topics-ui](images/kafka-topics-ui.png)
 
 ### Kafka Manager
 
@@ -138,8 +140,8 @@ SELECT * FROM user_events;
 
 - Click on `Save` button on the bottom of the page. Done!
 
-- The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2` partitions,
-that is used by the microservices of this project.
+- The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
+partitions, that is used by the microservices of this project.
 
 ![kafka-manager](images/kafka-manager.png)
 

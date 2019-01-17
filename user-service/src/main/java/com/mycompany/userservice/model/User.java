@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -15,14 +14,14 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "users", indexes = {@Index(name = "idxEmail", columnList = "email", unique = true)})
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -31,7 +30,10 @@ public class User {
     @Column(nullable = false)
     private Boolean active;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist

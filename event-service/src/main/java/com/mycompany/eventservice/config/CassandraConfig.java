@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
-import org.springframework.data.cassandra.core.cql.keyspace.DropKeyspaceSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
@@ -17,14 +16,17 @@ import java.util.List;
 @EnableCassandraRepositories
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
-    @Value("${spring.data.cassandra.contactpoints}")
+    @Value("${spring.data.cassandra.contact-points}")
     private String contactPoints;
 
     @Value("${spring.data.cassandra.port}")
     private int port;
 
-    @Value("${spring.data.cassandra.keyspace}")
-    private String keyspace;
+    @Value("${spring.data.cassandra.keyspace-name}")
+    private String keyspaceName;
+
+    @Value("${spring.data.cassandra.schema-action}")
+    private String schemaAction;
 
     @Override
     protected String getContactPoints() {
@@ -33,7 +35,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     protected String getKeyspaceName() {
-        return keyspace;
+        return keyspaceName;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     public SchemaAction getSchemaAction() {
-        return SchemaAction.CREATE_IF_NOT_EXISTS;
+        return SchemaAction.valueOf(schemaAction.toUpperCase());
     }
 
     @Override
@@ -54,16 +56,11 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     @Override
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         final CreateKeyspaceSpecification specification =
-                CreateKeyspaceSpecification.createKeyspace(keyspace)
+                CreateKeyspaceSpecification.createKeyspace(keyspaceName)
                         .ifNotExists()
                         .with(KeyspaceOption.DURABLE_WRITES, true)
                         .withSimpleReplication();
         return Collections.singletonList(specification);
-    }
-
-    @Override
-    protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-        return Collections.singletonList(DropKeyspaceSpecification.dropKeyspace(keyspace));
     }
 
 }

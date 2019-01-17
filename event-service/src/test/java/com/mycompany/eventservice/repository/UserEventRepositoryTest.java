@@ -20,9 +20,16 @@ import static com.mycompany.eventservice.util.MyLocalDateHandler.fromStringToDat
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest({"spring.data.cassandra.port=9142", "spring.data.cassandra.keyspace=mycompany"})
-@TestExecutionListeners({CassandraUnitDependencyInjectionTestExecutionListener.class, DependencyInjectionTestExecutionListener.class})
-@CassandraDataSet(value = {"event-service.cql"}, keyspace = "mycompany")
+@TestExecutionListeners({
+        CassandraUnitDependencyInjectionTestExecutionListener.class,
+        DependencyInjectionTestExecutionListener.class
+})
+@CassandraDataSet(value = "event-service.cql", keyspace = "mycompany")
+@SpringBootTest({
+        "spring.data.cassandra.port=9142",
+        "spring.data.cassandra.keyspace-name=mycompany",
+        "spring.data.cassandra.schema-action=RECREATE"
+})
 @CassandraUnit
 public class UserEventRepositoryTest {
 

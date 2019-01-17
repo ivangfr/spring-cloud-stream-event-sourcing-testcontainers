@@ -17,12 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.mycompany.userservice.UserServiceTestHelper.getDefaultCreateUserDto;
-import static com.mycompany.userservice.UserServiceTestHelper.getDefaultUser;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -49,7 +51,7 @@ public class RandomPortTestRestTemplateTests {
     @Test
     void given_oneUser_when_getAllUsers_then_returnArrayWithUser() {
         User user = getDefaultUser();
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
 
@@ -83,7 +85,7 @@ public class RandomPortTestRestTemplateTests {
     @Test
     void given_oneUser_when_getUserById_then_returnUserJson() {
         User user = getDefaultUser();
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         ResponseEntity<UserDto> responseEntity = testRestTemplate.getForEntity("/api/users/" + user.getId(), UserDto.class);
 
@@ -111,7 +113,8 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(createUserDto.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(createUserDto.getActive());
 
-        assertThat(userRepository.findAll()).hasSize(1);
+        Optional<User> userFound = userRepository.findById(responseEntity.getBody().getId());
+        assertThat(userFound.isPresent()).isTrue();
     }
 
     // TODO add more test cases
@@ -121,9 +124,9 @@ public class RandomPortTestRestTemplateTests {
      * =================== */
 
     @Test
-    void given_oneUser_when_updateUserActiveToFalse_then_returnUserJson() {
+    void given_oneUser_when_updateUser_then_returnUserJson() {
         User user = getDefaultUser();
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setActive(false);
@@ -148,7 +151,7 @@ public class RandomPortTestRestTemplateTests {
     @Test
     void given_oneUser_when_deleteUser_then_returnUserJson() {
         User user = getDefaultUser();
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.DELETE, null, UserDto.class);
 
@@ -159,8 +162,25 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(user.getActive());
 
-        assertThat(userRepository.findAll()).hasSize(0);
+        Optional<User> userNotFound = userRepository.findById(user.getId());
+        assertThat(userNotFound.isPresent()).isFalse();
     }
 
     // TODO add more test cases
+
+    /*
+     * Util Methods
+     * ============ */
+
+    private User getDefaultUser() {
+        User user = new User();
+        user.setEmail("ivan.franchin@test.com");
+        user.setFullName("Ivan Franchin");
+        user.setActive(true);
+        return user;
+    }
+
+    private CreateUserDto getDefaultCreateUserDto() {
+        return new CreateUserDto("ivan.franchin@test.com", "Ivan Franchin", true);
+    }
 }

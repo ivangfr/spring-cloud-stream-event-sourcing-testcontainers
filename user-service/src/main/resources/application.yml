@@ -1,15 +1,7 @@
-management:
-  security.enabled: false
-  endpoints:
-    web:
-      exposure.include: "*"
-  endpoint:
-    health:
-      show-details: always
-
 spring:
   jpa:
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     url: jdbc:mysql://${MYSQL_ADDR:localhost}:3306/userdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
@@ -23,10 +15,29 @@ spring:
       bindings:
         user-output:
           destination: com.mycompany.userservice.user
-          content-type: application/*+avro
+          content-type: application/avro
           producer:
             partition-key-expression: headers['partitionKey']
             partition-count: 2
   sleuth:
     sampler.probability: 1.0
 #    web.skipPattern: (^cleanup.*|.+favicon.*)
+
+management:
+  security.enabled: false
+  endpoints:
+    web:
+      exposure.include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+---
+spring:
+  profiles: test
+  jpa:
+    hibernate.ddl-auto: create-drop
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa

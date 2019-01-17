@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.1.RELEASE'
+	id 'org.springframework.boot' version '2.1.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
 
@@ -10,7 +10,6 @@ sourceCompatibility = 1.8
 ext {
 	springfoxSwaggerVersion = '2.9.2'
 	modelMapperVersion = '1.1.2'
-	gsonVersion = '2.8.2'
 	springCloudVersion = 'Greenwich.RC2'
 }
 
@@ -26,11 +25,11 @@ dependencies {
 	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile("com.google.code.gson:gson:${gsonVersion}")
+	compile('com.google.code.gson:gson:')
 	compile('com.mycompany:commons:0.0.1-SNAPSHOT')
 	compile('org.projectlombok:lombok')
 	runtime('mysql:mysql-connector-java')
-	runtime('com.h2database:h2')
+	testCompile('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 	testCompile('org.junit.jupiter:junit-jupiter-api')
