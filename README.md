@@ -6,23 +6,23 @@ The goal of this project is to create a service that handles _users_ using
 [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete,
 whenever an user is created/updated/deleted an event (informing this change) is sent to [`Kafka`](https://kafka.apache.org).
 Furthermore, we will implement a service that will listen for those events and save them in
-[`Cassandra`](http://cassandra.apache.org) database.
+[`Cassandra`](http://cassandra.apache.org).
 
 ![project-diagram](images/project-diagram.png)
 
 ## Microservices
 
 - `user-service`: spring-boot application responsible for handling users (create/update/delete). The users information
-will be stored in [`MySQL`](https://www.mysql.com) database. Once an user is created/updated/deleted, one event is sent
+will be stored in [`MySQL`](https://www.mysql.com). Once an user is created/updated/deleted, one event is sent
 to `Kafka`;
 
-- `event-service`: spring-boot application responsible for listening events from `Kafka` bus and saving those events in
-`Cassandra` database;
+- `event-service`: spring-boot application responsible for listening events from `Kafka` and saving those events in
+`Cassandra`.
 
 ## Serialization/Deserialization format
 
 We can use [`JSON`](https://www.json.org) (default) or [`Avro`](https://avro.apache.org) formats to serialize/deserialize
-data from/to binary format that Kafka uses. If `Avro` format is chosen, both services will benefit by the
+data to/from the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the
 [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container.
 
 ## Start Environment
@@ -108,12 +108,12 @@ gradle event-service:bootRun -Dspring.profiles.active=avro
 
 4. Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
 
-- You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
+5. You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
 below) using [Zipkin](https://zipkin.io): http://localhost:9411
 
 ![zipkin](images/zipkin.png)
 
-5. Create new users and update/delete existing ones in order to see how the application works.
+6. Create new users and update/delete existing ones in order to see how the application works.
 
 ## Useful Commands & Links
 
