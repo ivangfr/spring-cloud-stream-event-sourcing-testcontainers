@@ -1,7 +1,6 @@
 package com.mycompany.eventservice.controller;
 
 import com.mycompany.eventservice.dto.UserEventDto;
-import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.service.UserEventService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -18,12 +17,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/events/users")
 public class UserEventController {
 
+    private final UserEventService userEventService;
     private final ModelMapper modelMapper;
-    private UserEventService userEventService;
 
-    public UserEventController(ModelMapper modelMapper, UserEventService userEventService) {
-        this.modelMapper = modelMapper;
+    public UserEventController(UserEventService userEventService, ModelMapper modelMapper) {
         this.userEventService = userEventService;
+        this.modelMapper = modelMapper;
     }
 
     @ApiResponses(value = {
@@ -32,9 +31,9 @@ public class UserEventController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     @GetMapping("/{id}")
-    public List<UserEventDto> getUserEventByUserId(@PathVariable Long id) {
-        List<UserEvent> userEvents = userEventService.getAllUserEventsByUserId(id);
-        return userEvents.stream()
+    public List<UserEventDto> getUserEvents(@PathVariable Long id) {
+        return userEventService.getAllUserEvents(id)
+                .stream()
                 .map(userEvent -> modelMapper.map(userEvent, UserEventDto.class))
                 .collect(Collectors.toList());
     }

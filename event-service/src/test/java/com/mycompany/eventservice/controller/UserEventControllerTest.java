@@ -44,7 +44,7 @@ public class UserEventControllerTest {
     @Test
     void given_noUserEvents_when_getUserEventByUserId_then_returnEmptyJsonArray() throws Exception {
         Long userId = 1L;
-        given(userEventService.getAllUserEventsByUserId(userId)).willReturn(new ArrayList<>());
+        given(userEventService.getAllUserEvents(userId)).willReturn(new ArrayList<>());
 
         ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -63,7 +63,7 @@ public class UserEventControllerTest {
         String type = "type123";
         UserEvent userEvent = new UserEvent(new UserEventKey(userId, datetime), type, data);
 
-        given(userEventService.getAllUserEventsByUserId(userId)).willReturn(Collections.singletonList(userEvent));
+        given(userEventService.getAllUserEvents(userId)).willReturn(Collections.singletonList(userEvent));
 
         ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId)
                 .accept(MediaType.APPLICATION_JSON_UTF8))

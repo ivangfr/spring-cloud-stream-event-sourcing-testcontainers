@@ -13,9 +13,9 @@ spring:
           brokers: localhost:29092
           auto-add-partitions: true
       bindings:
-        user-output:
+        output:
           destination: com.mycompany.userservice.user
-          content-type: application/avro
+          content-type: application/json
           producer:
             partition-key-expression: headers['partitionKey']
             partition-count: 2
@@ -31,6 +31,22 @@ management:
   endpoint:
     health:
       show-details: always
+
+---
+spring:
+  profiles: avro
+  cloud:
+    stream:
+      schema-registry-client:
+        endpoint: http://localhost:8081
+      schema:
+        avro:
+          dynamic-schema-generation-enabled: true
+#          schema-locations:
+#            - classpath:avro/user-event.avsc # source in UserStream class is null when schema-locations is used
+      bindings:
+        output:
+          content-type: application/*+avro
 
 ---
 spring:

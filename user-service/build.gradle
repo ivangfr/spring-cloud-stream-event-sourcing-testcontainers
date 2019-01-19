@@ -8,9 +8,11 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 ext {
-	springfoxSwaggerVersion = '2.9.2'
-	modelMapperVersion = '1.1.2'
 	springCloudVersion = 'Greenwich.RC2'
+
+	avroVersion = '1.8.2'
+	modelMapperVersion = '2.3.2'
+	springfoxSwaggerVersion = '2.9.2'
 }
 
 dependencies {
@@ -22,12 +24,12 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-stream-schema')
 	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
 	compile('org.springframework.kafka:spring-kafka')
+	compile('com.google.code.gson:gson')
+	compile("org.apache.avro:avro:${avroVersion}")
 	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile('com.google.code.gson:gson:')
-	compile('com.mycompany:commons:0.0.1-SNAPSHOT')
-	compile('org.projectlombok:lombok')
+	compileOnly('org.projectlombok:lombok')
 	runtime('mysql:mysql-connector-java')
 	testCompile('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -40,6 +42,12 @@ dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
+}
+
+// adding arguments to bootRun, for example: gradle bootRun -Dspring.profiles.active=json
+
+bootRun {
+	systemProperties = System.properties
 }
 
 // adding integration test

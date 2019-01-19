@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserEventService {
 
-    List<UserEvent> getAllUserEventsByUserId(Long id);
+    List<UserEvent> getAllUserEvents(Long id);
 
     UserEvent saveUserEvent(UserEvent userEvent);
 

@@ -13,9 +13,9 @@ spring:
           auto-add-partitions: true
           min-partition-count: 2
       bindings:
-        user-input:
+        input:
           destination: com.mycompany.userservice.user
-          content-type: application/avro
+          content-type: application/json # it is redundant here because 'application/json' is the default
           group: eventServiceGroup
   sleuth:
     sampler.probability: 1.0
@@ -29,3 +29,14 @@ management:
   endpoint:
     health:
       show-details: always
+
+---
+spring:
+  profiles: avro
+  cloud:
+    stream:
+      schema-registry-client:
+        endpoint: http://localhost:8081
+      bindings:
+        input:
+          content-type: application/*+avro # in fact, it is not needed because the converter gets the content type in the message header

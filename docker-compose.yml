@@ -15,7 +15,7 @@ services:
       - MYSQL_PASSWORD=secret
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
-      start_period: 20s
+      start_period: 30s
 
   event-cassandra:
     image: cassandra:3.11.3
@@ -27,7 +27,7 @@ services:
       - "9160:9160"
     healthcheck:
       test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
-      start_period: 20s
+      start_period: 30s
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.1.0
@@ -40,7 +40,7 @@ services:
       TZ: "${TZ-Europe/Berlin}"
     healthcheck:
       test: "echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT"
-      start_period: 20s
+      start_period: 30s
 
   kafka:
     container_name: kafka
@@ -59,7 +59,38 @@ services:
       TZ: "${TZ-Europe/Berlin}"
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
-      start_period: 20s
+      start_period: 30s
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.1.0
+    container_name: schema-registry
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      TZ: "${TZ-Europe/Berlin}"
+    healthcheck:
+      test: "curl -f http://localhost:8081 || exit 1"
+      start_period: 1m
+
+  schema-registry-ui:
+    image: landoop/schema-registry-ui:0.9.5
+    container_name: kafka-schema-registry-ui
+    depends_on:
+      - schema-registry
+    ports:
+      - "8001:8000"
+    environment:
+      SCHEMAREGISTRY_URL: http://schema-registry:8081
+      PROXY: "true"
+    healthcheck:
+      test: "wget --quiet --tries=1 --spider http://localhost:8000 || exit 1"
+      start_period: 30s
 
   kafka-rest-proxy:
     image: confluentinc/cp-kafka-rest:5.1.0
@@ -111,7 +142,7 @@ services:
     command: -Dpidfile.path=/dev/null
   #    healthcheck:
   #      test: ""
-  #      start_period: 20s
+  #      start_period: 30s
 
   zipkin:
     container_name: zipkin
@@ -121,4 +152,4 @@ services:
       - "9411:9411"
     healthcheck:
       test: "curl -f http://localhost:9411 || exit 1"
-      start_period: 20s
+      start_period: 30s

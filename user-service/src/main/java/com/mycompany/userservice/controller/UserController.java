@@ -22,23 +22,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
-
+    private final UserStream userStream;
     private final ModelMapper modelMapper;
 
-    private UserStream userStream;
-
-    public UserController(UserService userService, ModelMapper modelMapper, UserStream userStream) {
+    public UserController(UserService userService, UserStream userStream, ModelMapper modelMapper) {
         this.userService = userService;
-        this.modelMapper = modelMapper;
         this.userStream = userStream;
+        this.modelMapper = modelMapper;
     }
 
     @ApiResponses(value = {
@@ -47,12 +45,10 @@ public class UserController {
     })
     @GetMapping
     public List<UserDto> getAllUsers() {
-        List<UserDto> userDtos = new ArrayList<>();
-        for (User user : userService.getAllUsers()) {
-            userDtos.add(modelMapper.map(user, UserDto.class));
-        }
-
-        return userDtos;
+        return userService.getAllUsers()
+                .stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
     }
 
     @ApiResponses(value = {
@@ -63,7 +59,6 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
-
         return modelMapper.map(user, UserDto.class);
     }
 
@@ -78,10 +73,10 @@ public class UserController {
     public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         userService.validateUserExistsByEmail(createUserDto.getEmail());
 
-        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         User user = modelMapper.map(createUserDto, User.class);
-        user = userService.saveUser(user);
 
+        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
+        user = userService.saveUser(user);
         userStream.userCreated(user.getId(), createUserDto);
         //--
 
@@ -105,10 +100,10 @@ public class UserController {
             userService.validateUserExistsByEmail(updateUserDtoEmail);
         }
 
-        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         modelMapper.map(updateUserDto, user);
-        user = userService.saveUser(user);
 
+        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
+        user = userService.saveUser(user);
         userStream.userUpdated(user.getId(), updateUserDto);
         //--
 
@@ -126,7 +121,6 @@ public class UserController {
 
         //-- Deleting from MySQL and sending event to Kafka is not an atomic transaction!
         userService.deleteUser(user);
-
         userStream.userDeleted(user.getId());
         //--
 

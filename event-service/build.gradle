@@ -8,11 +8,13 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 ext {
+	springCloudVersion = 'Greenwich.RC2'
+
+	avroVersion = '1.8.2'
+	modelMapperVersion = '2.3.2'
 	springfoxSwaggerVersion = '2.9.2'
 	cassandraUnitSpringVersion = '3.3.0.2'
-	modelMapperVersion = '1.1.2'
 	dropwizardMetricsVersion = '3.2.6'
-	springCloudVersion = 'Greenwich.RC2'
 }
 
 dependencies {
@@ -24,11 +26,11 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-stream-schema')
 	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
 	compile('org.springframework.kafka:spring-kafka')
+	compile("org.apache.avro:avro:${avroVersion}")
+	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}") // this dependency is needed by Cassandra
-	compile('com.mycompany:commons:0.0.1-SNAPSHOT')
 	compileOnly('org.projectlombok:lombok')
 	testCompile("org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -41,4 +43,10 @@ dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
+}
+
+// adding arguments to bootRun, for example: gradle bootRun -Dspring.profiles.active=json
+
+bootRun {
+	systemProperties = System.properties
 }
