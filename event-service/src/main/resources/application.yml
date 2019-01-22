@@ -15,7 +15,7 @@ spring:
       bindings:
         input:
           destination: com.mycompany.userservice.user
-          content-type: application/json # it is redundant here because 'application/json' is the default
+          content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup
   sleuth:
     sampler.probability: 1.0

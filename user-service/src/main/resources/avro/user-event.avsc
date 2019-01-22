@@ -3,16 +3,16 @@
 	"type": "record",
 	"name": "UserEventBus",
 	"fields": [
-	    {"name": "event_id", "type": "string"},
-		{"name": "event_timestamp", "type": "long"},
-		{"name": "event_type",
+	    {"name": "eventId", "type": "string"},
+		{"name": "eventTimestamp", "type": "long"},
+		{"name": "eventType",
 			"type": {
-				"name": "event_type",
+				"name": "EventType",
 				"type":"enum",
 				"symbols" : ["CREATED", "UPDATED", "DELETED"]
 			}
 		},
-		{"name": "user_id", "type": "long"},
-		{"name": "user_json",  "type": ["null", "string"], "default": null}
+		{"name": "userId", "type": "long"},
+		{"name": "userJson",  "type": ["null", "string"], "default": null}
 	]
 }

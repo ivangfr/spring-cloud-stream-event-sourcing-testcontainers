@@ -15,7 +15,7 @@ spring:
       bindings:
         output:
           destination: com.mycompany.userservice.user
-          content-type: application/json
+          content-type: application/json # it's redundant here, 'application/json' is the default
           producer:
             partition-key-expression: headers['partitionKey']
             partition-count: 2
@@ -41,9 +41,8 @@ spring:
         endpoint: http://localhost:8081
       schema:
         avro:
-          dynamic-schema-generation-enabled: true
-#          schema-locations:
-#            - classpath:avro/user-event.avsc # source in UserStream class is null when schema-locations is used
+          schema-locations:
+            - classpath:avro/user-event.avsc
       bindings:
         output:
           content-type: application/*+avro
