@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, ContainersExtension.class})
 @SpringBootTest
 public class UserServiceApplicationTests {
 

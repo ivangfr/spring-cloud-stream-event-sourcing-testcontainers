@@ -25,7 +25,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, ContainersExtension.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class RandomPortTestRestTemplateTests {
@@ -183,4 +183,5 @@ public class RandomPortTestRestTemplateTests {
     private CreateUserDto getDefaultCreateUserDto() {
         return new CreateUserDto("ivan.franchin@test.com", "Ivan Franchin", true);
     }
+
 }

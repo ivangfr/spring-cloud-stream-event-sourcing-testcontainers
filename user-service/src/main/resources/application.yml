@@ -53,6 +53,6 @@ spring:
   jpa:
     hibernate.ddl-auto: create-drop
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-    username: sa
-    password: sa
+    url: jdbc:mysql://localhost:3306/test-userdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: test-user
+    password: test-secret

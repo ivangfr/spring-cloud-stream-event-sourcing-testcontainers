@@ -68,12 +68,12 @@ zookeeper                  /etc/confluent/docker/run        Up (healthy)   0.0.0
 
 - **For `JSON` (de)serialization**
 ```
-gradle user-service:bootRun
+./gradlew user-service:bootRun
 ```
 
 - **For `Avro` (de)serialization**
 ```
-gradle user-service:bootRun -Dspring.profiles.active=avro
+./gradlew user-service:bootRun -Dspring.profiles.active=avro
 ```
 
 ## Start event-service
@@ -84,12 +84,12 @@ gradle user-service:bootRun -Dspring.profiles.active=avro
 
 - **For `JSON` (de)serialization**
 ```
-gradle event-service:bootRun
+./gradlew event-service:bootRun
 ```
 
 - **For `Avro` (de)serialization**
 ```
-gradle event-service:bootRun -Dspring.profiles.active=avro
+./gradlew event-service:bootRun -Dspring.profiles.active=avro
 ```
 
 ## How to test

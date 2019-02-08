@@ -1,6 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
 }
 
 group = 'com.mycompany'
@@ -31,7 +31,7 @@ dependencies {
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
 	compile("io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}") // this dependency is needed by Cassandra
-	compileOnly('org.projectlombok:lombok')
+	compile('org.projectlombok:lombok')
 	testCompile("org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
