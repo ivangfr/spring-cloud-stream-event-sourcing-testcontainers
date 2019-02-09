@@ -1,8 +1,8 @@
 package com.mycompany.userservice.bus;
 
 import com.google.gson.Gson;
-import com.mycompany.userservice.commons.events.EventType;
-import com.mycompany.userservice.commons.events.UserEventBus;
+import com.mycompany.userservice.messages.EventType;
+import com.mycompany.userservice.messages.UserEventMessage;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class UserStream {
     }
 
     public void userCreated(Long id, CreateUserDto createUserDto) {
-        UserEventBus userEventBus = UserEventBus.builder()
+        UserEventMessage userEventMessage = UserEventMessage.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventTimestamp(System.currentTimeMillis())
                 .eventType(EventType.CREATED)
@@ -38,11 +38,11 @@ public class UserStream {
                 .userJson(gson.toJson(createUserDto))
                 .build();
 
-        sendToBus(id, userEventBus);
+        sendToBus(id, userEventMessage);
     }
 
     public void userUpdated(Long id, UpdateUserDto updateUserDto) {
-        UserEventBus userEventBus = UserEventBus.builder()
+        UserEventMessage userEventMessage = UserEventMessage.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventTimestamp(System.currentTimeMillis())
                 .eventType(EventType.UPDATED)
@@ -50,22 +50,22 @@ public class UserStream {
                 .userJson(gson.toJson(updateUserDto))
                 .build();
 
-        sendToBus(id, userEventBus);
+        sendToBus(id, userEventMessage);
     }
 
     public void userDeleted(Long id) {
-        UserEventBus userEventBus = UserEventBus.builder()
+        UserEventMessage userEventMessage = UserEventMessage.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventTimestamp(System.currentTimeMillis())
                 .eventType(EventType.DELETED)
                 .userId(id)
                 .build();
 
-        sendToBus(id, userEventBus);
+        sendToBus(id, userEventMessage);
     }
 
-    private void sendToBus(Long partitionKey, UserEventBus userEventBus) {
-        Message<UserEventBus> message = MessageBuilder.withPayload(userEventBus)
+    private void sendToBus(Long partitionKey, UserEventMessage userEventMessage) {
+        Message<UserEventMessage> message = MessageBuilder.withPayload(userEventMessage)
                 .setHeader("partitionKey", partitionKey)
                 .build();
 

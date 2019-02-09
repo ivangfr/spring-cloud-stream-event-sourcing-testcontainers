@@ -1,11 +1,11 @@
-package com.mycompany.userservice.commons.events;
+package com.mycompany.userservice.messages;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class UserEventBus {
+public class UserEventMessage {
 
     private String eventId;
     private Long eventTimestamp;

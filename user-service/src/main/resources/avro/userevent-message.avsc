@@ -1,7 +1,7 @@
 {
-	"namespace": "com.mycompany.userservice.commons.events",
+	"namespace": "com.mycompany.userservice.messages",
 	"type": "record",
-	"name": "UserEventBus",
+	"name": "UserEventMessage",
 	"fields": [
 	    {"name": "eventId", "type": "string"},
 		{"name": "eventTimestamp", "type": "long"},

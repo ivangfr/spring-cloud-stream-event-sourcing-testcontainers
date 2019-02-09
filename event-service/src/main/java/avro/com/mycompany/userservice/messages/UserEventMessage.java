@@ -3,19 +3,19 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package com.mycompany.userservice.commons.events;
+package com.mycompany.userservice.messages;
 
 import org.apache.avro.specific.SpecificData;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
-public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -4582376864449631908L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"UserEventBus\",\"namespace\":\"com.mycompany.userservice.commons.events\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"eventTimestamp\",\"type\":\"long\"},{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"EventType\",\"symbols\":[\"CREATED\",\"UPDATED\",\"DELETED\"]}},{\"name\":\"userId\",\"type\":\"long\"},{\"name\":\"userJson\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]}");
+public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  private static final long serialVersionUID = 2268272132975302054L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"UserEventMessage\",\"namespace\":\"com.mycompany.userservice.messages\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"eventTimestamp\",\"type\":\"long\"},{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"EventType\",\"symbols\":[\"CREATED\",\"UPDATED\",\"DELETED\"]}},{\"name\":\"userId\",\"type\":\"long\"},{\"name\":\"userJson\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
    private java.lang.String eventId;
    private long eventTimestamp;
-   private com.mycompany.userservice.commons.events.EventType eventType;
+   private com.mycompany.userservice.messages.EventType eventType;
    private long userId;
    private java.lang.String userJson;
 
@@ -24,7 +24,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
    * to their default values from the schema.  If that is desired then
    * one should use <code>newBuilder()</code>.
    */
-  public UserEventBus() {}
+  public UserEventMessage() {}
 
   /**
    * All-args constructor.
@@ -34,7 +34,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
    * @param userId The new value for userId
    * @param userJson The new value for userJson
    */
-  public UserEventBus(java.lang.String eventId, java.lang.Long eventTimestamp, com.mycompany.userservice.commons.events.EventType eventType, java.lang.Long userId, java.lang.String userJson) {
+  public UserEventMessage(java.lang.String eventId, java.lang.Long eventTimestamp, com.mycompany.userservice.messages.EventType eventType, java.lang.Long userId, java.lang.String userJson) {
     this.eventId = eventId;
     this.eventTimestamp = eventTimestamp;
     this.eventType = eventType;
@@ -61,7 +61,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
     switch (field$) {
     case 0: eventId = (java.lang.String)value$; break;
     case 1: eventTimestamp = (java.lang.Long)value$; break;
-    case 2: eventType = (com.mycompany.userservice.commons.events.EventType)value$; break;
+    case 2: eventType = (com.mycompany.userservice.messages.EventType)value$; break;
     case 3: userId = (java.lang.Long)value$; break;
     case 4: userJson = (java.lang.String)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
@@ -90,7 +90,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
    * Gets the value of the 'eventType' field.
    * @return The value of the 'eventType' field.
    */
-  public com.mycompany.userservice.commons.events.EventType getEventType() {
+  public com.mycompany.userservice.messages.EventType getEventType() {
     return eventType;
   }
 
@@ -114,40 +114,40 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
 
 
   /**
-   * Creates a new UserEventBus RecordBuilder.
-   * @return A new UserEventBus RecordBuilder
+   * Creates a new UserEventMessage RecordBuilder.
+   * @return A new UserEventMessage RecordBuilder
    */
-  public static com.mycompany.userservice.commons.events.UserEventBus.Builder newBuilder() {
-    return new com.mycompany.userservice.commons.events.UserEventBus.Builder();
+  public static com.mycompany.userservice.messages.UserEventMessage.Builder newBuilder() {
+    return new com.mycompany.userservice.messages.UserEventMessage.Builder();
   }
 
   /**
-   * Creates a new UserEventBus RecordBuilder by copying an existing Builder.
+   * Creates a new UserEventMessage RecordBuilder by copying an existing Builder.
    * @param other The existing builder to copy.
-   * @return A new UserEventBus RecordBuilder
+   * @return A new UserEventMessage RecordBuilder
    */
-  public static com.mycompany.userservice.commons.events.UserEventBus.Builder newBuilder(com.mycompany.userservice.commons.events.UserEventBus.Builder other) {
-    return new com.mycompany.userservice.commons.events.UserEventBus.Builder(other);
+  public static com.mycompany.userservice.messages.UserEventMessage.Builder newBuilder(com.mycompany.userservice.messages.UserEventMessage.Builder other) {
+    return new com.mycompany.userservice.messages.UserEventMessage.Builder(other);
   }
 
   /**
-   * Creates a new UserEventBus RecordBuilder by copying an existing UserEventBus instance.
+   * Creates a new UserEventMessage RecordBuilder by copying an existing UserEventMessage instance.
    * @param other The existing instance to copy.
-   * @return A new UserEventBus RecordBuilder
+   * @return A new UserEventMessage RecordBuilder
    */
-  public static com.mycompany.userservice.commons.events.UserEventBus.Builder newBuilder(com.mycompany.userservice.commons.events.UserEventBus other) {
-    return new com.mycompany.userservice.commons.events.UserEventBus.Builder(other);
+  public static com.mycompany.userservice.messages.UserEventMessage.Builder newBuilder(com.mycompany.userservice.messages.UserEventMessage other) {
+    return new com.mycompany.userservice.messages.UserEventMessage.Builder(other);
   }
 
   /**
-   * RecordBuilder for UserEventBus instances.
+   * RecordBuilder for UserEventMessage instances.
    */
-  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<UserEventBus>
-    implements org.apache.avro.data.RecordBuilder<UserEventBus> {
+  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<UserEventMessage>
+    implements org.apache.avro.data.RecordBuilder<UserEventMessage> {
 
     private java.lang.String eventId;
     private long eventTimestamp;
-    private com.mycompany.userservice.commons.events.EventType eventType;
+    private com.mycompany.userservice.messages.EventType eventType;
     private long userId;
     private java.lang.String userJson;
 
@@ -160,7 +160,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(com.mycompany.userservice.commons.events.UserEventBus.Builder other) {
+    private Builder(com.mycompany.userservice.messages.UserEventMessage.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.eventId)) {
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
@@ -185,10 +185,10 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
     }
 
     /**
-     * Creates a Builder by copying an existing UserEventBus instance
+     * Creates a Builder by copying an existing UserEventMessage instance
      * @param other The existing instance to copy.
      */
-    private Builder(com.mycompany.userservice.commons.events.UserEventBus other) {
+    private Builder(com.mycompany.userservice.messages.UserEventMessage other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.eventId)) {
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
@@ -225,7 +225,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * @param value The value of 'eventId'.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder setEventId(java.lang.String value) {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder setEventId(java.lang.String value) {
       validate(fields()[0], value);
       this.eventId = value;
       fieldSetFlags()[0] = true;
@@ -245,7 +245,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * Clears the value of the 'eventId' field.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder clearEventId() {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder clearEventId() {
       eventId = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -264,7 +264,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * @param value The value of 'eventTimestamp'.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder setEventTimestamp(long value) {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder setEventTimestamp(long value) {
       validate(fields()[1], value);
       this.eventTimestamp = value;
       fieldSetFlags()[1] = true;
@@ -284,7 +284,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * Clears the value of the 'eventTimestamp' field.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder clearEventTimestamp() {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder clearEventTimestamp() {
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -293,7 +293,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * Gets the value of the 'eventType' field.
       * @return The value.
       */
-    public com.mycompany.userservice.commons.events.EventType getEventType() {
+    public com.mycompany.userservice.messages.EventType getEventType() {
       return eventType;
     }
 
@@ -302,7 +302,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * @param value The value of 'eventType'.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder setEventType(com.mycompany.userservice.commons.events.EventType value) {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder setEventType(com.mycompany.userservice.messages.EventType value) {
       validate(fields()[2], value);
       this.eventType = value;
       fieldSetFlags()[2] = true;
@@ -322,7 +322,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * Clears the value of the 'eventType' field.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder clearEventType() {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder clearEventType() {
       eventType = null;
       fieldSetFlags()[2] = false;
       return this;
@@ -341,7 +341,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * @param value The value of 'userId'.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder setUserId(long value) {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder setUserId(long value) {
       validate(fields()[3], value);
       this.userId = value;
       fieldSetFlags()[3] = true;
@@ -361,7 +361,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * Clears the value of the 'userId' field.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder clearUserId() {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder clearUserId() {
       fieldSetFlags()[3] = false;
       return this;
     }
@@ -379,7 +379,7 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * @param value The value of 'userJson'.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder setUserJson(java.lang.String value) {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder setUserJson(java.lang.String value) {
       validate(fields()[4], value);
       this.userJson = value;
       fieldSetFlags()[4] = true;
@@ -399,19 +399,19 @@ public class UserEventBus extends org.apache.avro.specific.SpecificRecordBase im
       * Clears the value of the 'userJson' field.
       * @return This builder.
       */
-    public com.mycompany.userservice.commons.events.UserEventBus.Builder clearUserJson() {
+    public com.mycompany.userservice.messages.UserEventMessage.Builder clearUserJson() {
       userJson = null;
       fieldSetFlags()[4] = false;
       return this;
     }
 
     @Override
-    public UserEventBus build() {
+    public UserEventMessage build() {
       try {
-        UserEventBus record = new UserEventBus();
+        UserEventMessage record = new UserEventMessage();
         record.eventId = fieldSetFlags()[0] ? this.eventId : (java.lang.String) defaultValue(fields()[0]);
         record.eventTimestamp = fieldSetFlags()[1] ? this.eventTimestamp : (java.lang.Long) defaultValue(fields()[1]);
-        record.eventType = fieldSetFlags()[2] ? this.eventType : (com.mycompany.userservice.commons.events.EventType) defaultValue(fields()[2]);
+        record.eventType = fieldSetFlags()[2] ? this.eventType : (com.mycompany.userservice.messages.EventType) defaultValue(fields()[2]);
         record.userId = fieldSetFlags()[3] ? this.userId : (java.lang.Long) defaultValue(fields()[3]);
         record.userJson = fieldSetFlags()[4] ? this.userJson : (java.lang.String) defaultValue(fields()[4]);
         return record;

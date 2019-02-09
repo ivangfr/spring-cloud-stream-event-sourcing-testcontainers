@@ -42,7 +42,7 @@ spring:
       schema:
         avro:
           schema-locations:
-            - classpath:avro/user-event.avsc
+            - classpath:avro/userevent-message.avsc
       bindings:
         output:
           content-type: application/*+avro

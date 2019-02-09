@@ -1,4 +1,4 @@
-package com.mycompany.userservice.commons.events;
+package com.mycompany.userservice.messages;
 
 public enum EventType {
 
