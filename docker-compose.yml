@@ -2,8 +2,8 @@ version: '3.5'
 
 services:
 
-  user-mysql:
-    container_name: user-mysql
+  mysql:
+    container_name: mysql
     image: mysql:5.7.24
     restart: unless-stopped
     ports:
@@ -17,9 +17,9 @@ services:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
       start_period: 30s
 
-  event-cassandra:
+  cassandra:
     image: cassandra:3.11.3
-    container_name: event-cassandra
+    container_name: cassandra
     restart: unless-stopped
     ports:
       - "9042:9042"
@@ -140,9 +140,9 @@ services:
       ZK_HOSTS: zookeeper:2181
       APPLICATION_SECRET: "random-secret"
     command: -Dpidfile.path=/dev/null
-  #    healthcheck:
-  #      test: ""
-  #      start_period: 30s
+#    healthcheck:
+#      test: ""
+#      start_period: 30s
 
   zipkin:
     container_name: zipkin
@@ -153,3 +153,35 @@ services:
     healthcheck:
       test: "curl -f http://localhost:9411 || exit 1"
       start_period: 30s
+
+  user-service:
+    container_name: user-service
+    image: docker.mycompany.com/springboot-kafka-mysql-cassandra_user-service:0.0.1
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - schema-registry
+      - mysql
+      - zipkin
+    ports:
+      - "9080:9080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${USER_SERVICE_SPRING_PROFILES_ACTIVE}
+    healthcheck:
+      test: "wget localhost:9080/actuator/health -q -O - > /dev/null 2>&1"
+      start_period: 2m
+
+  event-service:
+    container_name: event-service
+    image: docker.mycompany.com/springboot-kafka-mysql-cassandra_event-service:0.0.1
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - schema-registry
+      - cassandra
+      - zipkin
+    ports:
+      - "9081:9081"
+    healthcheck:
+      test: "wget localhost:9081/actuator/health -q -O - > /dev/null 2>&1"
+      start_period: 2m

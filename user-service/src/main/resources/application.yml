@@ -9,10 +9,10 @@ spring:
   cloud:
     stream:
       schema-registry-client:
-        endpoint: http://localhost:8081
+        endpoint: http://${SCHEMA_REGISTRY_ADDR:localhost}:8081
       kafka:
         binder:
-          brokers: localhost:29092
+          brokers: ${KAFKA_ADDR:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true
       bindings:
         output:
@@ -55,4 +55,4 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/test-userdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: test-user
-    password: test-secret
+    password: test-pass

@@ -26,7 +26,7 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
         mySQLContainer = new MySQLContainer("mysql:5.7.24")
                 .withDatabaseName("test-userdb")
                 .withUsername("test-user")
-                .withPassword("test-secret");
+                .withPassword("test-pass");
         mySQLContainer.setPortBindings(Collections.singletonList("3306:3306"));
         mySQLContainer.start();
 

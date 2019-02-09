@@ -2,16 +2,16 @@ spring:
   data:
     cassandra:
       keyspace-name: mycompany
-      contact-points: localhost
+      contact-points: ${CASSANDRA_ADDR:localhost}
       port: 9042
       schema-action: CREATE_IF_NOT_EXISTS
   cloud:
     stream:
       schema-registry-client:
-        endpoint: http://localhost:8081
+        endpoint: http://${SCHEMA_REGISTRY_ADDR:localhost}:8081
       kafka:
         binder:
-          brokers: localhost:29092
+          brokers: ${KAFKA_ADDR:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true
           min-partition-count: 2
       bindings:

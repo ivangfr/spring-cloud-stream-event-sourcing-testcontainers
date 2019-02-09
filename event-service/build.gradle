@@ -2,10 +2,11 @@ plugins {
     id 'org.springframework.boot' version '2.1.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.6.RELEASE'
     id 'com.commercehub.gradle.plugin.avro' version '0.9.1'
+    id 'com.palantir.docker' version '0.21.0'
 }
 
 group = 'com.mycompany'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = 1.8
 
 ext {
@@ -64,8 +65,18 @@ avro {
 }
 
 task generateAvro(type: com.commercehub.gradle.plugin.avro.GenerateAvroJavaTask) {
+    description = 'Generate Java classes from Avro schema located at src/main/resources/avro'
     source("src/main/resources/avro")
     outputDir = file("src/main/java/avro")
 }
 
 compileJava.source(generateAvro.outputs)
+
+// configuring docker builder plugin
+
+docker {
+    dependsOn build
+    name "docker.mycompany.com/springboot-kafka-mysql-cassandra_event-service:${version}"
+    files bootJar.archivePath
+    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
+}

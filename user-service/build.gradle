@@ -1,10 +1,11 @@
 plugins {
     id 'org.springframework.boot' version '2.1.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+    id 'com.palantir.docker' version '0.21.0'
 }
 
 group = 'com.mycompany'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = 1.8
 
 ext {
@@ -51,4 +52,13 @@ dependencyManagement {
 
 bootRun {
     systemProperties = System.properties
+}
+
+// configuring docker builder plugin
+
+docker {
+    dependsOn build
+    name "docker.mycompany.com/springboot-kafka-mysql-cassandra_user-service:${version}"
+    files bootJar.archivePath
+    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
 }
