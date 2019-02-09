@@ -177,7 +177,7 @@ partitions, that is used by the microservices of this project.
 
 ## TODO
 
-- use testcontainers to run Cassandra and Kafka/Zookeeper;
+- dockerize `user-service` and `event-service`;
 - implement tests to validate sending/receiving messages to/from Kafka;
 
 ## References

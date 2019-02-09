@@ -34,6 +34,7 @@ dependencies {
     runtime('mysql:mysql-connector-java')
     testCompile("org.testcontainers:junit-jupiter:${testcontainersVersion}")
     testCompile("org.testcontainers:mysql:${testcontainersVersion}")
+    testCompile("org.testcontainers:kafka:${testcontainersVersion}")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
     testCompile('org.junit.jupiter:junit-jupiter-api')

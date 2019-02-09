@@ -1,6 +1,6 @@
 package com.mycompany.eventservice.controller;
 
-import com.mycompany.eventservice.config.ModelMapperConfig;
+import com.mycompany.eventservice.config.MapperConfig;
 import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.model.UserEventKey;
 import com.mycompany.eventservice.service.UserEventService;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserEventController.class)
-@Import(ModelMapperConfig.class)
+@Import(MapperConfig.class)
 public class UserEventControllerTest {
 
     @Autowired

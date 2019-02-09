@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @CassandraDataSet(value = "event-service.cql", keyspace = "mycompany")
 @SpringBootTest({
         "spring.data.cassandra.port=9142",
-        "spring.data.cassandra.keyspace-name=mycompany",
         "spring.data.cassandra.schema-action=RECREATE"
 })
 @CassandraUnit

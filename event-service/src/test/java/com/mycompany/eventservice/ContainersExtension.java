@@ -1,10 +1,10 @@
-package com.mycompany.userservice;
+package com.mycompany.eventservice;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.testcontainers.containers.CassandraContainer;
 import org.testcontainers.containers.KafkaContainer;
-import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -14,7 +14,7 @@ import java.util.Collections;
 public class ContainersExtension implements BeforeAllCallback, AfterAllCallback {
 
     @Container
-    private static MySQLContainer mySQLContainer;
+    private static CassandraContainer cassandraContainer;
 
     @Container
     private static KafkaContainer kafkaContainer;
@@ -22,13 +22,10 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
 
-        // MySQL
-        mySQLContainer = new MySQLContainer("mysql:5.7.24")
-                .withDatabaseName("test-userdb")
-                .withUsername("test-user")
-                .withPassword("test-secret");
-        mySQLContainer.setPortBindings(Collections.singletonList("3306:3306"));
-        mySQLContainer.start();
+        // Cassandra
+        cassandraContainer = new CassandraContainer("cassandra:3.11.3");
+        cassandraContainer.setPortBindings(Collections.singletonList("9042:9042"));
+        cassandraContainer.start();
 
         // Kafka
         kafkaContainer = new KafkaContainer("5.1.0").withEmbeddedZookeeper();
@@ -39,7 +36,7 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
 
     @Override
     public void afterAll(ExtensionContext extensionContext) {
-        mySQLContainer.stop();
+        cassandraContainer.stop();
         kafkaContainer.stop();
     }
 
