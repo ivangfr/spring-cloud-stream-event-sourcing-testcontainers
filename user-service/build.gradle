@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+    id 'org.springframework.boot' version '2.1.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
 }
 
 group = 'com.mycompany'
@@ -8,46 +8,46 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 ext {
-	springCloudVersion = 'Greenwich.RC2'
+    springCloudVersion = 'Greenwich.RC2'
 
-	avroVersion = '1.8.2'
-	modelMapperVersion = '2.3.2'
-	springfoxSwaggerVersion = '2.9.2'
-	testcontainersVersion = '1.10.6'
+    avroVersion = '1.8.2'
+    modelMapperVersion = '2.3.2'
+    springfoxSwaggerVersion = '2.9.2'
+    testcontainersVersion = '1.10.6'
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.cloud:spring-cloud-starter-sleuth')
-	compile('org.springframework.cloud:spring-cloud-starter-zipkin')
-	compile('org.springframework.cloud:spring-cloud-stream-schema')
-	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
-	compile('org.springframework.kafka:spring-kafka')
-	compile('com.google.code.gson:gson')
-	compile("org.apache.avro:avro:${avroVersion}")
-	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
-	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
-	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile('org.projectlombok:lombok')
-	runtime('mysql:mysql-connector-java')
-	testCompile("org.testcontainers:junit-jupiter:${testcontainersVersion}")
-	testCompile("org.testcontainers:mysql:${testcontainersVersion}")
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
-	testCompile('org.junit.jupiter:junit-jupiter-api')
-	testRuntime('org.junit.jupiter:junit-jupiter-engine')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+    compile('org.springframework.cloud:spring-cloud-starter-zipkin')
+    compile('org.springframework.cloud:spring-cloud-stream-schema')
+    compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
+    compile('org.springframework.kafka:spring-kafka')
+    compile('com.google.code.gson:gson')
+    compile("org.apache.avro:avro:${avroVersion}")
+    compile("org.modelmapper:modelmapper:${modelMapperVersion}")
+    compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
+    compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
+    compile('org.projectlombok:lombok')
+    runtime('mysql:mysql-connector-java')
+    testCompile("org.testcontainers:junit-jupiter:${testcontainersVersion}")
+    testCompile("org.testcontainers:mysql:${testcontainersVersion}")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
+    testCompile('org.junit.jupiter:junit-jupiter-api')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine')
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 // adding arguments to bootRun, for example: gradle bootRun -Dspring.profiles.active=json
 
 bootRun {
-	systemProperties = System.properties
+    systemProperties = System.properties
 }

@@ -1,0 +1,18 @@
+{
+	"namespace": "com.mycompany.userservice.commons.events",
+	"type": "record",
+	"name": "UserEventBus",
+	"fields": [
+	    {"name": "eventId", "type": "string"},
+		{"name": "eventTimestamp", "type": "long"},
+		{"name": "eventType",
+			"type": {
+				"name": "EventType",
+				"type":"enum",
+				"symbols" : ["CREATED", "UPDATED", "DELETED"]
+			}
+		},
+		{"name": "userId", "type": "long"},
+		{"name": "userJson",  "type": ["null", "string"], "default": null}
+	]
+}

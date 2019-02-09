@@ -1,9 +1,9 @@
 package com.mycompany.eventservice.bus;
 
-import com.mycompany.userservice.commons.events.UserEventBus;
 import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.model.UserEventKey;
 import com.mycompany.eventservice.service.UserEventService;
+import com.mycompany.userservice.commons.events.UserEventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
