@@ -8,6 +8,8 @@ spring:
     password: secret
   cloud:
     stream:
+      schema-registry-client:
+        endpoint: http://localhost:8081
       kafka:
         binder:
           brokers: localhost:29092
@@ -37,8 +39,6 @@ spring:
   profiles: avro
   cloud:
     stream:
-      schema-registry-client:
-        endpoint: http://localhost:8081
       schema:
         avro:
           schema-locations:

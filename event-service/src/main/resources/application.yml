@@ -7,6 +7,8 @@ spring:
       schema-action: CREATE_IF_NOT_EXISTS
   cloud:
     stream:
+      schema-registry-client:
+        endpoint: http://localhost:8081
       kafka:
         binder:
           brokers: localhost:29092
@@ -30,13 +32,21 @@ management:
     health:
       show-details: always
 
----
-spring:
-  profiles: avro
-  cloud:
-    stream:
-      schema-registry-client:
-        endpoint: http://localhost:8081
-      bindings:
-        input:
-          content-type: application/*+avro # in fact, it is not needed because the converter gets the content type in the message header
+# In order to handle different content-types, Spring Cloud Stream  has a "content-type negotiation and transformation"
+# strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The
+# precedence orders are: 1st, content-type present in the message header; 2nd content-type defined in the binding;
+# and finally, content-type is "application/json" (default).
+#
+# The producer (in the case user-service) always sets the content-type in the message header. The content-type can be
+# "application/json" or "application/*+avro", depending on with which profile user-service is started.
+#
+# So, define the content-type in the binding is not needed due to the reasons explained about. Anyway, I will keep the
+# definition here but commented.
+#---
+#spring:
+#  profiles: avro
+#  cloud:
+#    stream:
+#      bindings:
+#        input:
+#          content-type: application/*+avro

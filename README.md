@@ -19,12 +19,6 @@ to `Kafka`;
 - `event-service`: spring-boot application responsible for listening events from `Kafka` and saving those events in
 `Cassandra`.
 
-## Serialization/Deserialization format
-
-We can use [`JSON`](https://www.json.org) (default) or [`Avro`](https://avro.apache.org) format to serialize/deserialize
-data to/from the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the
-[`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container.
-
 ## Start Environment
 
 ### Docker Compose
@@ -60,37 +54,55 @@ zipkin                     /bin/bash -c test -n "$STO ...   Up (healthy)   9410/
 zookeeper                  /etc/confluent/docker/run        Up (healthy)   0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
 ```
 
-## Start user-service
+## user-service
+
+### Serialization format 
+
+We can use [`JSON`](https://www.json.org) (default) or [`Avro`](https://avro.apache.org) format to serialize
+data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the
+[`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container.
+
+### Start service
 
 1. Open a new terminal
 
 2. Inside `/springboot-kafka-mysql-cassandra` root folder run
 
-- **For `JSON` (de)serialization**
+- **For `JSON` serialization**
 ```
 ./gradlew user-service:bootRun
 ```
 
-- **For `Avro` (de)serialization**
+- **For `Avro` serialization**
 ```
 ./gradlew user-service:bootRun -Dspring.profiles.active=avro
 ```
 
-## Start event-service
+## event-service
+
+### Deserialization
+
+Differently from `user-service`, `event-service` has no specific profile to select the deserialization format.
+Spring Cloud Stream provides a stack of `MessageConverters` that handle the conversion of many different types of
+content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered,
+Spring Cloud Stream auto configures an Apache Avro message converter for schema management.
+
+In order to handle different content-types, Spring Cloud Stream  has a "content-type negotiation and transformation"
+strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The
+precedence orders are: 1st, content-type present in the message header; 2nd content-type defined in the binding;
+and finally, content-type is `application/json` (default).
+
+The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be
+`application/json` or `application/*+avro`, depending on with which profile `user-service` is started.
+
+### Start service
 
 1. Open a new terminal
 
 2. Inside `/springboot-kafka-mysql-cassandra` root folder run
-
-- **For `JSON` (de)serialization**
 ```
 ./gradlew event-service:bootRun
-```
-
-- **For `Avro` (de)serialization**
-```
-./gradlew event-service:bootRun -Dspring.profiles.active=avro
-```
+``` 
 
 ## How to test
 
