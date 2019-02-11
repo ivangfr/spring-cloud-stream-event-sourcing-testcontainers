@@ -12,7 +12,7 @@ spring:
         endpoint: http://${SCHEMA_REGISTRY_ADDR:localhost}:8081
       kafka:
         binder:
-          brokers: ${KAFKA_ADDR:localhost}:${KAFKA_PORT:29092}
+          brokers: ${KAFKA_ADDR:localhost}:${KAFKA_PORT:9092}
           auto-add-partitions: true
       bindings:
         output:
@@ -53,6 +53,6 @@ spring:
   jpa:
     hibernate.ddl-auto: create-drop
   datasource:
-    url: jdbc:mysql://localhost:3306/test-userdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: test-user
-    password: test-pass
+    url: jdbc:mysql://localhost:3306/userdb-test?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root-test
+    password: secret-test

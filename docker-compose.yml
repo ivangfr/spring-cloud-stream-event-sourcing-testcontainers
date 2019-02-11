@@ -11,8 +11,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=userdb
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=secret
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
       start_period: 30s

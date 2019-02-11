@@ -15,6 +15,7 @@ ext {
     modelMapperVersion = '2.3.2'
     springfoxSwaggerVersion = '2.9.2'
     testcontainersVersion = '1.10.6'
+    awaitilityVersion = '3.1.6'
 }
 
 dependencies {
@@ -36,8 +37,11 @@ dependencies {
     testCompile("org.testcontainers:junit-jupiter:${testcontainersVersion}")
     testCompile("org.testcontainers:mysql:${testcontainersVersion}")
     testCompile("org.testcontainers:kafka:${testcontainersVersion}")
+    testCompile("org.testcontainers:cassandra:${testcontainersVersion}")
+    testCompile("org.awaitility:awaitility:${awaitilityVersion}")
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
+    //-- commented in order to send messages to kafka using testcontainers
+    // testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
     testCompile('org.junit.jupiter:junit-jupiter-api')
     testRuntime('org.junit.jupiter:junit-jupiter-engine')
 }
@@ -61,4 +65,10 @@ docker {
     name "docker.mycompany.com/springboot-kafka-mysql-cassandra_user-service:${version}"
     files bootJar.archivePath
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
+}
+
+// enable JUnit 5
+
+test {
+    useJUnitPlatform()
 }

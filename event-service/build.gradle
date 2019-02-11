@@ -17,7 +17,6 @@ ext {
     springfoxSwaggerVersion = '2.9.2'
     cassandraUnitSpringVersion = '3.3.0.2'
     dropwizardMetricsVersion = '3.2.6'
-    testcontainersVersion = '1.10.6'
 }
 
 dependencies {
@@ -36,9 +35,6 @@ dependencies {
     compile("io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}") // this dependency is needed by Cassandra
     compile('org.projectlombok:lombok')
     testCompile("org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}")
-    testCompile("org.testcontainers:junit-jupiter:${testcontainersVersion}")
-    testCompile("org.testcontainers:cassandra:${testcontainersVersion}")
-    testCompile("org.testcontainers:kafka:${testcontainersVersion}")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
     testCompile('org.junit.jupiter:junit-jupiter-api')
@@ -79,4 +75,10 @@ docker {
     name "docker.mycompany.com/springboot-kafka-mysql-cassandra_event-service:${version}"
     files bootJar.archivePath
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
+}
+
+// enable JUnit 5
+
+test {
+    useJUnitPlatform()
 }

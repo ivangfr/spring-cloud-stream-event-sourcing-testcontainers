@@ -11,7 +11,7 @@ Furthermore, we will implement a service that will listen for those events and s
 
 ## Microservices
 
-### user-service
+### `user-service`
 
 Spring-boot application responsible for handling users (create/update/delete). The users information
 will be stored in [`MySQL`](https://www.mysql.com). Once an user is created/updated/deleted, one event is sent
@@ -30,7 +30,7 @@ present in the `user-service` section in `docker-compose.yml`.
 | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
 | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
-### event-service
+### `event-service`
 
 Spring-boot application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
 
@@ -62,16 +62,16 @@ The following command will re-generate the Java classes from the Avro schema pre
 
 2. Build `user-service` docker image
 ```
-./gradlew user-service:docker
+./gradlew user-service:docker -x test
 ```
 
 3. Build `event-service` docker image
 ```
-./gradlew event-service:docker
+./gradlew event-service:docker -x test
 ```
 
-4. To run `user-service` with `Avro` format serialization export the following environment variable. If `JSON` is
-preferred, skip this step.
+4. In order to run `user-service` with `Avro` format serialization, export the following environment variable.
+If `JSON` is preferred, skip this step.
 ```
 export USER_SERVICE_SPRING_PROFILES_ACTIVE=avro
 ```
@@ -128,6 +128,20 @@ below) using [`Zipkin`](https://zipkin.io): http://localhost:9411
 
 6. Create new users and update/delete existing ones in order to see how the application works.
 
+## Running tests
+
+1. To run `event-service` test cases
+```
+./gradlew event-service:test
+```
+
+2. To run `user-service` test cases
+```
+./gradlew user-service:test
+```
+> Note: We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests, so it
+> can take some minutes.
+
 ## Useful Commands & Links
 
 ### MySQL Database
@@ -141,7 +155,7 @@ select * from users;
 ```
 docker exec -it cassandra cqlsh
 USE mycompany;
-SELECT * FROM user_events; 
+SELECT * FROM user_events;
 ```
 
 ### Kafka Topics UI
@@ -173,17 +187,15 @@ partitions, that is used by the microservices of this project.
 
 ![kafka-manager](images/kafka-manager.png)
 
-## TODO
-
-- implement tests to validate sending/receiving messages to/from Kafka;
-
 ## References
 
 - https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/
 - https://docs.docker.com/reference/
+- https://docs.docker.com/compose/compose-file/compose-versioning/
 
 ## Issues
 
+- unable to run test cases using `./gradlew` command line
 - unable to update spring-cloud from `Greenwich.RC2` to `Greenwich.RELEASE`
 ```
 java.lang.IllegalStateException: Error processing condition on org.springframework.cloud.sleuth.sampler.SamplerAutoConfiguration$RefreshScopedSamplerConfiguration.defaultTraceSampler

@@ -5,6 +5,8 @@ import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.awaitility.Duration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,13 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
+@Slf4j
 @ActiveProfiles("test")
 @ExtendWith({SpringExtension.class, ContainersExtension.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -45,6 +50,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody()).hasSize(0);
     }
 
@@ -113,8 +119,17 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(createUserDto.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(createUserDto.getActive());
 
-        Optional<User> userFound = userRepository.findById(responseEntity.getBody().getId());
+        final Long userId = responseEntity.getBody().getId();
+        Optional<User> userFound = userRepository.findById(userId);
         assertThat(userFound.isPresent()).isTrue();
+
+        await().atMost(Duration.TEN_SECONDS).pollInterval(Duration.ONE_SECOND).untilAsserted(() -> {
+            log.info("Waiting for event-service to receive the message and process ...");
+            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
+            assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(eventServiceResponseEntity.getBody()).isNotNull();
+            assertThat(Arrays.stream(eventServiceResponseEntity.getBody()).anyMatch(userEventDto -> userEventDto.getType().equals("CREATED"))).isTrue();
+        });
     }
 
     // TODO add more test cases
@@ -127,19 +142,28 @@ public class RandomPortTestRestTemplateTests {
     void given_oneUser_when_updateUser_then_returnUserJson() {
         User user = getDefaultUser();
         user = userRepository.save(user);
+        final Long userId = user.getId();
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setActive(false);
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.PUT, requestUpdate, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + userId, HttpMethod.PUT, requestUpdate, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody().getId()).isEqualTo(userId);
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(updateUserDto.getActive());
+
+        await().atMost(Duration.TEN_SECONDS).pollInterval(Duration.ONE_SECOND).untilAsserted(() -> {
+            log.info("Waiting for event-service to receive the message and process ...");
+            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
+            assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(eventServiceResponseEntity.getBody()).isNotNull();
+            assertThat(Arrays.stream(eventServiceResponseEntity.getBody()).anyMatch(userEventDto -> userEventDto.getType().equals("UPDATED"))).isTrue();
+        });
     }
 
     // TODO add more test cases
@@ -152,18 +176,27 @@ public class RandomPortTestRestTemplateTests {
     void given_oneUser_when_deleteUser_then_returnUserJson() {
         User user = getDefaultUser();
         user = userRepository.save(user);
+        final Long userId = user.getId();
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.DELETE, null, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + userId, HttpMethod.DELETE, null, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody().getId()).isEqualTo(userId);
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(user.getActive());
 
-        Optional<User> userNotFound = userRepository.findById(user.getId());
+        Optional<User> userNotFound = userRepository.findById(userId);
         assertThat(userNotFound.isPresent()).isFalse();
+
+        await().atMost(Duration.TEN_SECONDS).pollInterval(Duration.ONE_SECOND).untilAsserted(() -> {
+            log.info("Waiting for event-service to receive the message and process ...");
+            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
+            assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(eventServiceResponseEntity.getBody()).isNotNull();
+            assertThat(Arrays.stream(eventServiceResponseEntity.getBody()).anyMatch(userEventDto -> userEventDto.getType().equals("DELETED"))).isTrue();
+        });
     }
 
     // TODO add more test cases

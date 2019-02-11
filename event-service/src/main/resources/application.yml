@@ -11,7 +11,7 @@ spring:
         endpoint: http://${SCHEMA_REGISTRY_ADDR:localhost}:8081
       kafka:
         binder:
-          brokers: ${KAFKA_ADDR:localhost}:${KAFKA_PORT:29092}
+          brokers: ${KAFKA_ADDR:localhost}:${KAFKA_PORT:9092}
           auto-add-partitions: true
           min-partition-count: 2
       bindings:

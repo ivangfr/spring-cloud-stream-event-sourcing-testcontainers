@@ -6,3 +6,9 @@ spring:
   zipkin:
     baseUrl: http://${ZIPKIN_ADDR:localhost}:9411
     sender.type: web
+
+---
+spring:
+  profiles: test
+  zipkin:
+    enabled: false

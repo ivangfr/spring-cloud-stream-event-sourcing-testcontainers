@@ -4,6 +4,7 @@ import com.mycompany.eventservice.dto.UserEventDto;
 import com.mycompany.eventservice.service.UserEventService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/events/users")
 public class UserEventController {
@@ -32,6 +34,7 @@ public class UserEventController {
     })
     @GetMapping("/{id}")
     public List<UserEventDto> getUserEvents(@PathVariable Long id) {
+        log.info("GET Request, id: {}", id);
         return userEventService.getAllUserEvents(id)
                 .stream()
                 .map(userEvent -> modelMapper.map(userEvent, UserEventDto.class))
