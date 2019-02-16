@@ -1,23 +1,21 @@
-# springboot-kafka-mysql-cassandra
-
-## Goal
+# `springboot-kafka-mysql-cassandra`
 
 The goal of this project is to create a service that handles _users_ using
 [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete,
 whenever an user is created/updated/deleted an event (informing this change) is sent to [`Kafka`](https://kafka.apache.org).
 Furthermore, we will implement a service that will listen for those events and save them in [`Cassandra`](http://cassandra.apache.org).
 
+# Microservices
+
 ![project-diagram](images/project-diagram.png)
 
-## Microservices
-
-### `user-service`
+## user-service
 
 Spring-boot application responsible for handling users (create/update/delete). The users information
 will be stored in [`MySQL`](https://www.mysql.com). Once an user is created/updated/deleted, one event is sent
 to `Kafka`.
 
-#### Serialization format 
+### Serialization format 
 
 `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize
 data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the
@@ -30,11 +28,11 @@ present in the `user-service` section in `docker-compose.yml`.
 | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
 | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
-### `event-service`
+## event-service
 
 Spring-boot application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
 
-#### Deserialization
+### Deserialization
 
 Differently from `user-service`, `event-service` has no specific spring profile to select the deserialization format.
 Spring Cloud Stream provides a stack of `MessageConverters` that handle the conversion of many different types of
@@ -49,14 +47,14 @@ and finally, content-type is `application/json` (default).
 The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be
 `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` `user-service` is started.
 
-#### Java classes from Avro Schema
+### Java classes from Avro Schema
 
 The following command will re-generate the Java classes from the Avro schema present at `src/main/resources/avro`.
 ```
 ./gradlew event-service:generateAvro
 ```
 
-## Start Environment
+# Start Environment
 
 1. Open a terminal and go to `/springboot-kafka-mysql-cassandra` root folder
 
@@ -107,7 +105,7 @@ zipkin                     /bin/bash -c test -n "$STO ...   Up (healthy)   9410/
 zookeeper                  /etc/confluent/docker/run        Up (healthy)   0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
 ```
 
-## Playing around with the microservices
+# Playing around with the microservices
 
 1. Open `user-service` swagger link: http://localhost:9080/swagger-ui.html
 
@@ -128,7 +126,7 @@ below) using [`Zipkin`](https://zipkin.io): http://localhost:9411
 
 6. Create new users and update/delete existing ones in order to see how the application works.
 
-## Running tests
+# Running tests
 
 1. To run `event-service` test cases
 ```
@@ -139,10 +137,10 @@ below) using [`Zipkin`](https://zipkin.io): http://localhost:9411
 ```
 ./gradlew user-service:test
 ```
-> Note: We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests, so it
-> can take some minutes.
+> Note: We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests.  It
+starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
 
-## Useful Commands & Links
+# Useful Commands & Links
 
 ### MySQL Database
 ```
@@ -187,15 +185,16 @@ partitions, that is used by the microservices of this project.
 
 ![kafka-manager](images/kafka-manager.png)
 
-## References
+# References
 
 - https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/
+
 - https://docs.docker.com/reference/
+
 - https://docs.docker.com/compose/compose-file/compose-versioning/
 
-## Issues
+# Issues
 
-- unable to run test cases using `./gradlew` command line
 - unable to update spring-cloud from `Greenwich.RC2` to `Greenwich.RELEASE`
 ```
 java.lang.IllegalStateException: Error processing condition on org.springframework.cloud.sleuth.sampler.SamplerAutoConfiguration$RefreshScopedSamplerConfiguration.defaultTraceSampler

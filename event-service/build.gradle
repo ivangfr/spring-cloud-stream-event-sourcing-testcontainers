@@ -47,7 +47,7 @@ dependencyManagement {
     }
 }
 
-// adding arguments to bootRun, for example: gradle bootRun -Dspring.profiles.active=json
+// adding arguments to bootRun, for example: gradle event-service:bootRun -Dspring.profiles.active=test
 
 bootRun {
     systemProperties = System.properties
