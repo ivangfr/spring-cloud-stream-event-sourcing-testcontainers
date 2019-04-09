@@ -1,19 +1,20 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.2.RELEASE'
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.6.RELEASE'
     id 'com.palantir.docker' version '0.21.0'
 }
 
 group = 'com.mycompany'
-version = '0.0.1'
+version = '1.0.0'
 sourceCompatibility = 1.8
 
 ext {
-    springCloudVersion = 'Greenwich.RC2'
+    springCloudVersion = 'Greenwich.SR1'
 
     avroVersion = '1.8.2'
     modelMapperVersion = '2.3.2'
     springfoxSwaggerVersion = '2.9.2'
+    braveVersion = '5.6.3'
     testcontainersVersion = '1.10.6'
     awaitilityVersion = '3.1.6'
 }
@@ -22,10 +23,13 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
     compile('org.springframework.cloud:spring-cloud-starter-zipkin')
     compile('org.springframework.cloud:spring-cloud-stream-schema')
     compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
+    //-- Sleuth & Brave
+    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+    compile("io.zipkin.brave:brave:${braveVersion}")
+    //--
     compile('org.springframework.kafka:spring-kafka')
     compile('com.google.code.gson:gson')
     compile("org.apache.avro:avro:${avroVersion}")

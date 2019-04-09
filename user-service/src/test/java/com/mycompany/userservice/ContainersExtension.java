@@ -59,11 +59,11 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
         cassandraContainer.start();
 
         // event-service
-        eventServiceContainer = new GenericContainer("docker.mycompany.com/springboot-kafka-mysql-cassandra_event-service:0.0.1")
+        eventServiceContainer = new GenericContainer("docker.mycompany.com/springboot-kafka-mysql-cassandra_event-service:1.0.0")
                 .withNetwork(network)
                 .withNetworkAliases("event-service");
-        eventServiceContainer.setPortBindings(Collections.singletonList("9081:9081"));
-        eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health").forPort(9081).forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)));
+        eventServiceContainer.setPortBindings(Collections.singletonList("9081:8080"));
+        eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health").forPort(8080).forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)));
         eventServiceContainer.start();
     }
 

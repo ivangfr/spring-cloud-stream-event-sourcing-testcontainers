@@ -1,20 +1,21 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.2.RELEASE'
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.6.RELEASE'
     id 'com.commercehub.gradle.plugin.avro' version '0.9.1'
     id 'com.palantir.docker' version '0.21.0'
 }
 
 group = 'com.mycompany'
-version = '0.0.1'
+version = '1.0.0'
 sourceCompatibility = 1.8
 
 ext {
-    springCloudVersion = 'Greenwich.RC2'
+    springCloudVersion = 'Greenwich.SR1'
 
     avroVersion = '1.8.2'
     modelMapperVersion = '2.3.2'
     springfoxSwaggerVersion = '2.9.2'
+    braveVersion = '5.6.3'
     cassandraUnitSpringVersion = '3.3.0.2'
     dropwizardMetricsVersion = '3.2.6'
 }
@@ -27,6 +28,10 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-zipkin')
     compile('org.springframework.cloud:spring-cloud-stream-schema')
     compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
+    //-- Sleuth & Brave
+    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+    compile("io.zipkin.brave:brave:${braveVersion}")
+    //--
     compile('org.springframework.kafka:spring-kafka')
     compile("org.apache.avro:avro:${avroVersion}")
     compile("org.modelmapper:modelmapper:${modelMapperVersion}")

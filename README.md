@@ -2,7 +2,7 @@
 
 The goal of this project is to create a service that handles _users_ using
 [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete,
-whenever an user is created/updated/deleted an event (informing this change) is sent to [`Kafka`](https://kafka.apache.org).
+whenever an user is created/updated/deleted, an event (informing this change) is sent to [`Kafka`](https://kafka.apache.org).
 Furthermore, we will implement a service that will listen for those events and save them in [`Cassandra`](http://cassandra.apache.org).
 
 # Microservices
@@ -49,32 +49,33 @@ The producer (in the case `user-service`) always sets the content-type in the me
 
 ### Java classes from Avro Schema
 
-The following command will re-generate the Java classes from the Avro schema present at `src/main/resources/avro`.
+The following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the
+Avro schema present at `src/main/resources/avro`.
 ```
 ./gradlew event-service:generateAvro
 ```
 
 # Start Environment
 
-1. Open a terminal and go to `/springboot-kafka-mysql-cassandra` root folder
+- Open a terminal and go to `springboot-kafka-mysql-cassandra` root folder
 
-2. Build `user-service` docker image
+- Build `user-service` docker image
 ```
 ./gradlew user-service:docker -x test
 ```
 
-3. Build `event-service` docker image
+- Build `event-service` docker image
 ```
 ./gradlew event-service:docker -x test
 ```
 
-4. In order to run `user-service` with `Avro` format serialization, export the following environment variable.
+- In order to run `user-service` with `Avro` format serialization, export the following environment variable.
 If `JSON` is preferred, skip this step.
 ```
 export USER_SERVICE_SPRING_PROFILES_ACTIVE=avro
 ```
 
-5. Start docker-compose
+- Start docker-compose
 ```
 docker-compose up -d
 ```
@@ -83,7 +84,7 @@ docker-compose up -d
 > docker-compose down -v
 > ```
 
-6. Wait a little bit until all containers are `Up (healthy)`. You can check their status running
+- Wait a little bit until all containers are `Up (healthy)`. You can check their status running
 ```
 docker-compose ps
 ```
@@ -105,35 +106,53 @@ zipkin                     /bin/bash -c test -n "$STO ...   Up (healthy)   9410/
 zookeeper                  /etc/confluent/docker/run        Up (healthy)   0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
 ```
 
+# Running microservices with Gradle
+
+During development, it is better to just run the microservices with Gradle instead of always build the docker images and
+run it. In order to do that, comment the `user-service` and/or `event-service` in `docker-compose.yml` file and run the
+microservice(s) with Gradle Wrapper.
+
+### user-service
+```
+export KAFKA_PORT=29092
+./gradlew user-service:bootRun -Dserver.port=9080
+```
+
+### event-service
+```
+export KAFKA_PORT=29092
+./gradlew event-service:bootRun -Dserver.port=9081
+```
+
 # Playing around with the microservices
 
-1. Open `user-service` swagger link: http://localhost:9080/swagger-ui.html
+- Open `user-service` swagger link: http://localhost:9080/swagger-ui.html
 
 ![user-service](images/user-service.png)
 
-2. Create a new user, `POST /api/users`
+- Create a new user, `POST /api/users`
 
-3. Open `event-service` swagger link: http://localhost:9081/swagger-ui.html
+- Open `event-service` swagger link: http://localhost:9081/swagger-ui.html
 
 ![event-service](images/event-service.png)
 
-4. Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
+- Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
 
-5. You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
+- You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
 below) using [`Zipkin`](https://zipkin.io): http://localhost:9411
 
 ![zipkin](images/zipkin.png)
 
-6. Create new users and update/delete existing ones in order to see how the application works.
+- Create new users and update/delete existing ones in order to see how the application works.
 
 # Running tests
 
-1. To run `event-service` test cases
+- To run `event-service` test cases
 ```
 ./gradlew event-service:test
 ```
 
-2. To run `user-service` test cases
+- To run `user-service` test cases
 ```
 ./gradlew user-service:test
 ```
@@ -158,29 +177,24 @@ SELECT * FROM user_events;
 
 ### Kafka Topics UI
 
-- Kafka Topics UI can be accessed at http://localhost:8085
+Kafka Topics UI can be accessed at http://localhost:8085
 
 ![kafka-topics-ui](images/kafka-topics-ui.png)
 
 ### Schema Registry UI
 
-- Schema Registry UI can be accessed at http://localhost:8001
+Schema Registry UI can be accessed at http://localhost:8001
 
 ![schema-registry-ui](images/schema-registry-ui.png)
 
 ### Kafka Manager
 
-1. Kafka Manager can be accessed at http://localhost:9000
-
-2. First, you must create a new cluster. Click on `Cluster` (dropdown on the header) and then on `Add Cluster`
-
-3. Type on `Cluster Name` field the name of your cluster, for example: `MyZooCluster`
-
-4. On `Cluster Zookeeper Hosts` field type: `zookeeper:2181`
-
-5. Click on `Save` button on the bottom of the page. Done!
-
-6. The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
+- Kafka Manager can be accessed at http://localhost:9000
+- First, you must create a new cluster. Click on `Cluster` (dropdown on the header) and then on `Add Cluster`
+- Type on `Cluster Name` field the name of your cluster, for example: `MyZooCluster`
+- On `Cluster Zookeeper Hosts` field type: `zookeeper:2181`
+- Click on `Save` button on the bottom of the page. Done!
+- The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
 partitions, that is used by the microservices of this project.
 
 ![kafka-manager](images/kafka-manager.png)
@@ -188,55 +202,5 @@ partitions, that is used by the microservices of this project.
 # References
 
 - https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/
-
 - https://docs.docker.com/reference/
-
 - https://docs.docker.com/compose/compose-file/compose-versioning/
-
-# Issues
-
-- unable to update spring-cloud from `Greenwich.RC2` to `Greenwich.RELEASE`
-```
-java.lang.IllegalStateException: Error processing condition on org.springframework.cloud.sleuth.sampler.SamplerAutoConfiguration$RefreshScopedSamplerConfiguration.defaultTraceSampler
-        at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:64) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.context.annotation.ConditionEvaluator.shouldSkip(ConditionEvaluator.java:108) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForBeanMethod(ConfigurationClassBeanDefinitionReader.java:181) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:141) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:117) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:327) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:232) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:275) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:95) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:691) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:528) ~[spring-context-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:142) ~[spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:775) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:316) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1260) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1248) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:12) [main/:na]
-Caused by: java.lang.IllegalStateException: @ConditionalOnMissingBean did not specify a bean using type, name or annotation and the attempt to deduce the bean's type failed
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.validate(OnBeanCondition.java:451) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.<init>(OnBeanCondition.java:441) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.<init>(OnBeanCondition.java:416) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition.getMatchOutcome(OnBeanCondition.java:158) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:47) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        ... 17 common frames omitted
-Caused by: org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanTypeDeductionException: Failed to deduce bean type for org.springframework.cloud.sleuth.sampler.SamplerAutoConfiguration$RefreshScopedSamplerConfiguration.defaultTraceSampler
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.addDeducedBeanTypeForBeanMethod(OnBeanCondition.java:496) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.addDeducedBeanType(OnBeanCondition.java:483) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.<init>(OnBeanCondition.java:435) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        ... 20 common frames omitted
-Caused by: java.lang.ClassNotFoundException: brave.sampler.Sampler
-        at java.net.URLClassLoader.findClass(URLClassLoader.java:381) ~[na:1.8.0_102]
-        at java.lang.ClassLoader.loadClass(ClassLoader.java:424) ~[na:1.8.0_102]
-        at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331) ~[na:1.8.0_102]
-        at java.lang.ClassLoader.loadClass(ClassLoader.java:357) ~[na:1.8.0_102]
-        at java.lang.Class.forName0(Native Method) ~[na:1.8.0_102]
-        at java.lang.Class.forName(Class.java:348) ~[na:1.8.0_102]
-        at org.springframework.util.ClassUtils.forName(ClassUtils.java:275) ~[spring-core-5.1.4.RELEASE.jar:5.1.4.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.getReturnType(OnBeanCondition.java:505) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        at org.springframework.boot.autoconfigure.condition.OnBeanCondition$BeanSearchSpec.addDeducedBeanTypeForBeanMethod(OnBeanCondition.java:491) ~[spring-boot-autoconfigure-2.1.2.RELEASE.jar:2.1.2.RELEASE]
-        ... 22 common frames omitted
-```

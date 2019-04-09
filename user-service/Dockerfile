@@ -9,10 +9,10 @@ ENV KAFKA_ADDR=kafka KAFKA_PORT=9092
 ENV SCHEMA_REGISTRY_ADDR schema-registry
 ENV ZIPKIN_ADDR zipkin
 
-RUN apk update && apk add ca-certificates wget && update-ca-certificates
+RUN apk update && apk add ca-certificates curl && update-ca-certificates
 
-ADD ${JAR_FILE} /user-service.jar
+COPY ${JAR_FILE} /user-service.jar
 
 CMD ["java", "-jar", "/user-service.jar"]
 
-EXPOSE 9080
+EXPOSE 8080
