@@ -55,27 +55,52 @@ Avro schema present at `src/main/resources/avro`.
 ./gradlew event-service:generateAvro
 ```
 
-# Start Environment
+# Build Docker Images
+  
+In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following `./gradlew` commands to
+build the microservices docker images
 
-- Open a terminal and go to `springboot-kafka-mysql-cassandra` root folder
+## user-service
 
-- Build `user-service` docker image
 ```
 ./gradlew user-service:docker -x test
 ```
+| Environment Variable | Description |
+| -------------------- | ------------- |
+| `MYSQL_HOST` | Specify host of the `MySQL` database to use (default `localhost`) |
+| `MYSQL_PORT` | Specify port of the `MySQL` database to use (default `3306`) |
+| `KAFKA_HOST` | Specify host of the `Kafka` message broker to use (default `localhost`). |
+| `KAFKA_PORT` | Specify port of the `Kafka` message broker to use (default `29092`). |
+| `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`) |
+| `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`) |
+| `ZIPKIN_HOST` | Specify host of the `Zipkin` to use (default `localhost`) |
+| `ZIPKIN_PORT` | Specify port of the `Zipkin` to use (default `9411`) |
 
-- Build `event-service` docker image
+## event-service
+
 ```
 ./gradlew event-service:docker -x test
 ```
+| Environment Variable | Description |
+| -------------------- | ------------- |
+| `CASSANDRA_HOST` | Specify host of the `Cassandra` database to use (default `localhost`) |
+| `CASSANDRA_PORT` | Specify port of the `Cassandra` database to use (default `9042`) |
+| `KAFKA_HOST` | Specify host of the `Kafka` message broker to use (default `localhost`) |
+| `KAFKA_PORT` | Specify port of the `Kafka` message broker to use (default `29092`) |
+| `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`) |
+| `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`) |
+| `ZIPKIN_HOST` | Specify host of the `Zipkin` to use (default `localhost`) |
+| `ZIPKIN_PORT` | Specify port of the `Zipkin` to use (default `9411`) |
 
-- In order to run `user-service` with `Avro` format serialization, export the following environment variable.
-If `JSON` is preferred, skip this step.
-```
-export USER_SERVICE_SPRING_PROFILES_ACTIVE=avro
-```
+> In order to run `user-service` with `Avro` format serialization, export the following environment variable.
+> If `JSON` is preferred, skip this step.
+> ```
+> export USER_SERVICE_SPRING_PROFILES_ACTIVE=avro
+> ```
 
-- Start docker-compose
+# Start Environment
+
+- In `springboot-kafka-mysql-cassandra` root folder run
 ```
 docker-compose up -d
 ```
@@ -88,23 +113,13 @@ docker-compose up -d
 ```
 docker-compose ps
 ```
-The output will be something like
-```
-Name              Command                          State          Ports
----------------------------------------------------------------------------------------------------------------
-cassandra                  docker-entrypoint.sh cassa ...   Up (healthy)   7000/tcp, 7001/tcp, 0.0.0.0:7199->7199/tcp...
-event-service              java -jar /event-service.jar     Up (healthy)   0.0.0.0:9081->9081/tcp
-kafka                      /etc/confluent/docker/run        Up (healthy)   0.0.0.0:29092->29092/tcp, 9092/tcp
-kafka-manager              /kafka-manager/bin/kafka-m ...   Up             0.0.0.0:9000->9000/tcp
-kafka-rest-proxy           /etc/confluent/docker/run        Up (healthy)   0.0.0.0:8082->8082/tcp
-kafka-schema-registry-ui   /run.sh                          Up (healthy)   0.0.0.0:8001->8000/tcp
-kafka-topics-ui            /run.sh                          Up (healthy)   0.0.0.0:8085->8000/tcp
-mysql                      docker-entrypoint.sh mysqld      Up (healthy)   0.0.0.0:3306->3306/tcp, 33060/tcp
-schema-registry            /etc/confluent/docker/run        Up (healthy)   0.0.0.0:8081->8081/tcp
-user-service               java -jar /user-service.jar      Up (healthy)   0.0.0.0:9080->9080/tcp
-zipkin                     /bin/bash -c test -n "$STO ...   Up (healthy)   9410/tcp, 0.0.0.0:9411->9411/tcp
-zookeeper                  /etc/confluent/docker/run        Up (healthy)   0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
-```
+
+# Microservice Links
+
+| Microservice | URL |
+| ------------ | --- |
+| user-service | http://localhost:9080/swagger-ui.html |
+| event-service | http://localhost:9081/swagger-ui.html |
 
 # Running microservices with Gradle
 
@@ -114,13 +129,11 @@ microservice(s) with Gradle Wrapper.
 
 ### user-service
 ```
-export KAFKA_PORT=29092
 ./gradlew user-service:bootRun -Dserver.port=9080
 ```
 
 ### event-service
 ```
-export KAFKA_PORT=29092
 ./gradlew event-service:bootRun -Dserver.port=9081
 ```
 
