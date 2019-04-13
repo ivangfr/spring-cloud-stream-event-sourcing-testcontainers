@@ -73,8 +73,8 @@ build the microservices docker images
 | `KAFKA_PORT` | Specify port of the `Kafka` message broker to use (default `29092`). |
 | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`) |
 | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`) |
-| `ZIPKIN_HOST` | Specify host of the `Zipkin` to use (default `localhost`) |
-| `ZIPKIN_PORT` | Specify port of the `Zipkin` to use (default `9411`) |
+| `ZIPKIN_HOST` | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+| `ZIPKIN_PORT` | Specify port of the `Zipkin` distributed tracing system to use (default `9411`) |
 
 ## event-service
 
@@ -89,8 +89,8 @@ build the microservices docker images
 | `KAFKA_PORT` | Specify port of the `Kafka` message broker to use (default `29092`) |
 | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`) |
 | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`) |
-| `ZIPKIN_HOST` | Specify host of the `Zipkin` to use (default `localhost`) |
-| `ZIPKIN_PORT` | Specify port of the `Zipkin` to use (default `9411`) |
+| `ZIPKIN_HOST` | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+| `ZIPKIN_PORT` | Specify port of the `Zipkin` distributed tracing system to use (default `9411`) |
 
 > In order to run `user-service` with `Avro` format serialization, export the following environment variable.
 > If `JSON` is preferred, skip this step.
