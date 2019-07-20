@@ -36,7 +36,7 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
         Network network = Network.SHARED;
 
         // MySQL
-        mySQLContainer = new MySQLContainer("mysql:5.7.24")
+        mySQLContainer = new MySQLContainer("mysql:5.7.26")
                 .withDatabaseName("userdb-test")
                 .withUsername("root-test")
                 .withPassword("secret-test");
@@ -46,22 +46,26 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
         mySQLContainer.start();
 
         // Kafka
-        kafkaContainer = new KafkaContainer("5.1.0").withEmbeddedZookeeper();
+        kafkaContainer = new KafkaContainer("5.2.2").withEmbeddedZookeeper();
         kafkaContainer.setNetwork(network);
         kafkaContainer.setNetworkAliases(Collections.singletonList("kafka"));
         kafkaContainer.setPortBindings(Collections.singletonList("9092:9092"));
         kafkaContainer.start();
 
         // Cassandra
-        cassandraContainer = new CassandraContainer("cassandra:3.11.3");
+        cassandraContainer = new CassandraContainer("cassandra:3.11.4");
         cassandraContainer.setNetwork(network);
         cassandraContainer.setNetworkAliases(Collections.singletonList("cassandra"));
+        cassandraContainer.setPortBindings(Collections.singletonList("9042:9042"));
         cassandraContainer.start();
 
         // event-service
-        eventServiceContainer = new GenericContainer("docker.mycompany.com/springboot-kafka-mysql-cassandra_event-service:1.0.0")
+        eventServiceContainer = new GenericContainer("docker.mycompany.com/event-service:1.0.0")
                 .withNetwork(network)
-                .withNetworkAliases("event-service");
+                .withNetworkAliases("event-service")
+                .withEnv("CASSANDRA_HOST", "cassandra")
+                .withEnv("KAFKA_HOST", "kafka")
+                .withEnv("KAFKA_PORT", "9092");
         eventServiceContainer.setPortBindings(Collections.singletonList("9081:8080"));
         eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health").forPort(8080).forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)));
         eventServiceContainer.start();

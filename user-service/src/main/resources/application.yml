@@ -56,3 +56,8 @@ spring:
     url: jdbc:mysql://localhost:3306/userdb-test?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root-test
     password: secret-test
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
