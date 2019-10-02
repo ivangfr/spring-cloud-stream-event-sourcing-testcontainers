@@ -24,7 +24,6 @@ spring:
 #    web.skipPattern: (^cleanup.*|.+favicon.*)
 
 management:
-  security.enabled: false
   endpoints:
     web:
       exposure.include: "*"

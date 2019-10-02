@@ -12,10 +12,10 @@ public class UpdateUserDto {
     @Email
     private String email;
 
-    @ApiModelProperty(position = 2, value = "User's full name", example = "Ivan Franchin Jr")
+    @ApiModelProperty(position = 1, value = "User's full name", example = "Ivan Franchin Jr")
     private String fullName;
 
-    @ApiModelProperty(position = 3, value = "User's status", example = "false")
+    @ApiModelProperty(position = 2, value = "User's status", example = "false")
     private Boolean active;
 
 }

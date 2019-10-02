@@ -1,20 +1,21 @@
 # `springboot-kafka-mysql-cassandra`
 
-The goal of this project is to create a service that handles `users` using
-[`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete,
-whenever an user is created/updated/deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org).
-Furthermore, we will implement a service that will listen to those events and save them in [`Cassandra`](http://cassandra.apache.org).
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So,
+besides the traditional create/update/delete, whenever a user is created/updated/deleted, an event informing this
+change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another Spring Boot application
+that will listen to those events and save them in [`Cassandra`](http://cassandra.apache.org).
 
 ## Project Architecture
 
 ![project-diagram](images/project-diagram.png)
 
-## Microservice
+## Applications
 
 ### user-service
 
-Spring-boot Web Java application responsible for handling users. The users information will be stored in
-[`MySQL`](https://www.mysql.com). Once an user is created/updated/deleted, one event is sent to `Kafka`.
+Spring Boot Web Java application responsible for handling users. The user information will be stored in
+[`MySQL`](https://www.mysql.com). Once a user is created/updated/deleted, one event is sent to `Kafka`.
 
 #### Serialization format 
 
@@ -31,7 +32,7 @@ present in the `user-service` section in `docker-compose.yml`.
 
 ### event-service
 
-Spring-boot Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
+Spring Boot Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
 
 #### Deserialization
 
@@ -40,7 +41,7 @@ Spring Cloud Stream provides a stack of `MessageConverters` that handle the conv
 content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered,
 Spring Cloud Stream auto configures an Apache Avro message converter for schema management.
 
-In order to handle different content-types, Spring Cloud Stream  has a "content-type negotiation and transformation"
+In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The
 precedence orders are: first, content-type present in the message header; second, content-type defined in the binding;
 and finally, content-type is `application/json` (default).
@@ -59,7 +60,7 @@ the Avro schema present at `event-service/src/main/resources/avro`.
 ## Build Docker Images
   
 In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following `./gradlew` commands to
-build the microservices docker images
+build the application's docker image
 
 ### user-service
 
@@ -111,18 +112,18 @@ Wait a little bit until all containers are `Up (healthy)`. You can check their s
 docker-compose ps
 ```
 
-## Microservice URLs
+## Application URLs
 
-| Microservice    | URL                                   |
+| Application     | URL                                   |
 | --------------- | ------------------------------------- |
 | `user-service`  | http://localhost:9080/swagger-ui.html |
 | `event-service` | http://localhost:9081/swagger-ui.html |
 
-## Running Microservices with Gradle
+## Running Applications with Gradle
 
-During development, it is better to just run the microservices instead of always build the docker images and run it.
+During development, it is better to just run the applications instead of always build the docker images and run it.
 In order to do it, comment the `user-service` and/or `event-service` in `docker-compose.yml` file and run the
-microservice(s) with Gradle Wrapper.
+application(s) with Gradle Wrapper.
 
 ### user-service
 ```
@@ -134,7 +135,7 @@ microservice(s) with Gradle Wrapper.
 ./gradlew event-service:bootRun -Dserver.port=9081
 ```
 
-## Playing around with the microservices
+## Playing around with the applications
 
 - Open `user-service` Swagger http://localhost:9080/swagger-ui.html
 
@@ -184,8 +185,7 @@ starts automatically some Docker containers before the tests begin and shuts the
 
 ### MySQL Database
 ```
-docker exec -it mysql mysql -uroot -psecret
-use userdb;
+docker exec -it mysql mysql -uroot -psecret --database userdb
 select * from users;
 ```
 
@@ -224,7 +224,7 @@ SELECT * FROM user_events;
 - Click on `Save` button at the bottom of the page.
 
 The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
-partitions, that is used by the microservices of this project.
+partitions, that is used by the applications of this project.
 
 ![kafka-manager](images/kafka-manager.png)
 

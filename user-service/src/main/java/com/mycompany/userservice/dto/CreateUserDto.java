@@ -19,11 +19,11 @@ public class CreateUserDto {
     @Email
     private String email;
 
-    @ApiModelProperty(position = 2, value = "User's full name", example = "Ivan Franchin")
+    @ApiModelProperty(position = 1, value = "User's full name", example = "Ivan Franchin")
     @NotBlank
     private String fullName;
 
-    @ApiModelProperty(position = 3, value = "User's status", example = "true")
+    @ApiModelProperty(position = 2, value = "User's status", example = "true")
     @NotNull
     private Boolean active;
 
