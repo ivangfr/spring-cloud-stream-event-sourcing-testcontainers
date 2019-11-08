@@ -14,16 +14,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CreateUserDto {
 
-    @ApiModelProperty(value = "User's email", example = "ivan.franchin@test.com")
+    @ApiModelProperty(example = "ivan.franchin@test.com")
     @NotBlank
     @Email
     private String email;
 
-    @ApiModelProperty(position = 1, value = "User's full name", example = "Ivan Franchin")
+    @ApiModelProperty(position = 1, example = "Ivan Franchin")
     @NotBlank
     private String fullName;
 
-    @ApiModelProperty(position = 2, value = "User's status", example = "true")
+    @ApiModelProperty(position = 2, example = "true")
     @NotNull
     private Boolean active;
 

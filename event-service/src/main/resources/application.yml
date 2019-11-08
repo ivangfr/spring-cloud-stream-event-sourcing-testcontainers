@@ -20,8 +20,8 @@ spring:
           content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup
   sleuth:
-    sampler.probability: 1.0
-#    web.skipPattern: (^cleanup.*|.+favicon.*)
+    sampler:
+      probability: 1.0
 
 management:
   endpoints:

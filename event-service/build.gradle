@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'org.springframework.boot' version '2.1.10.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'com.commercehub.gradle.plugin.avro' version '0.9.1'
     id 'com.palantir.docker' version '0.22.1'
@@ -10,44 +10,42 @@ version = '1.0.0'
 sourceCompatibility = 1.8
 
 ext {
-    springCloudVersion = 'Greenwich.SR2'
-
-    avroVersion = '1.8.2'
-    modelMapperVersion = '2.3.5'
-    springfoxSwaggerVersion = '2.9.2'
-    braveVersion = '5.6.9'
-    lombokVersion = '1.18.8'
-    cassandraUnitSpringVersion = '3.11.2.0'
-    dropwizardMetricsVersion = '3.2.6'
+    set('springCloudVersion', 'Greenwich.SR3')
+    set('avroVersion', '1.8.2')
+    set('modelMapperVersion', '2.3.5')
+    set('springfoxSwaggerVersion', '2.9.2')
+    set('cassandraUnitSpringVersion', '3.11.2.0')
+    set('dropwizardMetricsVersion', '3.2.6')
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-data-cassandra')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
-    compile('org.springframework.cloud:spring-cloud-starter-zipkin')
-    compile('org.springframework.cloud:spring-cloud-stream-schema')
-    compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
-    //-- Sleuth & Brave
-    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
-    compile("io.zipkin.brave:brave:${braveVersion}")
-    //--
-    compile('org.springframework.kafka:spring-kafka')
-    compile("org.apache.avro:avro:${avroVersion}")
-    compile("org.modelmapper:modelmapper:${modelMapperVersion}")
-    compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
-    compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-    compile("io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}") // this dependency is needed by Cassandra
-    // -- Lombok & Gradle 5
-    compile("org.projectlombok:lombok:${lombokVersion}")
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    // --
-    testCompile("org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
-    testCompile('org.junit.jupiter:junit-jupiter-api')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    implementation 'org.springframework.cloud:spring-cloud-stream-schema'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    implementation "org.apache.avro:avro:${avroVersion}"
+    implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
+    implementation "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+    implementation "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    implementation "io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}" // this dependency is needed by Cassandra
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    testImplementation "org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 dependencyManagement {
@@ -84,10 +82,4 @@ docker {
     name "docker.mycompany.com/event-service:${version}"
     files bootJar.archivePath
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
-}
-
-// enable JUnit 5
-
-test {
-    useJUnitPlatform()
 }

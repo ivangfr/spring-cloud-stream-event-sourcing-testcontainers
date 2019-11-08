@@ -2,9 +2,9 @@
 
 The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
 application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So,
-besides the traditional create/update/delete, whenever a user is created/updated/deleted, an event informing this
-change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another Spring Boot application
-that will listen to those events and save them in [`Cassandra`](http://cassandra.apache.org).
+besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this
+change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application
+that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org).
 
 ## Project Architecture
 
@@ -14,16 +14,16 @@ that will listen to those events and save them in [`Cassandra`](http://cassandra
 
 ### user-service
 
-Spring Boot Web Java application responsible for handling users. The user information will be stored in
-[`MySQL`](https://www.mysql.com). Once a user is created/updated/deleted, one event is sent to `Kafka`.
+`Spring Boot` Web Java application responsible for handling users. The user information will be stored in
+[`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
 
 #### Serialization format 
 
 `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize
 data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the
 [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker
-container. The serialization format used is defined by value set to the environment variable `SPRING_PROFILES_ACTIVE`,
-present in the `user-service` section in `docker-compose.yml`.
+container. The serialization format to be used is defined by the value set to the environment variable
+`SPRING_PROFILES_ACTIVE`.
 
 | Configuration                    | Format |
 | -------------------------------- | ------ |
@@ -32,19 +32,20 @@ present in the `user-service` section in `docker-compose.yml`.
 
 ### event-service
 
-Spring Boot Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
+`Spring Boot` Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
 
 #### Deserialization
 
-Differently from `user-service`, `event-service` has no specific spring profile to select the deserialization format.
-Spring Cloud Stream provides a stack of `MessageConverters` that handle the conversion of many different types of
-content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered,
-Spring Cloud Stream auto configures an Apache Avro message converter for schema management.
+Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format.
+[Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack
+of `MessageConverters` that handle the conversion of many different types of content-types, including `application/json`.
+Besides, as `event-service` has `SchemaRegistryClient` bean registered, Spring Cloud Stream auto configures an Apache
+Avro message converter for schema management.
 
 In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
-strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The
-precedence orders are: first, content-type present in the message header; second, content-type defined in the binding;
-and finally, content-type is `application/json` (default).
+strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)).
+The precedence orders are: first, content-type present in the message header; second, content-type defined in the
+binding; and finally, content-type is `application/json` (default).
 
 The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be
 `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` `user-service` is started.
@@ -58,9 +59,13 @@ the Avro schema present at `event-service/src/main/resources/avro`.
 ```
 
 ## Build Docker Images
-  
-In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following `./gradlew` commands to
-build the application's docker image
+
+In a terminal and inside `springboot-kafka-mysql-cassandra` folder, in order to build the applications docker images,
+you can just run the following script or manually run the `./gradlew` commands for each application.
+
+```
+./build-apps.sh
+```
 
 ### user-service
 
@@ -96,20 +101,45 @@ build the application's docker image
 
 ## Start Environment
 
-> Note. In order to run `user-service` with `Avro` format serialization, export the following environment variable.
-> If `JSON` is preferred, skip this step.
-> ```
-> export USER_SERVICE_SPRING_PROFILES_ACTIVE=avro
-> ```
-
 In a terminal and inside `springboot-kafka-mysql-cassandra` root folder run
 ```
 docker-compose up -d
 ```
 
-Wait a little bit until all containers are `Up (healthy)`. You can check their status running
+Wait a little bit until all containers are `Up (healthy)`. You can check by running the following command
 ```
 docker-compose ps
+```
+
+## Running Applications as Docker containers
+
+Open a terminal and inside `springboot-kafka-mysql-cassandra` root folder run following script
+
+```
+./start-apps.sh
+```
+> Note. In order to run `user-service` with `Avro` use
+> ```
+> ./start-apps.sh avro
+> ```
+
+## Running Applications with Gradle
+
+During development, it is easier to just run the applications instead of always build the docker images and run it.
+For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle commands in different terminals
+
+### user-service
+```
+./gradlew user-service:bootRun -Dserver.port=9080
+```
+> Note. In order to run `user-service` with `Avro` use
+> ```
+> ./gradlew user-service:bootRun -Dserver.port=9080 -Dspring.profiles.active=avro
+> ```
+
+### event-service
+```
+./gradlew event-service:bootRun -Dserver.port=9081
 ```
 
 ## Application URLs
@@ -118,22 +148,6 @@ docker-compose ps
 | --------------- | ------------------------------------- |
 | `user-service`  | http://localhost:9080/swagger-ui.html |
 | `event-service` | http://localhost:9081/swagger-ui.html |
-
-## Running Applications with Gradle
-
-During development, it is better to just run the applications instead of always build the docker images and run it.
-In order to do it, comment the `user-service` and/or `event-service` in `docker-compose.yml` file and run the
-application(s) with Gradle Wrapper.
-
-### user-service
-```
-./gradlew user-service:bootRun -Dserver.port=9080
-```
-
-### event-service
-```
-./gradlew event-service:bootRun -Dserver.port=9081
-```
 
 ## Playing around with the applications
 
@@ -158,7 +172,13 @@ below) using [`Zipkin`](https://zipkin.io) http://localhost:9411
 
 ## Shutdown
 
-To stop and remove containers, networks and volumes, run
+Run the command below to stop the applications
+
+```
+./stop-apps.sh
+```
+
+Then, run the following command to stop and remove docker-compose containers, networks and volumes
 ```
 docker-compose down -v
 ```

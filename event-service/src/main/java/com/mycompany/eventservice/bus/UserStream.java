@@ -28,14 +28,17 @@ public class UserStream {
     public void process(Message<UserEventMessage> message) {
         log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
 
+        userEventService.saveUserEvent(createUserEvent(message));
+    }
+
+    private UserEvent createUserEvent(Message<UserEventMessage> message) {
         UserEventMessage userEventMessage = message.getPayload();
         UserEvent userEvent = new UserEvent();
         UserEventKey key = new UserEventKey(userEventMessage.getUserId(), new Date());
         userEvent.setKey(key);
         userEvent.setType(userEventMessage.getEventType().toString());
         userEvent.setData(userEventMessage.getUserJson());
-
-        userEventService.saveUserEvent(userEvent);
+        return userEvent;
     }
 
 }

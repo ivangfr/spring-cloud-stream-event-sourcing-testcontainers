@@ -1,7 +1,7 @@
 spring:
   jpa:
-    hibernate.ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL57Dialect
+    hibernate:
+      ddl-auto: update
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/userdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
@@ -22,8 +22,8 @@ spring:
             partition-key-expression: headers['partitionKey']
             partition-count: 2
   sleuth:
-    sampler.probability: 1.0
-#    web.skipPattern: (^cleanup.*|.+favicon.*)
+    sampler:
+      probability: 1.0
 
 management:
   endpoints:
@@ -50,7 +50,8 @@ spring:
 spring:
   profiles: test
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate:
+      ddl-auto: create-drop
   datasource:
     url: jdbc:mysql://localhost:3306/userdb-test?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root-test

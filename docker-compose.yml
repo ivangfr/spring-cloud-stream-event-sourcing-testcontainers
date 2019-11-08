@@ -4,7 +4,7 @@ services:
 
   mysql:
     container_name: mysql
-    image: mysql:5.7.26
+    image: mysql:5.7.28
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   cassandra:
-    image: cassandra:3.11.4
+    image: cassandra:3.11.5
     container_name: cassandra
     restart: unless-stopped
     ports:
@@ -28,7 +28,7 @@ services:
       start_period: 30s
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.2.2
+    image: confluentinc/cp-zookeeper:5.3.1
     container_name: zookeeper
     restart: unless-stopped
     ports:
@@ -42,7 +42,7 @@ services:
 
   kafka:
     container_name: kafka
-    image: confluentinc/cp-kafka:5.2.2
+    image: confluentinc/cp-kafka:5.3.1
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -60,7 +60,7 @@ services:
       start_period: 30s
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.2.2
+    image: confluentinc/cp-schema-registry:5.3.1
     container_name: schema-registry
     restart: unless-stopped
     depends_on:
@@ -91,7 +91,7 @@ services:
       start_period: 30s
 
   kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:5.2.2
+    image: confluentinc/cp-kafka-rest:5.3.1
     container_name: kafka-rest-proxy
     restart: unless-stopped
     depends_on:
@@ -144,53 +144,10 @@ services:
 
   zipkin:
     container_name: zipkin
-    image: openzipkin/zipkin:2.15.0
+    image: openzipkin/zipkin:2.18.0
     restart: unless-stopped
     ports:
       - "9411:9411"
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9411" ]
       start_period: 30s
-
-  user-service:
-    container_name: user-service
-    image: docker.mycompany.com/user-service:1.0.0
-    restart: unless-stopped
-    ports:
-      - "9080:8080"
-    depends_on:
-      - kafka
-      - schema-registry
-      - mysql
-      - zipkin
-    environment:
-      SPRING_PROFILES_ACTIVE: ${USER_SERVICE_SPRING_PROFILES_ACTIVE}
-      MYSQL_HOST: mysql
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9092
-      SCHEMA_REGISTRY_HOST: schema-registry
-      ZIPKIN_HOST: zipkin
-    healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "8080" ]
-      start_period: 2m
-
-  event-service:
-    container_name: event-service
-    image: docker.mycompany.com/event-service:1.0.0
-    restart: unless-stopped
-    ports:
-      - "9081:8080"
-    depends_on:
-      - kafka
-      - schema-registry
-      - cassandra
-      - zipkin
-    environment:
-      CASSANDRA_HOST: cassandra
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9092
-      SCHEMA_REGISTRY_HOST: schema-registry
-      ZIPKIN_HOST: zipkin
-    healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "8080" ]
-      start_period: 2m

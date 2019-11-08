@@ -46,7 +46,7 @@ public class RandomPortTestRestTemplateTests {
      * ============== */
 
     @Test
-    void given_noUsers_when_getAllUsers_then_returnEmptyArray() {
+    void givenNoUsersWhenGetAllUsersThenReturnEmptyArray() {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -55,7 +55,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    void given_oneUser_when_getAllUsers_then_returnArrayWithUser() {
+    void givenOneUserWhenGetAllUsersThenReturnArrayWithUser() {
         User user = getDefaultUser();
         user = userRepository.save(user);
 
@@ -74,7 +74,7 @@ public class RandomPortTestRestTemplateTests {
      * =================== */
 
     @Test
-    void given_noUsers_when_getUserById_then_returnNotFound() {
+    void givenNoUsersWhenGetUserByIdThenReturnNotFound() {
         long id = 1L;
         ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity("/api/users/" + id, MessageError.class);
 
@@ -89,7 +89,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    void given_oneUser_when_getUserById_then_returnUserJson() {
+    void givenOneUserWhenGetUserByIdThenReturnUserJson() {
         User user = getDefaultUser();
         user = userRepository.save(user);
 
@@ -108,7 +108,7 @@ public class RandomPortTestRestTemplateTests {
      * =============== */
 
     @Test
-    void given_noUsers_when_createUser_then_returnUserJson() {
+    void givenNoUsersWhenCreateUserThenReturnUserJson() {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
 
@@ -139,7 +139,7 @@ public class RandomPortTestRestTemplateTests {
      * =================== */
 
     @Test
-    void given_oneUser_when_updateUser_then_returnUserJson() {
+    void givenOneUserWhenUpdateUserThenReturnUserJson() {
         User user = getDefaultUser();
         user = userRepository.save(user);
         final Long userId = user.getId();
@@ -173,7 +173,7 @@ public class RandomPortTestRestTemplateTests {
      * ====================== */
 
     @Test
-    void given_oneUser_when_deleteUser_then_returnUserJson() {
+    void givenOneUserWhenDeleteUserThenReturnUserJson() {
         User user = getDefaultUser();
         user = userRepository.save(user);
         final Long userId = user.getId();

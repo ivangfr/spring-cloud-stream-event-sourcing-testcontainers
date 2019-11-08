@@ -36,13 +36,13 @@ public class UserEventRepositoryTest {
     private UserEventRepository userEventRepository;
 
     @Test
-    void given_noUserEvent_when_findByKeyUserId_then_returnEmptyList() {
+    void givenNoUserEventWhenFindByKeyUserIdThenReturnEmptyList() {
         List<UserEvent> userEvents = userEventRepository.findByKeyUserId(1L);
         assertThat(userEvents).hasSize(0);
     }
 
     @Test
-    void given_oneUserEvent_when_findByKeyUserId_then_returnListWitOneUserEvent() {
+    void givenOneUserEventWhenFindByKeyUserIdThenReturnListWitOneUserEvent() {
         Long userId = 1L;
         Date datetime = fromStringToDate("2018-12-03T10:15:30.000+0000");
         String data = "data123";
@@ -61,7 +61,7 @@ public class UserEventRepositoryTest {
     }
 
     @Test
-    void given_twoUserEvents_when_findByKeyUserId_then_returnListUserEventsOrdered() {
+    void givenTwoUserEventsWhenFindByKeyUserIdThenReturnListUserEventsOrdered() {
         Long userId = 1L;
         Date datetime1 = fromStringToDate("2018-12-03T10:15:30.000+0000");
         String data1 = "data123";

@@ -42,12 +42,11 @@ public class UserEventControllerTest {
     private UserEventService userEventService;
 
     @Test
-    void given_noUserEvents_when_getUserEventByUserId_then_returnEmptyJsonArray() throws Exception {
+    void givenNoUserEventsWhenGetUserEventByUserIdThenReturnEmptyJsonArray() throws Exception {
         Long userId = 1L;
         given(userEventService.getAllUserEvents(userId)).willReturn(new ArrayList<>());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -56,7 +55,7 @@ public class UserEventControllerTest {
     }
 
     @Test
-    void given_oneUserEvent_when_getUserEventByUserId_then_returnArrayWithUserEventJson() throws Exception {
+    void givenOneUserEventWhenGetUserEventByUserIdThenReturnArrayWithUserEventJson() throws Exception {
         Long userId = 1L;
         Date datetime = fromStringToDate("2018-12-03T10:15:30.000+0100");
         String data = "data123";
@@ -65,8 +64,7 @@ public class UserEventControllerTest {
 
         given(userEventService.getAllUserEvents(userId)).willReturn(Collections.singletonList(userEvent));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())

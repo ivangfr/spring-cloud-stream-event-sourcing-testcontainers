@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'org.springframework.boot' version '2.1.10.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'com.palantir.docker' version '0.22.1'
 }
@@ -9,51 +9,50 @@ version = '1.0.0'
 sourceCompatibility = 1.8
 
 ext {
-    springCloudVersion = 'Greenwich.SR2'
-
-    avroVersion = '1.8.2'
-    modelMapperVersion = '2.3.5'
-    springfoxSwaggerVersion = '2.9.2'
-    braveVersion = '5.6.9'
-    lombokVersion = '1.18.8'
-    testcontainersVersion = '1.11.4'
-    awaitilityVersion = '3.1.6'
+    set('springCloudVersion', 'Greenwich.SR3')
+    set('avroVersion', '1.8.2')
+    set('modelMapperVersion', '2.3.5')
+    set('springfoxSwaggerVersion', '2.9.2')
+    set('testcontainersVersion', '1.11.4')
+    set('awaitilityVersion', '3.1.6')
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.cloud:spring-cloud-starter-zipkin')
-    compile('org.springframework.cloud:spring-cloud-stream-schema')
-    compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
-    //-- Sleuth & Brave
-    compile('org.springframework.cloud:spring-cloud-starter-sleuth')
-    compile("io.zipkin.brave:brave:${braveVersion}")
-    //--
-    compile('org.springframework.kafka:spring-kafka')
-    compile('com.google.code.gson:gson')
-    compile("org.apache.avro:avro:${avroVersion}")
-    compile("org.modelmapper:modelmapper:${modelMapperVersion}")
-    compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
-    compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-    // -- Lombok & Gradle 5
-    compile("org.projectlombok:lombok:${lombokVersion}")
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}") 
-    testCompile("org.projectlombok:lombok:${lombokVersion}")
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    //--
-    runtime('mysql:mysql-connector-java')
-    testCompile("org.testcontainers:junit-jupiter:${testcontainersVersion}")
-    testCompile("org.testcontainers:mysql:${testcontainersVersion}")
-    testCompile("org.testcontainers:kafka:${testcontainersVersion}")
-    testCompile("org.testcontainers:cassandra:${testcontainersVersion}")
-    testCompile("org.awaitility:awaitility:${awaitilityVersion}")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    implementation 'org.springframework.cloud:spring-cloud-stream-schema'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'com.google.code.gson:gson'
+
+    implementation "org.apache.avro:avro:${avroVersion}"
+    implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
+    implementation "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+    implementation "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    testImplementation "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testImplementation "org.testcontainers:mysql:${testcontainersVersion}"
+    testImplementation "org.testcontainers:kafka:${testcontainersVersion}"
+    testImplementation "org.testcontainers:cassandra:${testcontainersVersion}"
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     //-- commented in order to send messages to kafka using testcontainers
-    // testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
-    testCompile('org.junit.jupiter:junit-jupiter-api')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine')
+    // testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 dependencyManagement {
@@ -75,10 +74,4 @@ docker {
     name "docker.mycompany.com/user-service:${version}"
     files bootJar.archivePath
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
-}
-
-// enable JUnit 5
-
-test {
-    useJUnitPlatform()
 }

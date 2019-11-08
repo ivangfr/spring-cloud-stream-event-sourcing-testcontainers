@@ -8,14 +8,14 @@ import javax.validation.constraints.Email;
 @Data
 public class UpdateUserDto {
 
-    @ApiModelProperty(value = "User's email", example = "ivan.franchin.jr@test2.com")
+    @ApiModelProperty(example = "ivan.franchin.jr@test2.com")
     @Email
     private String email;
 
-    @ApiModelProperty(position = 1, value = "User's full name", example = "Ivan Franchin Jr")
+    @ApiModelProperty(position = 1, example = "Ivan Franchin Jr")
     private String fullName;
 
-    @ApiModelProperty(position = 2, value = "User's status", example = "false")
+    @ApiModelProperty(position = 2, example = "false")
     private Boolean active;
 
 }
