@@ -12,7 +12,7 @@ sourceCompatibility = 1.8
 ext {
     set('springCloudVersion', 'Greenwich.SR3')
     set('avroVersion', '1.8.2')
-    set('modelMapperVersion', '2.3.5')
+    set('mapstructVersion', '1.3.1.Final')
     set('springfoxSwaggerVersion', '2.9.2')
     set('cassandraUnitSpringVersion', '3.11.2.0')
     set('dropwizardMetricsVersion', '3.2.6')
@@ -29,7 +29,11 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
 
     implementation "org.apache.avro:avro:${avroVersion}"
-    implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
+
+    compileOnly "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
     implementation "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
     implementation "io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}" // this dependency is needed by Cassandra

@@ -4,11 +4,11 @@ import com.mycompany.userservice.bus.UserStream;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
+import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,12 +31,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserStream userStream;
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService, UserStream userStream, ModelMapper modelMapper) {
+    public UserController(UserService userService, UserStream userStream, UserMapper userMapper) {
         this.userService = userService;
         this.userStream = userStream;
-        this.modelMapper = modelMapper;
+        this.userMapper = userMapper;
     }
 
     @ApiResponses(value = {
@@ -47,7 +47,7 @@ public class UserController {
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers()
                 .stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +59,7 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
     @ApiResponses(value = {
@@ -73,14 +73,14 @@ public class UserController {
     public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         userService.validateUserExistsByEmail(createUserDto.getEmail());
 
-        User user = modelMapper.map(createUserDto, User.class);
+        User user = userMapper.toUser(createUserDto);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         user = userService.saveUser(user);
         userStream.userCreated(user.getId(), createUserDto);
         //--
 
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
     @ApiResponses(value = {
@@ -100,14 +100,14 @@ public class UserController {
             userService.validateUserExistsByEmail(updateUserDtoEmail);
         }
 
-        modelMapper.map(updateUserDto, user);
+        userMapper.updateUserFromDto(updateUserDto, user);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         user = userService.saveUser(user);
         userStream.userUpdated(user.getId(), updateUserDto);
         //--
 
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
     @ApiResponses(value = {
@@ -124,7 +124,7 @@ public class UserController {
         userStream.userDeleted(user.getId());
         //--
 
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
 }

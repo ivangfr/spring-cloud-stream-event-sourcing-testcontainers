@@ -1,11 +1,11 @@
 package com.mycompany.eventservice.controller;
 
 import com.mycompany.eventservice.dto.UserEventDto;
+import com.mycompany.eventservice.mapper.UserMapper;
 import com.mycompany.eventservice.service.UserEventService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 public class UserEventController {
 
     private final UserEventService userEventService;
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
-    public UserEventController(UserEventService userEventService, ModelMapper modelMapper) {
+    public UserEventController(UserEventService userEventService, UserMapper userMapper) {
         this.userEventService = userEventService;
-        this.modelMapper = modelMapper;
+        this.userMapper = userMapper;
     }
 
     @ApiResponses(value = {
@@ -37,7 +37,7 @@ public class UserEventController {
         log.info("GET Request, id: {}", id);
         return userEventService.getAllUserEvents(id)
                 .stream()
-                .map(userEvent -> modelMapper.map(userEvent, UserEventDto.class))
+                .map(userMapper::toUserEventDto)
                 .collect(Collectors.toList());
     }
 
