@@ -6,6 +6,9 @@ besides the traditional create/update/delete, whenever a user is created, update
 change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application
 that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org).
 
+> Note. In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-monitoring)
+repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+
 ## Project Architecture
 
 ![project-diagram](images/project-diagram.png)
@@ -61,11 +64,12 @@ the Avro schema present at `event-service/src/main/resources/avro`.
 ## Build Docker Images
 
 In a terminal and inside `springboot-kafka-mysql-cassandra` folder, in order to build the applications docker images,
-you can just run the following script or manually run the `./gradlew` commands for each application.
-
+you can just run the following script
 ```
 ./build-apps.sh
 ```
+
+Or manually run the `./gradlew` commands for each application.
 
 ### user-service
 
@@ -114,7 +118,6 @@ docker-compose ps
 ## Running Applications as Docker containers
 
 Open a terminal and inside `springboot-kafka-mysql-cassandra` root folder run following script
-
 ```
 ./start-apps.sh
 ```
@@ -129,6 +132,7 @@ During development, it is easier to just run the applications instead of always 
 For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle commands in different terminals
 
 ### user-service
+
 ```
 ./gradlew user-service:bootRun -Dserver.port=9080
 ```
@@ -138,42 +142,42 @@ For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle comm
 > ```
 
 ### event-service
+
 ```
 ./gradlew event-service:bootRun -Dserver.port=9081
 ```
 
 ## Application URLs
 
-| Application     | URL                                   |
-| --------------- | ------------------------------------- |
-| `user-service`  | http://localhost:9080/swagger-ui.html |
-| `event-service` | http://localhost:9081/swagger-ui.html |
+| Application   | URL                                   |
+| ------------- | ------------------------------------- |
+| user-service  | http://localhost:9080/swagger-ui.html |
+| event-service | http://localhost:9081/swagger-ui.html |
 
 ## Playing around with the applications
 
-- Open `user-service` Swagger http://localhost:9080/swagger-ui.html
+1. Open `user-service` Swagger http://localhost:9080/swagger-ui.html
 
-![user-service](images/user-service.png)
+   ![user-service](images/user-service.png)
 
-- Create a new user, `POST /api/users`
+1. Create a new user, `POST /api/users`
 
-- Open `event-service` Swagger http://localhost:9081/swagger-ui.html
+1. Open `event-service` Swagger http://localhost:9081/swagger-ui.html
 
-![event-service](images/event-service.png)
+   ![event-service](images/event-service.png)
 
-- Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
+1. Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
 
-- You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
-below) using [`Zipkin`](https://zipkin.io) http://localhost:9411
+1. You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
+   below) using [`Zipkin`](https://zipkin.io) http://localhost:9411
 
-![zipkin](images/zipkin.png)
+   ![zipkin](images/zipkin.png)
 
-- Create new users and update/delete existing ones in order to see how the application works.
+1. Create new users and update/delete existing ones in order to see how the application works.
 
 ## Shutdown
 
 Run the command below to stop the applications
-
 ```
 ./stop-apps.sh
 ```
@@ -240,13 +244,76 @@ SELECT * FROM user_events;
 - First, you must create a new cluster. Click on `Cluster` (dropdown on the header) and then on `Add Cluster`
 - Type the name of your cluster in `Cluster Name` field, for example: `MyZooCluster`
 - Type `zookeeper:2181` in `Cluster Zookeeper Hosts` field
-- Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
+- Enable checkbox `Poll consumer information (Not recommended for large # of consumers)`
 - Click on `Save` button at the bottom of the page.
 
 The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
 partitions, that is used by the applications of this project.
 
 ![kafka-manager](images/kafka-manager.png)
+
+## Issues
+
+Unable to upgrade to `Spring Boot` version `2.2.1`.
+
+`Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far.
+
+The `user-service` was ok to change. However, `event-service` cannot deserialize the event. 
+
+Next time to try, those are the changes to be done:
+
+- FROM
+  ```
+  implementation 'org.springframework.cloud:spring-cloud-stream-schema'
+  ```
+  TO
+  ```
+  implementation 'org.springframework.cloud:spring-cloud-schema-registry-client'
+  ```
+  
+- FROM
+  ```
+  cloud:
+    stream:
+      schema-registry-client:
+        endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
+  ```
+  TO
+  ```
+  cloud:
+    schema-registry-client:
+      enabled: true
+      endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
+    stream:
+  ```
+
+- FROM
+  ```
+  cloud:
+    stream:
+      schema:
+        avro:
+          schema-locations:
+            - classpath:avro/userevent-message.avsc
+  ```
+  TO
+  ```
+  cloud:
+    schema:
+      avro:
+        schema-locations:
+          - classpath:avro/userevent-message.avsc
+    stream:
+  ```
+  
+- FROM
+  ```
+  SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.stream.schema-registry-client.endpoint}") String endpoint) {
+  ```
+  TO
+  ```
+  SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.schema-registry-client.endpoint}") String endpoint) {
+  ```
 
 ## References
 

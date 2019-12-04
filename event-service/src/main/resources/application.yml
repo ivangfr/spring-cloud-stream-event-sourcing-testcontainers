@@ -31,7 +31,7 @@ management:
     health:
       show-details: always
 
-# In order to handle different content-types, Spring Cloud Stream  has a "content-type negotiation and transformation"
+# In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 # strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The
 # precedence orders are: 1st, content-type present in the message header; 2nd content-type defined in the binding;
 # and finally, content-type is "application/json" (default).

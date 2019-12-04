@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-./gradlew clean
-./gradlew user-service:docker -x test
-./gradlew event-service:docker -x test
+./gradlew user-service:clean user-service:docker -x test
+./gradlew event-service:clean event-service:docker -x test
