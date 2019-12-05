@@ -1,13 +1,8 @@
 # `springboot-kafka-mysql-cassandra`
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
-application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So,
-besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this
-change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application
-that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org).
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org).
 
-> Note. In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-monitoring)
-repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-monitoring) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Project Architecture
 
@@ -17,16 +12,11 @@ repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ### user-service
 
-`Spring Boot` Web Java application responsible for handling users. The user information will be stored in
-[`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
+`Spring Boot` Web Java application responsible for handling users. The user information will be stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
 
 #### Serialization format 
 
-`user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize
-data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the
-[`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker
-container. The serialization format to be used is defined by the value set to the environment variable
-`SPRING_PROFILES_ACTIVE`.
+`user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
 
 | Configuration                    | Format |
 | -------------------------------- | ------ |
@@ -39,32 +29,22 @@ container. The serialization format to be used is defined by the value set to th
 
 #### Deserialization
 
-Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format.
-[Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack
-of `MessageConverters` that handle the conversion of many different types of content-types, including `application/json`.
-Besides, as `event-service` has `SchemaRegistryClient` bean registered, Spring Cloud Stream auto configures an Apache
-Avro message converter for schema management.
+Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many different types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, Spring Cloud Stream auto configures an Apache Avro message converter for schema management.
 
-In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
-strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)).
-The precedence orders are: first, content-type present in the message header; second, content-type defined in the
-binding; and finally, content-type is `application/json` (default).
+In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation" strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
 
-The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be
-`application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` `user-service` is started.
+The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` `user-service` is started.
 
 #### Java classes from Avro Schema
 
-Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from
-the Avro schema present at `event-service/src/main/resources/avro`.
+Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
 ```
 ./gradlew event-service:generateAvro
 ```
 
 ## Build Docker Images
 
-In a terminal and inside `springboot-kafka-mysql-cassandra` folder, in order to build the applications docker images,
-you can just run the following script
+In a terminal and inside `springboot-kafka-mysql-cassandra` folder, in order to build the applications docker images, you can just run the following script
 ```
 ./build-apps.sh
 ```
@@ -121,22 +101,23 @@ Open a terminal and inside `springboot-kafka-mysql-cassandra` root folder run fo
 ```
 ./start-apps.sh
 ```
-> Note. In order to run `user-service` with `Avro` use
+
+> **Note:** In order to run `user-service` with `Avro` use
 > ```
 > ./start-apps.sh avro
 > ```
 
 ## Running Applications with Gradle
 
-During development, it is easier to just run the applications instead of always build the docker images and run it.
-For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle commands in different terminals
+During development, it is easier to just run the applications instead of always build the docker images and run it. For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle commands in different terminals
 
 ### user-service
 
 ```
 ./gradlew user-service:bootRun -Dserver.port=9080
 ```
-> Note. In order to run `user-service` with `Avro` use
+
+> **Note:** In order to run `user-service` with `Avro` use
 > ```
 > ./gradlew user-service:bootRun -Dserver.port=9080 -Dspring.profiles.active=avro
 > ```
@@ -147,7 +128,7 @@ For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle comm
 ./gradlew event-service:bootRun -Dserver.port=9081
 ```
 
-## Application URLs
+## Applications URLs
 
 | Application   | URL                                   |
 | ------------- | ------------------------------------- |
@@ -168,8 +149,7 @@ For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle comm
 
 1. Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
 
-1. You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image
-   below) using [`Zipkin`](https://zipkin.io) http://localhost:9411
+1. You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image below) using [`Zipkin`](https://zipkin.io) http://localhost:9411
 
    ![zipkin](images/zipkin.png)
 
@@ -202,18 +182,20 @@ Run the following command to start `user-service` test cases
 ```
 ./gradlew user-service:test
 ```
-> Note: We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests.  It
-starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
+
+> **Note:** We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
 
 ## Useful Commands & Links
 
 ### MySQL Database
+
 ```
 docker exec -it mysql mysql -uroot -psecret --database userdb
 select * from users;
 ```
 
 ### Cassandra Database
+
 ```
 docker exec -it cassandra cqlsh
 USE mycompany;
