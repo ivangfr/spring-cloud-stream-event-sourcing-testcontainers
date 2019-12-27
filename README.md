@@ -114,18 +114,18 @@ During development, it is easier to just run the applications instead of always 
 ### user-service
 
 ```
-./gradlew user-service:bootRun -Dserver.port=9080
+./gradlew user-service:bootRun --args='--server.port=9080'
 ```
 
 > **Note:** In order to run `user-service` with `Avro` use
 > ```
-> ./gradlew user-service:bootRun -Dserver.port=9080 -Dspring.profiles.active=avro
+> ./gradlew user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
 > ```
 
 ### event-service
 
 ```
-./gradlew event-service:bootRun -Dserver.port=9081
+./gradlew event-service:bootRun --args='--server.port=9081'
 ```
 
 ## Applications URLs
@@ -236,7 +236,7 @@ partitions, that is used by the applications of this project.
 
 ## Issues
 
-Unable to upgrade to `Spring Boot` version `2.2.1`.
+Unable to upgrade to `Spring Boot` version `2.2.2`.
 
 `Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far.
 
