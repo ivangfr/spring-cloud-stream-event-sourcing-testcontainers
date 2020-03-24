@@ -74,9 +74,9 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ## Running Applications as Docker containers
 
-- Build Docker Images
+- Build Application's Docker Images
 
-  In a terminal and inside `springboot-kafka-mysql-cassandra` folder, run the following script to build the applications docker images 
+  In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to build the applications docker images 
   ```
   ./build-apps.sh
   ```
@@ -109,9 +109,9 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
     | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
     | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-- Start applications
+- Start Application's Docker Container
 
-  Open a terminal and inside `springboot-kafka-mysql-cassandra` root folder run following script
+  In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to start the applications docker containers
   ```
   ./start-apps.sh
   ```
