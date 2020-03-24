@@ -74,7 +74,7 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ## Running Applications as Docker containers
 
-- Build Application's Docker Images
+- Build Application's Docker Image
 
   In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to build the applications docker images 
   ```
@@ -129,13 +129,13 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ## Playing around
 
-1. Open `user-service` Swagger http://localhost:9080/swagger-ui.html
+1. Access `user-service` Swagger website http://localhost:9080/swagger-ui.html
 
    ![user-service](images/user-service.png)
 
 1. Create a new user, `POST /api/users`
 
-1. Open `event-service` Swagger http://localhost:9081/swagger-ui.html
+1. Access `event-service` Swagger website http://localhost:9081/swagger-ui.html
 
    ![event-service](images/event-service.png)
 
