@@ -36,7 +36,7 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
         Network network = Network.SHARED;
 
         // MySQL
-        mySQLContainer = new MySQLContainer("mysql:5.7.28")
+        mySQLContainer = new MySQLContainer("mysql:5.7.29")
                 .withDatabaseName("userdb-test")
                 .withUsername("root-test")
                 .withPassword("secret-test");
@@ -46,7 +46,7 @@ public class ContainersExtension implements BeforeAllCallback, AfterAllCallback 
         mySQLContainer.start();
 
         // Kafka
-        kafkaContainer = new KafkaContainer("5.3.1").withEmbeddedZookeeper();
+        kafkaContainer = new KafkaContainer("5.4.1").withEmbeddedZookeeper();
         kafkaContainer.setNetwork(network);
         kafkaContainer.setNetworkAliases(Collections.singletonList("kafka"));
         kafkaContainer.setPortBindings(Collections.singletonList("9092:9092"));

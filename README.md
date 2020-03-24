@@ -10,123 +10,115 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Applications
 
-### user-service
+- ### user-service
 
-`Spring Boot` Web Java application responsible for handling users. The user information will be stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
+  `Spring Boot` Web Java application responsible for handling users. The user information is stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
 
-#### Serialization format 
+  #### Serialization format
 
-`user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+  `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+  
+  | Configuration                    | Format |
+  | -------------------------------- | ------ |
+  | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
+  | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
-| Configuration                    | Format |
-| -------------------------------- | ------ |
-| `SPRING_PROFILES_ACTIVE=default` | `JSON` |
-| `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
+- ### event-service
 
-### event-service
+  `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
 
-`Spring Boot` Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
-
-#### Deserialization
-
-Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many different types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, Spring Cloud Stream auto configures an Apache Avro message converter for schema management.
-
-In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation" strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
-
-The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` `user-service` is started.
-
-#### Java classes from Avro Schema
-
-Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
-```
-./gradlew event-service:generateAvro
-```
-
-## Build Docker Images
-
-In a terminal and inside `springboot-kafka-mysql-cassandra` folder, in order to build the applications docker images, you can just run the following script
-```
-./build-apps.sh
-```
-
-Or manually run the `./gradlew` commands for each application.
-
-### user-service
-
-```
-./gradlew user-service:docker -x test
-```
-| Environment Variable   | Description                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------ |
-| `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
-| `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
-| `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
-| `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
-| `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
-| `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
-| `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
-| `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
-
-### event-service
-
-```
-./gradlew event-service:docker -x test
-```
-| Environment Variable   | Description                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------ |
-| `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
-| `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
-| `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
-| `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
-| `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
-| `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
-| `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
-| `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+  #### Deserialization
+  
+  Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many different types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
+    
+  In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
+    
+  The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
+  
+  #### Java classes from Avro Schema
+  
+  Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
+  ```
+  ./gradlew event-service:generateAvro
+  ```
 
 ## Start Environment
 
-In a terminal and inside `springboot-kafka-mysql-cassandra` root folder run
-```
-docker-compose up -d
-```
+- In a terminal and inside `springboot-kafka-mysql-cassandra` root folder run
+  ```
+  docker-compose up -d
+  ```
 
-Wait a little bit until all containers are `Up (healthy)`. You can check by running the following command
-```
-docker-compose ps
-```
-
-## Running Applications as Docker containers
-
-Open a terminal and inside `springboot-kafka-mysql-cassandra` root folder run following script
-```
-./start-apps.sh
-```
-
-> **Note:** In order to run `user-service` with `Avro` use
-> ```
-> ./start-apps.sh avro
-> ```
+- Wait a little bit until all containers are `Up (healthy)`. You can check by running the following command
+  ```
+  docker-compose ps
+  ```
 
 ## Running Applications with Gradle
 
-During development, it is easier to just run the applications instead of always build the docker images and run it. For it, inside `springboot-kafka-mysql-cassandra`, run the following Gradle commands in different terminals
+Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle` commands in different terminals
 
-### user-service
+- **user-service**
+  ```
+  ./gradlew user-service:bootRun --args='--server.port=9080'
+  ```
+  > **Note:** In order to run `user-service` with `Avro` use
+  > ```
+  > ./gradlew user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
+  > ```
 
-```
-./gradlew user-service:bootRun --args='--server.port=9080'
-```
+- **event-service**
+  ```
+  ./gradlew event-service:bootRun --args='--server.port=9081'
+  ```
 
-> **Note:** In order to run `user-service` with `Avro` use
-> ```
-> ./gradlew user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
-> ```
+## Running Applications as Docker containers
 
-### event-service
+- Build Docker Images
 
-```
-./gradlew event-service:bootRun --args='--server.port=9081'
-```
+  In a terminal and inside `springboot-kafka-mysql-cassandra` folder, run the following script to build the applications docker images 
+  ```
+  ./build-apps.sh
+  ```
+
+- Application's Environment Variables
+   
+  - **user-service**
+
+    | Environment Variable   | Description                                                                          |
+    | ---------------------- | ------------------------------------------------------------------------------------ |
+    | `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
+    | `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
+    | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
+    | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
+    | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
+    | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
+    | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+    | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+
+  - **event-service**
+
+    | Environment Variable   | Description                                                                          |
+    | ---------------------- | ------------------------------------------------------------------------------------ |
+    | `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
+    | `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
+    | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
+    | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
+    | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
+    | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
+    | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+    | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+
+- Start applications
+
+  Open a terminal and inside `springboot-kafka-mysql-cassandra` root folder run following script
+  ```
+  ./start-apps.sh
+  ```
+  > **Note:** In order to run `user-service` with `Avro` use
+  > ```
+  > ./start-apps.sh avro
+  > ```
 
 ## Applications URLs
 
@@ -135,7 +127,7 @@ During development, it is easier to just run the applications instead of always 
 | user-service  | http://localhost:9080/swagger-ui.html |
 | event-service | http://localhost:9081/swagger-ui.html |
 
-## Playing around with the applications
+## Playing around
 
 1. Open `user-service` Swagger http://localhost:9080/swagger-ui.html
 
@@ -157,86 +149,82 @@ During development, it is easier to just run the applications instead of always 
 
 ## Shutdown
 
-Run the command below to stop the applications
-```
-./stop-apps.sh
-```
+1. Stop applications
+   - If they were started with `Gradle`, go to the terminals where they are running and press `Ctrl+C`
+   - If they were started as a Docker container, run the script below
+     ```
+     ./stop-apps.sh
+     ```
 
-Then, run the following command to stop and remove docker-compose containers, networks and volumes
-```
-docker-compose down -v
-```
+1. Stop and remove docker-compose containers, networks and volumes
+   ```
+   docker-compose down -v
+   ```
 
 ## Running tests
 
-### event-service 
+- **event-service**
+  ```
+  ./gradlew event-service:cleanTest event-service:test
+  ```
 
-Run the command below to trigger `event-service` test cases
-```
-./gradlew event-service:test
-```
-
-### user-service
-
-Run the following command to start `user-service` test cases
-```
-./gradlew user-service:test
-```
-
-> **Note:** We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
+- **user-service**
+  ```
+  ./gradlew user-service:cleanTest user-service:test
+  ```
+  > **Note:** We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
 
 ## Useful Commands & Links
 
-### MySQL Database
+- ### MySQL Database
+  ```
+  docker exec -it mysql mysql -uroot -psecret --database userdb
+  select * from users;
+  ```
 
-```
-docker exec -it mysql mysql -uroot -psecret --database userdb
-select * from users;
-```
+- ### Cassandra Database
+  ```
+  docker exec -it cassandra cqlsh
+  USE mycompany;
+  SELECT * FROM user_events;
+  ```
 
-### Cassandra Database
+- ### Zipkin
 
-```
-docker exec -it cassandra cqlsh
-USE mycompany;
-SELECT * FROM user_events;
-```
+  `Zipkin` can be accessed at http://localhost:9411
 
-### Zipkin
+- ### Kafka Topics UI
 
-`Zipkin` can be accessed at http://localhost:9411
+  `Kafka Topics UI` can be accessed at http://localhost:8085
 
-### Kafka Topics UI
+  ![kafka-topics-ui](images/kafka-topics-ui.png)
 
-`Kafka Topics UI` can be accessed at http://localhost:8085
+- ### Schema Registry UI
 
-![kafka-topics-ui](images/kafka-topics-ui.png)
+  `Schema Registry UI` can be accessed at http://localhost:8001
 
-### Schema Registry UI
+  ![schema-registry-ui](images/schema-registry-ui.png)
 
-`Schema Registry UI` can be accessed at http://localhost:8001
+- ### Kafka Manager
 
-![schema-registry-ui](images/schema-registry-ui.png)
+  `Kafka Manager` can be accessed at http://localhost:9000
 
-### Kafka Manager
+  **Configuration**
 
-`Kafka Manager` can be accessed at http://localhost:9000
+  - First, you must create a new cluster. Click on `Cluster` (dropdown button on the header) and then on `Add Cluster`
+  - Type the name of your cluster in `Cluster Name` field, for example: `MyZooCluster`
+  - Type `zookeeper:2181` in `Cluster Zookeeper Hosts` field
+  - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
+  - Click on `Save` button at the bottom of the page.
 
-**Configuration**
-- First, you must create a new cluster. Click on `Cluster` (dropdown on the header) and then on `Add Cluster`
-- Type the name of your cluster in `Cluster Name` field, for example: `MyZooCluster`
-- Type `zookeeper:2181` in `Cluster Zookeeper Hosts` field
-- Enable checkbox `Poll consumer information (Not recommended for large # of consumers)`
-- Click on `Save` button at the bottom of the page.
+  The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
+partitions.
 
-The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
-partitions, that is used by the applications of this project.
-
-![kafka-manager](images/kafka-manager.png)
+  ![kafka-manager](images/kafka-manager.png)
 
 ## Issues
 
-Unable to upgrade to `Spring Boot` version `2.2.2`.
+Unable to upgrade to `Spring Boot` version `2.2.X`.
 
 `Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far.
 
