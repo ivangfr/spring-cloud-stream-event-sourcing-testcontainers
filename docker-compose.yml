@@ -138,9 +138,9 @@ services:
       ZK_HOSTS: zookeeper:2181
       APPLICATION_SECRET: "random-secret"
     command: -Dpidfile.path=/dev/null
-#    healthcheck:
-#      test: ""
-#      start_period: 30s
+    healthcheck:
+      test: "curl -f http://localhost:9000 || exit 1"
+      start_period: 30s
 
   zipkin:
     container_name: zipkin

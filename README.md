@@ -1,4 +1,4 @@
-# `springboot-kafka-mysql-cassandra`
+# springboot-kafka-mysql-cassandra
 
 The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org).
 
@@ -74,51 +74,51 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ## Running Applications as Docker containers
 
-- Build Application's Docker Image
+### Build Application's Docker Image
 
-  In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to build the applications docker images 
-  ```
-  ./build-apps.sh
-  ```
+In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to build the applications docker images 
+```
+./build-apps.sh
+```
 
-- Application's Environment Variables
+### Application's Environment Variables
    
-  - **user-service**
+- **user-service**
 
-    | Environment Variable   | Description                                                                          |
-    | ---------------------- | ------------------------------------------------------------------------------------ |
-    | `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
-    | `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
-    | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
-    | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
-    | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
-    | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
-    | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
-    | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+  | Environment Variable   | Description                                                                          |
+  | ---------------------- | ------------------------------------------------------------------------------------ |
+  | `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
+  | `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
+  | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
+  | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
+  | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
+  | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
+  | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+  | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-  - **event-service**
+- **event-service**
 
-    | Environment Variable   | Description                                                                          |
-    | ---------------------- | ------------------------------------------------------------------------------------ |
-    | `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
-    | `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
-    | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
-    | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
-    | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
-    | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
-    | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
-    | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+  | Environment Variable   | Description                                                                          |
+  | ---------------------- | ------------------------------------------------------------------------------------ |
+  | `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
+  | `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
+  | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
+  | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
+  | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
+  | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
+  | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+  | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-- Start Application's Docker Container
+### Start Application's Docker Container
 
-  In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to start the applications docker containers
-  ```
-  ./start-apps.sh
-  ```
-  > **Note:** In order to run `user-service` with `Avro` use
-  > ```
-  > ./start-apps.sh avro
-  > ```
+In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to start the applications docker containers
+```
+./start-apps.sh
+```
+> **Note:** In order to run `user-service` with `Avro` use
+> ```
+> ./start-apps.sh avro
+> ```
 
 ## Applications URLs
 
@@ -149,17 +149,17 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ## Shutdown
 
-1. Stop applications
-   - If they were started with `Gradle`, go to the terminals where they are running and press `Ctrl+C`
-   - If they were started as a Docker container, run the script below
-     ```
-     ./stop-apps.sh
-     ```
+- Stop applications
+  - If they were started with `Gradle`, go to the terminals where they are running and press `Ctrl+C`
+  - If they were started as a Docker container, run the script below
+    ```
+    ./stop-apps.sh
+    ```
 
-1. Stop and remove docker-compose containers, networks and volumes
-   ```
-   docker-compose down -v
-   ```
+- Stop and remove docker-compose containers, networks and volumes
+  ```
+  docker-compose down -v
+  ```
 
 ## Running tests
 
@@ -176,40 +176,40 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ## Useful Commands & Links
 
-- ### MySQL Database
+- **MySQL Database**
   ```
   docker exec -it mysql mysql -uroot -psecret --database userdb
   select * from users;
   ```
 
-- ### Cassandra Database
+- **Cassandra Database**
   ```
   docker exec -it cassandra cqlsh
   USE mycompany;
   SELECT * FROM user_events;
   ```
 
-- ### Zipkin
+- **Zipkin**
 
   `Zipkin` can be accessed at http://localhost:9411
 
-- ### Kafka Topics UI
+- **Kafka Topics UI**
 
   `Kafka Topics UI` can be accessed at http://localhost:8085
 
   ![kafka-topics-ui](images/kafka-topics-ui.png)
 
-- ### Schema Registry UI
+- **Schema Registry UI**
 
   `Schema Registry UI` can be accessed at http://localhost:8001
 
   ![schema-registry-ui](images/schema-registry-ui.png)
 
-- ### Kafka Manager
+- **Kafka Manager**
 
   `Kafka Manager` can be accessed at http://localhost:9000
 
-  **Configuration**
+  _Configuration_
 
   - First, you must create a new cluster. Click on `Cluster` (dropdown button on the header) and then on `Add Cluster`
   - Type the name of your cluster in `Cluster Name` field, for example: `MyZooCluster`
@@ -217,73 +217,71 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
   - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
   - Click on `Save` button at the bottom of the page.
 
-  The image below shows the topics present on Kafka, including the topic `com.mycompany.userservice.user` with `2`
+  The image below shows the topics present in Kafka, including the topic `com.mycompany.userservice.user` with `2`
 partitions.
 
   ![kafka-manager](images/kafka-manager.png)
 
 ## Issues
 
-Unable to upgrade to `Spring Boot` version `2.2.X`.
+- Unable to upgrade to `Spring Boot` version `2.2.x`.
 
-`Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far.
-
-The `user-service` was ok to change. However, `event-service` cannot deserialize the event. 
-
-Next time to try, those are the changes to be done:
-
-- FROM
-  ```
-  implementation 'org.springframework.cloud:spring-cloud-stream-schema'
-  ```
-  TO
-  ```
-  implementation 'org.springframework.cloud:spring-cloud-schema-registry-client'
-  ```
+  `Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far. The `user-service` was ok to change. However, `event-service` cannot deserialize the event. 
   
-- FROM
-  ```
-  cloud:
-    stream:
+  Next time to try, those are the changes to be done:
+  
+  - FROM
+    ```
+    implementation 'org.springframework.cloud:spring-cloud-stream-schema'
+    ```
+    TO
+    ```
+    implementation 'org.springframework.cloud:spring-cloud-schema-registry-client'
+    ```
+    
+  - FROM
+    ```
+    cloud:
+      stream:
+        schema-registry-client:
+          endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
+    ```
+    TO
+    ```
+    cloud:
       schema-registry-client:
+        enabled: true
         endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
-  ```
-  TO
-  ```
-  cloud:
-    schema-registry-client:
-      enabled: true
-      endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
-    stream:
-  ```
-
-- FROM
-  ```
-  cloud:
-    stream:
+      stream:
+    ```
+  
+  - FROM
+    ```
+    cloud:
+      stream:
+        schema:
+          avro:
+            schema-locations:
+              - classpath:avro/userevent-message.avsc
+    ```
+    TO
+    ```
+    cloud:
       schema:
         avro:
           schema-locations:
             - classpath:avro/userevent-message.avsc
-  ```
-  TO
-  ```
-  cloud:
-    schema:
-      avro:
-        schema-locations:
-          - classpath:avro/userevent-message.avsc
-    stream:
-  ```
-  
-- FROM
-  ```
-  SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.stream.schema-registry-client.endpoint}") String endpoint) {
-  ```
-  TO
-  ```
-  SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.schema-registry-client.endpoint}") String endpoint) {
-  ```
+      stream:
+    ```
+    
+  - FROM
+    ```
+    SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.stream.schema-registry-client.endpoint}") String endpoint) {
+    ```
+    TO
+    ```
+    SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.schema-registry-client.endpoint}") String endpoint) {
+    ```
 
 ## References
 
