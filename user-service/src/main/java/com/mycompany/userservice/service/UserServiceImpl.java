@@ -4,18 +4,16 @@ import com.mycompany.userservice.exception.UserEmailDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<User> getAllUsers() {

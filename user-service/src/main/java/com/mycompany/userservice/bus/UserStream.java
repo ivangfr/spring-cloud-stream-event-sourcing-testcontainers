@@ -1,10 +1,11 @@
 package com.mycompany.userservice.bus;
 
 import com.google.gson.Gson;
-import com.mycompany.userservice.messages.EventType;
-import com.mycompany.userservice.messages.UserEventMessage;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
+import com.mycompany.userservice.messages.EventType;
+import com.mycompany.userservice.messages.UserEventMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 @EnableBinding(Source.class)
 public class UserStream {
@@ -23,11 +25,6 @@ public class UserStream {
 
     private final Source source;
     private final Gson gson;
-
-    public UserStream(Source source, Gson gson) {
-        this.source = source;
-        this.gson = gson;
-    }
 
     public void userCreated(Long id, CreateUserDto createUserDto) {
         UserEventMessage userEventMessage = UserEventMessage.builder()

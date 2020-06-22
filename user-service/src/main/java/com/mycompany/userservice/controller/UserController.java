@@ -7,8 +7,7 @@ import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +24,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -33,16 +33,6 @@ public class UserController {
     private final UserStream userStream;
     private final UserMapper userMapper;
 
-    public UserController(UserService userService, UserStream userStream, UserMapper userMapper) {
-        this.userService = userService;
-        this.userStream = userStream;
-        this.userMapper = userMapper;
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
     @GetMapping
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers()
@@ -51,28 +41,16 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
         return userMapper.toUserDto(user);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 409, message = "Conflict"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         userService.validateUserExistsByEmail(createUserDto.getEmail());
-
         User user = userMapper.toUser(createUserDto);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
@@ -83,13 +61,6 @@ public class UserController {
         return userMapper.toUserDto(user);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 409, message = "Conflict"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
     @PutMapping("/{id}")
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) {
         User user = userService.validateAndGetUserById(id);
@@ -110,11 +81,6 @@ public class UserController {
         return userMapper.toUserDto(user);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
     @DeleteMapping("/{id}")
     public UserDto deleteUser(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);

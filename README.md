@@ -29,7 +29,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   #### Deserialization
   
-  Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many different types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
+  Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
     
   In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
     
@@ -41,6 +41,12 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   ```
   ./gradlew event-service:generateAvro
   ```
+  
+## Prerequisites
+
+- `Java 11+`
+- `Docker`
+- `Docker-Compose`
 
 ## Start Environment
 
@@ -56,30 +62,37 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Running Applications with Gradle
 
-Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle` commands in different terminals
+Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle` commands in different terminals.
+
+> **Note:** start `user-service` first, so it created the `com.mycompany.userservice.user` partitioned.
 
 - **user-service**
-  ```
-  ./gradlew user-service:bootRun --args='--server.port=9080'
-  ```
-  > **Note:** In order to run `user-service` with `Avro` use
-  > ```
-  > ./gradlew user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
-  > ```
+  
+  - Using `JSON`
+    ```
+    ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080'
+    ```
+  
+  - Using `Avro`
+    ```
+    ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
+    ```
 
 - **event-service**
   ```
-  ./gradlew event-service:bootRun --args='--server.port=9081'
+  ./gradlew event-service:clean event-service:bootRun --args='--server.port=9081'
   ```
 
 ## Running Applications as Docker containers
 
 ### Build Application's Docker Image
 
-In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to build the applications docker images 
-```
-./build-apps.sh
-```
+- In a terminal, make sure you are inside `springboot-kafka-mysql-cassandra` root folder
+
+- Run the following script to build the application's docker images 
+  ```
+  ./build-apps.sh
+  ```
 
 ### Application's Environment Variables
    
@@ -111,14 +124,19 @@ In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the
 
 ### Start Application's Docker Container
 
-In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the following script to start the applications docker containers
-```
-./start-apps.sh
-```
-> **Note:** In order to run `user-service` with `Avro` use
-> ```
-> ./start-apps.sh avro
-> ```
+- In a terminal, make sure you are inside `springboot-kafka-mysql-cassandra` root folder
+
+- In order to run the application's docker containers, you can pick between `JSON` or `Avro`
+
+  - Using `JSON`
+    ```
+    ./start-apps.sh
+    ```
+    
+  - Using `Avro`
+    ```
+    ./start-apps.sh avro
+    ```
 
 ## Applications URLs
 
@@ -156,7 +174,7 @@ In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the
     ./stop-apps.sh
     ```
 
-- Stop and remove docker-compose containers, networks and volumes
+- To stop and remove docker-compose containers, networks and volumes, make sure you are inside `springboot-kafka-mysql-cassandra` root folder and run
   ```
   docker-compose down -v
   ```
@@ -165,24 +183,24 @@ In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the
 
 - **event-service**
   ```
-  ./gradlew event-service:cleanTest event-service:test
+  ./gradlew event-service:clean event-service:cleanTest event-service:test
   ```
 
 - **user-service**
   ```
-  ./gradlew user-service:cleanTest user-service:test
+  ./gradlew user-service:clean user-service:cleanTest user-service:test
   ```
   > **Note:** We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
 
 ## Useful Commands & Links
 
-- **MySQL Database**
+- **MySQL**
   ```
   docker exec -it mysql mysql -uroot -psecret --database userdb
   select * from users;
   ```
 
-- **Cassandra Database**
+- **Cassandra**
   ```
   docker exec -it cassandra cqlsh
   USE mycompany;
@@ -212,7 +230,7 @@ In a terminal and inside `springboot-kafka-mysql-cassandra` root folder, run the
   _Configuration_
 
   - First, you must create a new cluster. Click on `Cluster` (dropdown button on the header) and then on `Add Cluster`
-  - Type the name of your cluster in `Cluster Name` field, for example: `MyZooCluster`
+  - Type the name of your cluster in `Cluster Name` field, for example: `MyCluster`
   - Type `zookeeper:2181` in `Cluster Zookeeper Hosts` field
   - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
   - Click on `Save` button at the bottom of the page.
@@ -224,7 +242,9 @@ partitions.
 
 ## Issues
 
-- Unable to upgrade to `Spring Boot` version `2.2.x`.
+- Unable to upgrade `Testcontainers` to version `1.14.3`. It seems that the tests cannot connect to `Kafka` that is running on `localhost:9092`
+
+- Unable to upgrade `Spring Boot` to version `2.2.x`.
 
   `Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far. The `user-service` was ok to change. However, `event-service` cannot deserialize the event. 
   

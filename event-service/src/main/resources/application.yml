@@ -26,10 +26,15 @@ spring:
 management:
   endpoints:
     web:
-      exposure.include: "*"
+      exposure.include: beans, env, health, info, metrics, mappings
   endpoint:
     health:
       show-details: always
+
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    groups-order: DESC
 
 # In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 # strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The

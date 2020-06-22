@@ -5,8 +5,8 @@ import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.awaitility.Duration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,9 +31,9 @@ import static org.awaitility.Awaitility.await;
 
 @Slf4j
 @ActiveProfiles("test")
-@ExtendWith({SpringExtension.class, ContainersExtension.class})
+@ExtendWith(ContainersExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class RandomPortTestRestTemplateTests {
 
     @Autowired
@@ -112,6 +113,7 @@ public class RandomPortTestRestTemplateTests {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
 
+        log.info("{}", responseEntity);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isGreaterThan(0);
@@ -123,7 +125,7 @@ public class RandomPortTestRestTemplateTests {
         Optional<User> userFound = userRepository.findById(userId);
         assertThat(userFound.isPresent()).isTrue();
 
-        await().atMost(Duration.TEN_SECONDS).pollInterval(Duration.ONE_SECOND).untilAsserted(() -> {
+        await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
             ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -157,7 +159,7 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(updateUserDto.getActive());
 
-        await().atMost(Duration.TEN_SECONDS).pollInterval(Duration.ONE_SECOND).untilAsserted(() -> {
+        await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
             ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -190,7 +192,7 @@ public class RandomPortTestRestTemplateTests {
         Optional<User> userNotFound = userRepository.findById(userId);
         assertThat(userNotFound.isPresent()).isFalse();
 
-        await().atMost(Duration.TEN_SECONDS).pollInterval(Duration.ONE_SECOND).untilAsserted(() -> {
+        await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
             ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -215,6 +217,35 @@ public class RandomPortTestRestTemplateTests {
 
     private CreateUserDto getDefaultCreateUserDto() {
         return new CreateUserDto("ivan.franchin@test.com", "Ivan Franchin", true);
+    }
+
+    @Data
+    private static class EventServiceUserEventDto {
+        private Long userId;
+        private String datetime;
+        private String type;
+        private String data;
+    }
+
+    @Data
+    private static class MessageError {
+        private String timestamp;
+        private int status;
+        private String error;
+        private String message;
+        private String path;
+        private List<ErrorDetail> errors;
+
+        @Data
+        static class ErrorDetail {
+            private List<String> codes;
+            private String defaultMessage;
+            private String objectName;
+            private String field;
+            private String rejectedValue;
+            private boolean bindingFailure;
+            private String code;
+        }
     }
 
 }

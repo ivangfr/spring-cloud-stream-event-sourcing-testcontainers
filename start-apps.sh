@@ -10,6 +10,8 @@ docker run -d --rm --name user-service \
   --health-cmd="curl -f http://localhost:8080/actuator/health || exit 1" --health-start-period=1m \
   docker.mycompany.com/user-service:1.0.0
 
+sleep 5
+
 echo
 echo "Starting event-service..."
 

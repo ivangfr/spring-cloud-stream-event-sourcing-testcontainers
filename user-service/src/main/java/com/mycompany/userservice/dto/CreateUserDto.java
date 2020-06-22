@@ -1,6 +1,6 @@
 package com.mycompany.userservice.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,16 +14,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CreateUserDto {
 
-    @ApiModelProperty(example = "ivan.franchin@test.com")
+    @Schema(example = "ivan.franchin@test.com")
     @NotBlank
     @Email
     private String email;
 
-    @ApiModelProperty(position = 1, example = "Ivan Franchin")
+    @Schema(example = "Ivan Franchin")
     @NotBlank
     private String fullName;
 
-    @ApiModelProperty(position = 2, example = "true")
+    @Schema(example = "true")
     @NotNull
     private Boolean active;
 
