@@ -22,6 +22,8 @@ docker run -d --rm --name event-service \
   --health-cmd="curl -f http://localhost:8080/actuator/health || exit 1" --health-start-period=1m \
   docker.mycompany.com/event-service:1.0.0
 
+sleep 5
+
 printf "\n"
 printf "%14s | %37s |\n" "Application" "URL"
 printf "%14s + %37s |\n" "--------------" "-------------------------------------"

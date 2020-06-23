@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.15.RELEASE'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.commercehub.gradle.plugin.avro' version '0.9.1'
     id 'com.google.cloud.tools.jib' version '2.4.0'
@@ -10,12 +10,11 @@ version = '1.0.0'
 sourceCompatibility = 1.8
 
 ext {
-    set('springCloudVersion', 'Greenwich.SR6')
+    set('springCloudVersion', 'Hoxton.SR5')
     set('avroVersion', '1.9.2')
     set('mapstructVersion', '1.3.1.Final')
     set('springdocOpenApiVerison', '1.4.1')
-    set('cassandraUnitSpringVersion', '3.11.2.0')
-    set('dropwizardMetricsVersion', '3.2.6')
+    set('cassandraUnitSpringVersion', '4.3.1.0')
 }
 
 dependencies {
@@ -23,9 +22,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
-    implementation 'org.springframework.cloud:spring-cloud-stream-schema'
+    implementation 'org.springframework.cloud:spring-cloud-schema-registry-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
@@ -36,8 +36,6 @@ dependencies {
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
     implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
-
-    implementation "io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}" // this dependency is needed by Cassandra
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"

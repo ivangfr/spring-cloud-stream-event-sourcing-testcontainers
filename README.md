@@ -14,33 +14,33 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   `Spring Boot` Web Java application responsible for handling users. The user information is stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
 
-  #### Serialization format
+  - **Serialization format**
 
-  `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
   
-  | Configuration                    | Format |
-  | -------------------------------- | ------ |
-  | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
-  | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
+    | Configuration                    | Format |
+    | -------------------------------- | ------ |
+    | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
+    | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
 - ### event-service
 
   `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
 
-  #### Deserialization
+  - **Deserialization**
   
-  Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
+    Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
     
-  In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
+    In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
     
-  The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
+    The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
   
-  #### Java classes from Avro Schema
+  - **Java classes from Avro Schema**
   
-  Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
-  ```
-  ./gradlew event-service:generateAvro
-  ```
+    Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
+    ```
+    ./gradlew event-service:generateAvro
+    ```
   
 ## Prerequisites
 
@@ -182,15 +182,22 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 ## Running tests
 
 - **event-service**
-  ```
-  ./gradlew event-service:clean event-service:cleanTest event-service:test
-  ```
+
+  - Run the command below to start the tests
+    ```
+    ./gradlew event-service:clean event-service:cleanTest event-service:test
+    ```
 
 - **user-service**
-  ```
-  ./gradlew user-service:clean user-service:cleanTest user-service:test
-  ```
-  > **Note:** We are using [`Testcontainers`](https://www.testcontainers.org/) to run `user-service` integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
+
+  - We are using [`Testcontainers`](https://www.testcontainers.org/) to run integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
+  
+  - Make sure you have an updated `event-service` docker image because it will be used during the integration tests
+  
+  - Run the command below to start the tests
+    ```
+    ./gradlew user-service:clean user-service:cleanTest user-service:test
+    ```
 
 ## Useful Commands & Links
 
@@ -242,66 +249,9 @@ partitions.
 
 ## Issues
 
+- Disable some `UserEventRepositoryTest` test case because I was not able to make `org.cassandraunit:cassandra-unit-spring` to work in `event-service` since I updated to `springboot` version `2.3.1`
+
 - Unable to upgrade `Testcontainers` to version `1.14.3`. It seems that the tests cannot connect to `Kafka` that is running on `localhost:9092`
-
-- Unable to upgrade `Spring Boot` to version `2.2.x`.
-
-  `Spring Cloud Stream` has changed the `Schema Registry` and the documentation is very poor so far. The `user-service` was ok to change. However, `event-service` cannot deserialize the event. 
-  
-  Next time to try, those are the changes to be done:
-  
-  - FROM
-    ```
-    implementation 'org.springframework.cloud:spring-cloud-stream-schema'
-    ```
-    TO
-    ```
-    implementation 'org.springframework.cloud:spring-cloud-schema-registry-client'
-    ```
-    
-  - FROM
-    ```
-    cloud:
-      stream:
-        schema-registry-client:
-          endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
-    ```
-    TO
-    ```
-    cloud:
-      schema-registry-client:
-        enabled: true
-        endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
-      stream:
-    ```
-  
-  - FROM
-    ```
-    cloud:
-      stream:
-        schema:
-          avro:
-            schema-locations:
-              - classpath:avro/userevent-message.avsc
-    ```
-    TO
-    ```
-    cloud:
-      schema:
-        avro:
-          schema-locations:
-            - classpath:avro/userevent-message.avsc
-      stream:
-    ```
-    
-  - FROM
-    ```
-    SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.stream.schema-registry-client.endpoint}") String endpoint) {
-    ```
-    TO
-    ```
-    SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.schema-registry-client.endpoint}") String endpoint) {
-    ```
 
 ## References
 

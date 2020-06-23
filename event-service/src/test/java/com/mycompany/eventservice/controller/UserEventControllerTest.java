@@ -50,7 +50,7 @@ public class UserEventControllerTest {
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
@@ -68,7 +68,7 @@ public class UserEventControllerTest {
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].userId", is(1)))
                 .andExpect(jsonPath("$[0].datetime", is(fromDateToString(datetime))))

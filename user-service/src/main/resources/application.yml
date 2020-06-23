@@ -7,9 +7,10 @@ spring:
     username: root
     password: secret
   cloud:
+    schema-registry-client:
+      enabled: true
+      endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
     stream:
-      schema-registry-client:
-        endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
       kafka:
         binder:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
@@ -42,11 +43,11 @@ springdoc:
 spring:
   profiles: avro
   cloud:
+    schema:
+      avro:
+        schema-locations:
+          - classpath:avro/userevent-message.avsc
     stream:
-      schema:
-        avro:
-          schema-locations:
-            - classpath:avro/userevent-message.avsc
       bindings:
         output:
           content-type: application/*+avro
