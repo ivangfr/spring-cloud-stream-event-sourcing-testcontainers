@@ -3,8 +3,8 @@ package com.mycompany.eventservice.repository;
 import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.model.UserEventKey;
 import org.cassandraunit.spring.CassandraDataSet;
-import org.cassandraunit.spring.CassandraUnit;
 import org.cassandraunit.spring.CassandraUnitDependencyInjectionTestExecutionListener;
+import org.cassandraunit.spring.EmbeddedCassandra;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ import static org.assertj.core.api.Assertions.assertThat;
         CassandraUnitDependencyInjectionTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class
 })
+@EmbeddedCassandra
 @CassandraDataSet(value = "event-service.cql", keyspace = "mycompany")
 @SpringBootTest({
         "spring.data.cassandra.port=9142",
         "spring.data.cassandra.schema-action=RECREATE"
 })
-@CassandraUnit
 public class UserEventRepositoryTest {
 
     @Autowired

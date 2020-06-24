@@ -165,40 +165,6 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 1. Create new users and update/delete existing ones in order to see how the application works.
 
-## Shutdown
-
-- Stop applications
-  - If they were started with `Gradle`, go to the terminals where they are running and press `Ctrl+C`
-  - If they were started as a Docker container, run the script below
-    ```
-    ./stop-apps.sh
-    ```
-
-- To stop and remove docker-compose containers, networks and volumes, make sure you are inside `springboot-kafka-mysql-cassandra` root folder and run
-  ```
-  docker-compose down -v
-  ```
-
-## Running tests
-
-- **event-service**
-
-  - Run the command below to start the tests
-    ```
-    ./gradlew event-service:clean event-service:cleanTest event-service:test
-    ```
-
-- **user-service**
-
-  - We are using [`Testcontainers`](https://www.testcontainers.org/) to run integration tests. It starts automatically some Docker containers before the tests begin and shuts the containers down when the tests finish.
-  
-  - Make sure you have an updated `event-service` docker image because it will be used during the integration tests
-  
-  - Run the command below to start the tests
-    ```
-    ./gradlew user-service:clean user-service:cleanTest user-service:test
-    ```
-
 ## Useful Commands & Links
 
 - **MySQL**
@@ -247,14 +213,59 @@ partitions.
 
   ![kafka-manager](images/kafka-manager.png)
 
+## Shutdown
+
+- Stop applications
+  - If they were started with `Gradle`, go to the terminals where they are running and press `Ctrl+C`
+  - If they were started as a Docker container, run the script below
+    ```
+    ./stop-apps.sh
+    ```
+
+- To stop and remove docker-compose containers, networks and volumes, make sure you are inside `springboot-kafka-mysql-cassandra` root folder and run
+  ```
+  docker-compose down -v
+  ```
+
+## Running tests
+
+- **event-service**
+
+  - Run the command below to start the tests
+    ```
+    ./gradlew event-service:clean event-service:cleanTest event-service:test
+    ```
+
+- **user-service**
+
+  - Before start running the test, make sure you run the Shutdown steps. During integration tests, [`Testcontainers`](https://www.testcontainers.org/) will start automatically MongoDB and Keycloak containers before the tests begin and shuts them down when the tests finish.
+
+  - Also, make sure you have an updated `event-service` docker image because it will be used during the integration tests
+
+  - Run the command below to start the tests
+    - Using `JSON`
+      ```
+      ./gradlew user-service:clean user-service:cleanTest user-service:test
+      ```
+    - Using `Avro` **(NOT READY YET!)**
+      ```
+      SPRING_PROFILES_ACTIVE=avro ./gradlew user-service:clean user-service:cleanTest user-service:test
+      ```
+
 ## Issues
 
 - Disable some `UserEventRepositoryTest` test case because I was not able to make `org.cassandraunit:cassandra-unit-spring` to work in `event-service` since I updated to `springboot` version `2.3.1`
 
-- Unable to upgrade `Testcontainers` to version `1.14.3`. It seems that the tests cannot connect to `Kafka` that is running on `localhost:9092`
-
+- Unable to upgrade `Testcontainers` to version `1.14.3`. It seems that the tests cannot connect to `Kafka` that is running on `localhost:9092`.
+  - `1.11.4`
+    ```
+    advertised.listeners = PLAINTEXT://localhost:33019,BROKER://kafka:9092
+    ```
+  - `1.14.3`
+    ```
+    advertised.listeners = PLAINTEXT://localhost:33030,BROKER://172.23.0.4:9092
+    ```
+    
 ## References
 
 - https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/
-- https://docs.docker.com/reference/
-- https://docs.docker.com/compose/compose-file/compose-versioning/
