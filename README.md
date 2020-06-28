@@ -44,9 +44,9 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   
 ## Prerequisites
 
-- `Java 11+`
-- `Docker`
-- `Docker-Compose`
+- [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+- [`Docker`](https://www.docker.com/)
+- [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
 ## Start Environment
 
@@ -247,7 +247,8 @@ partitions.
       ```
       ./gradlew user-service:clean user-service:cleanTest user-service:test
       ```
-    - Using `Avro` **(NOT READY YET!)**
+    - Using `Avro`
+      > **Warning:** app starts with correct profile. However, messages are sent in json format.
       ```
       SPRING_PROFILES_ACTIVE=avro ./gradlew user-service:clean user-service:cleanTest user-service:test
       ```
@@ -255,16 +256,6 @@ partitions.
 ## Issues
 
 - Disable some `UserEventRepositoryTest` test case because I was not able to make `org.cassandraunit:cassandra-unit-spring` to work in `event-service` since I updated to `springboot` version `2.3.1`
-
-- Unable to upgrade `Testcontainers` to version `1.14.3`. It seems that the tests cannot connect to `Kafka` that is running on `localhost:9092`.
-  - `1.11.4`
-    ```
-    advertised.listeners = PLAINTEXT://localhost:33019,BROKER://kafka:9092
-    ```
-  - `1.14.3`
-    ```
-    advertised.listeners = PLAINTEXT://localhost:33030,BROKER://172.23.0.4:9092
-    ```
     
 ## References
 

@@ -3,7 +3,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/userdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/userdb?characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: secret
   cloud:
@@ -59,11 +59,13 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
-    url: jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: test
-    password: test
+    url:      # \
+    username: #  ) they will be set dynamically by AbstractTestcontainers
+    password: # /
   cloud:
+    schema-registry-client:
+      endpoint: # it will be set dynamically by AbstractTestcontainers
     stream:
       kafka:
         binder:
-          brokers: localhost:9092
+          brokers: # it will be set dynamically by AbstractTestcontainers

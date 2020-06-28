@@ -8,7 +8,6 @@ import com.mycompany.userservice.repository.UserRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -31,10 +30,9 @@ import static org.awaitility.Awaitility.await;
 
 @Slf4j
 @ActiveProfiles("test")
-@ExtendWith(ContainersExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class RandomPortTestRestTemplateTests {
+public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
     @Autowired
     private UserRepository userRepository;
@@ -48,7 +46,7 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenNoUsersWhenGetAllUsersThenReturnEmptyArray() {
-        ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
+        ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -57,10 +55,9 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenOneUserWhenGetAllUsersThenReturnArrayWithUser() {
-        User user = getDefaultUser();
-        user = userRepository.save(user);
+        User user = userRepository.save(getDefaultUser());
 
-        ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
+        ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -77,24 +74,25 @@ public class RandomPortTestRestTemplateTests {
     @Test
     void givenNoUsersWhenGetUserByIdThenReturnNotFound() {
         long id = 1L;
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity("/api/users/" + id, MessageError.class);
+        String url = String.format(API_USERS_USER_ID_URL, id);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity(url, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with id '" + id + "' doesn't exist.");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users/" + id);
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with id '1' doesn't exist.");
+        assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
     @Test
     void givenOneUserWhenGetUserByIdThenReturnUserJson() {
-        User user = getDefaultUser();
-        user = userRepository.save(user);
+        User user = userRepository.save(getDefaultUser());
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.getForEntity("/api/users/" + user.getId(), UserDto.class);
+        String url = String.format(API_USERS_USER_ID_URL, user.getId());
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.getForEntity(url, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -111,7 +109,7 @@ public class RandomPortTestRestTemplateTests {
     @Test
     void givenNoUsersWhenCreateUserThenReturnUserJson() {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, UserDto.class);
 
         log.info("{}", responseEntity);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -127,7 +125,8 @@ public class RandomPortTestRestTemplateTests {
 
         await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
-            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
+            String eventServiceUrl = String.format("%s/events/users/%s", EVENT_SERVICE_API_URL, userId);
+            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity(eventServiceUrl, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
             assertThat(Arrays.stream(eventServiceResponseEntity.getBody()).anyMatch(userEventDto -> userEventDto.getType().equals("CREATED"))).isTrue();
@@ -142,15 +141,15 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenOneUserWhenUpdateUserThenReturnUserJson() {
-        User user = getDefaultUser();
-        user = userRepository.save(user);
-        final Long userId = user.getId();
+        User user = userRepository.save(getDefaultUser());
+        final long userId = user.getId();
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setActive(false);
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + userId, HttpMethod.PUT, requestUpdate, UserDto.class);
+        String url = String.format(API_USERS_USER_ID_URL, userId);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, requestUpdate, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -161,7 +160,8 @@ public class RandomPortTestRestTemplateTests {
 
         await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
-            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
+            String eventServiceUrl = String.format("%s/events/users/%s", EVENT_SERVICE_API_URL, userId);
+            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity(eventServiceUrl, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
             assertThat(Arrays.stream(eventServiceResponseEntity.getBody()).anyMatch(userEventDto -> userEventDto.getType().equals("UPDATED"))).isTrue();
@@ -176,11 +176,11 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenOneUserWhenDeleteUserThenReturnUserJson() {
-        User user = getDefaultUser();
-        user = userRepository.save(user);
-        final Long userId = user.getId();
+        User user = userRepository.save(getDefaultUser());
+        final long userId = user.getId();
 
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + userId, HttpMethod.DELETE, null, UserDto.class);
+        String url = String.format(API_USERS_USER_ID_URL, userId);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -194,7 +194,8 @@ public class RandomPortTestRestTemplateTests {
 
         await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
-            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity("http://localhost:9081/api/events/users/" + userId, EventServiceUserEventDto[].class);
+            String eventServiceUrl = String.format("%s/events/users/%s", EVENT_SERVICE_API_URL, userId);
+            ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity(eventServiceUrl, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
             assertThat(Arrays.stream(eventServiceResponseEntity.getBody()).anyMatch(userEventDto -> userEventDto.getType().equals("DELETED"))).isTrue();
@@ -247,5 +248,8 @@ public class RandomPortTestRestTemplateTests {
             private String code;
         }
     }
+
+    private static final String API_USERS_URL = "/api/users";
+    private static final String API_USERS_USER_ID_URL = "/api/users/%s";
 
 }
