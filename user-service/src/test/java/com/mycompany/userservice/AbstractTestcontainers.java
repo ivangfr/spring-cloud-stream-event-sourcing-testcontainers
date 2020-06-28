@@ -77,8 +77,8 @@ public abstract class AbstractTestcontainers {
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
 
-        String schemaRegistryUrl = String.format("http://%s:%s", schemaRegistryContainer.getHost(), schemaRegistryContainer.getMappedPort(8081));
-        registry.add("spring.cloud.schema-registry-client", () -> schemaRegistryUrl);
+        String schemaRegistryUrl = String.format("http://localhost:%s", schemaRegistryContainer.getMappedPort(8081));
+        registry.add("spring.cloud.schema-registry-client.endpoint", () -> schemaRegistryUrl);
         registry.add("spring.cloud.stream.kafka.binder.brokers", kafkaContainer::getBootstrapServers);
 
         EVENT_SERVICE_API_URL = String.format("http://localhost:%s/api", eventServiceContainer.getMappedPort(8080));

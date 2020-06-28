@@ -149,13 +149,13 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 1. Access `user-service` Swagger website http://localhost:9080/swagger-ui.html
 
-   ![user-service](images/user-service.png)
+   ![user-service](images/user-service-swagger.png)
 
 1. Create a new user, `POST /api/users`
 
 1. Access `event-service` Swagger website http://localhost:9081/swagger-ui.html
 
-   ![event-service](images/event-service.png)
+   ![event-service](images/event-service-swagger.png)
 
 1. Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
 
