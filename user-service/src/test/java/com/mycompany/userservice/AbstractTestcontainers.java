@@ -18,9 +18,9 @@ import java.time.Duration;
 public abstract class AbstractTestcontainers {
 
     private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.20");
-    private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:5.4.1");
-    private static final KafkaContainer kafkaContainer = new KafkaContainer("5.4.1");
-    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:5.4.1");
+    private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:5.5.1");
+    private static final KafkaContainer kafkaContainer = new KafkaContainer("5.5.1");
+    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:5.5.1");
     private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.6");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("docker.mycompany.com/event-service:1.0.0");
 
