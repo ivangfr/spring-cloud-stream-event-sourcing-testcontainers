@@ -1,4 +1,4 @@
-# springboot-kafka-mysql-cassandra
+# spring-cloud-stream-event-sourcing-testcontainers
 
 The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org/) to run the integration tests of all project.
 
@@ -37,7 +37,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   
   - **Java classes from Avro Schema**
   
-    Run the following command in `springboot-kafka-mysql-cassandra` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
+    Run the following command in `spring-cloud-stream-event-sourcing-testcontainers` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
     ```
     ./gradlew event-service:generateAvro
     ```
@@ -50,7 +50,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Start Environment
 
-- In a terminal and inside `springboot-kafka-mysql-cassandra` root folder run
+- In a terminal and inside `spring-cloud-stream-event-sourcing-testcontainers` root folder run
   ```
   docker-compose up -d
   ```
@@ -62,7 +62,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Running Applications with Gradle
 
-Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle` commands in different terminals.
+Inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following `Gradle` commands in different terminals.
 
 > **Note:** start `user-service` first, so it created the `com.mycompany.userservice.user` partitioned.
 
@@ -87,7 +87,7 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ### Build Application's Docker Image
 
-- In a terminal, make sure you are inside `springboot-kafka-mysql-cassandra` root folder
+- In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
 
 - Run the following script to build the application's docker images 
   ```
@@ -124,7 +124,7 @@ Inside `springboot-kafka-mysql-cassandra` root folder, run the following `Gradle
 
 ### Start Application's Docker Container
 
-- In a terminal, make sure you are inside `springboot-kafka-mysql-cassandra` root folder
+- In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
 
 - In order to run the application's docker containers, you can pick between `JSON` or `Avro`
 
@@ -222,7 +222,7 @@ partitions.
     ./stop-apps.sh
     ```
 
-- To stop and remove docker-compose containers, networks and volumes, make sure you are inside `springboot-kafka-mysql-cassandra` root folder and run
+- To stop and remove docker-compose containers, networks and volumes, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder and run
   ```
   docker-compose down -v
   ```
