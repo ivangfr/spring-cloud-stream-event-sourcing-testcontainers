@@ -32,7 +32,7 @@ import static org.awaitility.Awaitility.await;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
+class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
     @Autowired
     private UserRepository userRepository;
@@ -50,7 +50,7 @@ public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody()).hasSize(0);
+        assertThat(responseEntity.getBody()).isEmpty();
     }
 
     @Test

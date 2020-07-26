@@ -1,6 +1,6 @@
 # springboot-kafka-mysql-cassandra
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org).
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org/) to run the integration tests of all project.
 
 > **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-monitoring) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -55,7 +55,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   docker-compose up -d
   ```
 
-- Wait a little bit until all containers are `Up (healthy)`. You can check by running the following command
+- Wait a bit until all containers are `Up (healthy)`. You can check by running the following command
   ```
   docker-compose ps
   ```
@@ -238,9 +238,8 @@ partitions.
 
 - **user-service**
 
-  - Before start running the test, make sure you run the Shutdown steps. During integration tests, [`Testcontainers`](https://www.testcontainers.org/) will start automatically MongoDB and Keycloak containers before the tests begin and shuts them down when the tests finish.
-
-  - Also, make sure you have an updated `event-service` docker image because it will be used during the integration tests
+  - During integration tests, [`Testcontainers`](https://www.testcontainers.org/) will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra` and `event-service` containers before the tests begin and shuts them down when the tests finish.
+    > **Note:** Make sure you have an updated `event-service` docker image
 
   - Run the command below to start the tests
     - Using `JSON`

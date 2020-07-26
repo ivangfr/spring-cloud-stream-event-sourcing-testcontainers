@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         "spring.data.cassandra.port=9142",
         "spring.data.cassandra.schema-action=RECREATE"
 })
-public class UserEventRepositoryTest {
+class UserEventRepositoryTest {
 
     @Autowired
     private UserEventRepository userEventRepository;
@@ -36,7 +36,7 @@ public class UserEventRepositoryTest {
     @Test
     void givenNoUserEventWhenFindByKeyUserIdThenReturnEmptyList() {
         List<UserEvent> userEvents = userEventRepository.findByKeyUserId(1L);
-        assertThat(userEvents).hasSize(0);
+        assertThat(userEvents).isEmpty();
     }
 
     @Disabled("Unable to fix it after updating springboot version to 2.3.1")

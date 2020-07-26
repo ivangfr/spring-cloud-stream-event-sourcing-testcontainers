@@ -21,8 +21,6 @@ import java.util.UUID;
 @EnableBinding(Source.class)
 public class UserStream {
 
-    private static final long SEND_BUS_TIMEOUT = 3000;
-
     private final Source source;
     private final Gson gson;
 
@@ -69,5 +67,7 @@ public class UserStream {
         source.output().send(message, SEND_BUS_TIMEOUT);
         log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
     }
+
+    private static final long SEND_BUS_TIMEOUT = 3000;
 
 }
