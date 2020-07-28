@@ -2,7 +2,7 @@
 
 The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org/) to run the integration tests of all project.
 
-> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-monitoring) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/movies-api-elk-prometheus-grafana) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Project Architecture
 

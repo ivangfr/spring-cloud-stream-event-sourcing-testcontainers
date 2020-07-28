@@ -17,7 +17,7 @@ import java.time.Duration;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.20");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.21");
     private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:5.5.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer("5.5.1");
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:5.5.1");

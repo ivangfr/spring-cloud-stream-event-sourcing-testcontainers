@@ -25,6 +25,12 @@ public class CassandraConfig {
     @Value("${spring.data.cassandra.keyspace-name}")
     private String keyspaceName;
 
+    @Value("${spring.data.cassandra.username:@null}")
+    private String username;
+
+    @Value("${spring.data.cassandra.password:@null}")
+    private String password;
+
     @Bean
     CqlSessionFactoryBean session() {
         CqlSessionFactoryBean session = new CqlSessionFactoryBean();
@@ -32,6 +38,8 @@ public class CassandraConfig {
         session.setPort(port);
         session.setLocalDatacenter(localDatacenter);
         session.setKeyspaceName(keyspaceName);
+        session.setUsername(username);
+        session.setPassword(password);
         session.setKeyspaceCreations(getKeyspaceCreations());
         return session;
     }

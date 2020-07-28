@@ -114,7 +114,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         log.info("{}", responseEntity);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isGreaterThan(0);
+        assertThat(responseEntity.getBody().getId()).isPositive();
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(createUserDto.getEmail());
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(createUserDto.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(createUserDto.getActive());
