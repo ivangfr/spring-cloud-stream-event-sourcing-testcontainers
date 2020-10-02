@@ -1,6 +1,6 @@
-package com.mycompany.eventservice.controller;
+package com.mycompany.eventservice.rest;
 
-import com.mycompany.eventservice.dto.UserEventDto;
+import com.mycompany.eventservice.rest.dto.UserEventDto;
 import com.mycompany.eventservice.mapper.UserMapper;
 import com.mycompany.eventservice.service.UserEventService;
 import lombok.RequiredArgsConstructor;

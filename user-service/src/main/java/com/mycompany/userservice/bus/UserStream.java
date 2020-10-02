@@ -1,10 +1,10 @@
 package com.mycompany.userservice.bus;
 
 import com.google.gson.Gson;
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.messages.EventType;
 import com.mycompany.userservice.messages.UserEventMessage;
+import com.mycompany.userservice.rest.dto.CreateUserDto;
+import com.mycompany.userservice.rest.dto.UpdateUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;

@@ -21,7 +21,7 @@ public abstract class AbstractTestcontainers {
     private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:5.5.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer("5.5.1");
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:5.5.1");
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.6");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.7");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("docker.mycompany.com/event-service:1.0.0");
 
     protected static String EVENT_SERVICE_API_URL;

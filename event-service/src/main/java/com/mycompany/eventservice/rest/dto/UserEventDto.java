@@ -1,4 +1,4 @@
-package com.mycompany.eventservice.dto;
+package com.mycompany.eventservice.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

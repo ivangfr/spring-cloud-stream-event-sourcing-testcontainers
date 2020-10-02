@@ -1,11 +1,11 @@
-package com.mycompany.userservice.controller;
+package com.mycompany.userservice.rest;
 
 import com.mycompany.userservice.bus.UserStream;
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
-import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
+import com.mycompany.userservice.rest.dto.CreateUserDto;
+import com.mycompany.userservice.rest.dto.UpdateUserDto;
+import com.mycompany.userservice.rest.dto.UserDto;
 import com.mycompany.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

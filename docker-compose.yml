@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   cassandra:
-    image: cassandra:3.11.6
+    image: cassandra:3.11.7
     container_name: cassandra
     restart: unless-stopped
     ports:

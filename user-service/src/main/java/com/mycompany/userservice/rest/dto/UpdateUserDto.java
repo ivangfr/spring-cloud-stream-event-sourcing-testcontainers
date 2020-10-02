@@ -1,4 +1,4 @@
-package com.mycompany.userservice.dto;
+package com.mycompany.userservice.rest.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,10 +1,10 @@
 package com.mycompany.userservice;
 
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
-import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
+import com.mycompany.userservice.rest.dto.CreateUserDto;
+import com.mycompany.userservice.rest.dto.UpdateUserDto;
+import com.mycompany.userservice.rest.dto.UserDto;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

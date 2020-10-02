@@ -1,8 +1,8 @@
 package com.mycompany.userservice.mapper;
 
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
-import com.mycompany.userservice.dto.UserDto;
+import com.mycompany.userservice.rest.dto.CreateUserDto;
+import com.mycompany.userservice.rest.dto.UpdateUserDto;
+import com.mycompany.userservice.rest.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

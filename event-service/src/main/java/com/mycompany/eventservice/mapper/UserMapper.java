@@ -1,6 +1,6 @@
 package com.mycompany.eventservice.mapper;
 
-import com.mycompany.eventservice.dto.UserEventDto;
+import com.mycompany.eventservice.rest.dto.UserEventDto;
 import com.mycompany.eventservice.model.UserEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

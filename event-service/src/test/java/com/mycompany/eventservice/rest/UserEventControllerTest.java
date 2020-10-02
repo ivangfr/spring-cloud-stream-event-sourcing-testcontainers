@@ -1,4 +1,4 @@
-package com.mycompany.eventservice.controller;
+package com.mycompany.eventservice.rest;
 
 import com.mycompany.eventservice.mapper.UserMapperImpl;
 import com.mycompany.eventservice.model.UserEvent;
