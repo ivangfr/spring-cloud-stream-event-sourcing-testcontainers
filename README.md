@@ -254,8 +254,20 @@ partitions.
 
 ## Issues
 
-- Disable some `UserEventRepositoryTest` test case because I was not able to make `org.cassandraunit:cassandra-unit-spring` to work in `event-service` since I updated to `springboot` version `2.3.1`
-    
+- When using the dependency `org.springframework.cloud:spring-cloud-stream:test-binder@test-jar` instead of `org.springframework.cloud:spring-cloud-stream-test-support`, it is throwing the following exception
+  ```
+   * What went wrong:
+   Execution failed for task ':event-service:compileTestJava'.
+   > Could not resolve all files for configuration ':event-service:testCompileClasspath'.
+      > Could not find org.springframework.cloud:spring-cloud-stream:test-binder.
+        Required by:
+            project :event-service
+      > Could not find org.springframework.cloud:spring-cloud-stream:test-binder.
+        Required by:
+            project :event-service > org.springframework.cloud:spring-cloud-starter-stream-kafka:3.1.0-M4 > org.springframework.cloud:spring-cloud-stream-binder-kafka:3.1.0-M4
+            project :event-service > org.springframework.cloud:spring-cloud-starter-stream-kafka:3.1.0-M4 > org.springframework.cloud:spring-cloud-stream-binder-kafka:3.1.0-M4 > org.springframework.cloud:spring-cloud-stream-binder-kafka-core:3.1.0-M4
+  ```
+
 ## References
 
 - https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/

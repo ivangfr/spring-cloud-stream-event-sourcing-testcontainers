@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         CassandraUnitDependencyInjectionTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class
 })
-@EmbeddedCassandra(timeout = 60000)
+@EmbeddedCassandra
 @CassandraDataSet(value = "event-service.cql", keyspace = "mycompany")
 @SpringBootTest({
         "spring.data.cassandra.port=9142",
