@@ -67,7 +67,7 @@ public class UserController {
 
         String userEmail = user.getEmail();
         String updateUserDtoEmail = updateUserDto.getEmail();
-        if (!StringUtils.isEmpty(updateUserDtoEmail) && !updateUserDtoEmail.equals(userEmail)) {
+        if (StringUtils.hasText(updateUserDtoEmail) && !updateUserDtoEmail.equals(userEmail)) {
             userService.validateUserExistsByEmail(updateUserDtoEmail);
         }
 

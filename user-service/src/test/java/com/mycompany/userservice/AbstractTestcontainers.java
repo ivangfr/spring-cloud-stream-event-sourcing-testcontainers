@@ -10,6 +10,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
 
@@ -17,11 +18,11 @@ import java.time.Duration;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.21");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.22");
     private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:5.5.1");
-    private static final KafkaContainer kafkaContainer = new KafkaContainer("5.5.1");
+    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.5.1"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:5.5.1");
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.7");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.9");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("docker.mycompany.com/event-service:1.0.0");
 
     protected static String EVENT_SERVICE_API_URL;

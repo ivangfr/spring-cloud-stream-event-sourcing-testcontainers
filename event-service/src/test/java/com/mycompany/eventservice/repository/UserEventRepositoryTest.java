@@ -5,7 +5,6 @@ import com.mycompany.eventservice.model.UserEventKey;
 import org.cassandraunit.spring.CassandraDataSet;
 import org.cassandraunit.spring.CassandraUnitDependencyInjectionTestExecutionListener;
 import org.cassandraunit.spring.EmbeddedCassandra;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         CassandraUnitDependencyInjectionTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class
 })
-@EmbeddedCassandra
+@EmbeddedCassandra(timeout = 60000)
 @CassandraDataSet(value = "event-service.cql", keyspace = "mycompany")
 @SpringBootTest({
         "spring.data.cassandra.port=9142",
@@ -39,7 +38,7 @@ class UserEventRepositoryTest {
         assertThat(userEvents).isEmpty();
     }
 
-    @Disabled("Unable to fix it after updating springboot version to 2.3.1")
+    // Sometimes this test fails due to: Caused by: com.datastax.oss.driver.api.core.DriverTimeoutException: Query timed out after PT2S
     @Test
     void givenOneUserEventWhenFindByKeyUserIdThenReturnListWitOneUserEvent() {
         Long userId = 1L;
@@ -59,7 +58,6 @@ class UserEventRepositoryTest {
         assertThat(userEvents.get(0).getType()).isEqualTo(type);
     }
 
-    @Disabled("Unable to fix it after updating springboot version to 2.3.1")
     @Test
     void givenTwoUserEventsWhenFindByKeyUserIdThenReturnListUserEventsOrdered() {
         Long userId = 1L;

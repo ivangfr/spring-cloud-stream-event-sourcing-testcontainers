@@ -121,7 +121,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
         final Long userId = responseEntity.getBody().getId();
         Optional<User> userFound = userRepository.findById(userId);
-        assertThat(userFound.isPresent()).isTrue();
+        assertThat(userFound).isPresent();
 
         await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
@@ -190,7 +190,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getActive()).isEqualTo(user.getActive());
 
         Optional<User> userNotFound = userRepository.findById(userId);
-        assertThat(userNotFound.isPresent()).isFalse();
+        assertThat(userNotFound).isNotPresent();
 
         await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
