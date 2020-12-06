@@ -6,27 +6,26 @@ import com.mycompany.eventservice.service.UserEventService;
 import com.mycompany.userservice.messages.UserEventMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.function.Consumer;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@EnableBinding(Sink.class)
 public class UserStream {
 
     private final UserEventService userEventService;
 
-    @StreamListener(Sink.INPUT)
-    public void process(Message<UserEventMessage> message) {
-        log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
-
-        userEventService.saveUserEvent(createUserEvent(message));
+    @Bean
+    public Consumer<Message<UserEventMessage>> save() {
+        return message -> {
+            log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
+            userEventService.saveUserEvent(createUserEvent(message));
+        };
     }
 
     private UserEvent createUserEvent(Message<UserEventMessage> message) {

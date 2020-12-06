@@ -17,7 +17,7 @@ spring:
           auto-add-partitions: true # \ both event-service and user-service can create topic and add partitions
           min-partition-count: 3    # /
       bindings:
-        input:
+        save-in-0:
           destination: com.mycompany.userservice.user
           content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup

@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'com.google.cloud.tools.jib' version '2.6.0'
+    id 'com.google.cloud.tools.jib' version '2.7.0'
 }
 
 group = 'com.mycompany'
@@ -15,7 +15,7 @@ configurations {
 }
 
 ext {
-    set('springCloudVersion', '2020.0.0-M5')
+    set('springCloudVersion', '2020.0.0-M6')
     set('avroVersion', '1.9.2')
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
