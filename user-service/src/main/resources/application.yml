@@ -41,7 +41,8 @@ springdoc:
 
 ---
 spring:
-  profiles: avro
+  config:
+    activate.on-profile: avro
   cloud:
     schema:
       avro:
@@ -54,7 +55,8 @@ spring:
 
 ---
 spring:
-  profiles: test
+  config:
+    activate.on-profile: test
   jpa:
     hibernate:
       ddl-auto: create-drop

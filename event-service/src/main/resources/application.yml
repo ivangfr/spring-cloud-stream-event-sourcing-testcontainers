@@ -39,18 +39,18 @@ springdoc:
     groups-order: DESC
 
 # In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
-# strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management). The
-# precedence orders are: 1st, content-type present in the message header; 2nd content-type defined in the binding;
+# strategy (https://cloud.spring.io/spring-cloud-static/spring-cloud-stream/current/reference/html/spring-cloud-stream.html#content-type-management).
+# The precedence orders are: 1st, content-type present in the message header; 2nd content-type defined in the binding;
 # and finally, content-type is "application/json" (default).
 #
 # The producer (in the case user-service) always sets the content-type in the message header. The content-type can be
 # "application/json" or "application/*+avro", depending on with which profile user-service is started.
 #
-# So, define the content-type in the binding is not needed due to the reasons explained about. Anyway, I will keep the
-# definition here but commented.
+# So, define the content-type in the binding is not needed. Anyway, I will keep the definition here but commented.
 #---
 #spring:
-#  profiles: avro
+#  config:
+#    activate.on-profile: avro
 #  cloud:
 #    stream:
 #      bindings:

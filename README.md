@@ -1,6 +1,6 @@
 # spring-cloud-stream-event-sourcing-testcontainers
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](http://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org/) to run the integration tests of all project.
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) to run the integration tests of all project.
 
 > **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-kafka) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -93,6 +93,11 @@ Inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the 
   ```
   ./build-apps.sh
   ```
+  In order to build the **Docker Native Image** run
+  ```
+  ./build-apps.sh native
+  ```
+  > **Note:** the building to Docker Native Image is not working yet!
 
 ### Application's Environment Variables
    

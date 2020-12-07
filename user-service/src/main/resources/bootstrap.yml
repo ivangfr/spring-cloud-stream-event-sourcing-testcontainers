@@ -7,6 +7,7 @@ spring:
 
 ---
 spring:
-  profiles: test
+  config:
+    activate.on-profile: test
   zipkin:
     enabled: false

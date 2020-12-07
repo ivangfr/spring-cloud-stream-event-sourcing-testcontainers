@@ -20,8 +20,10 @@ ext {
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
     set('springdocOpenApiVerison', '1.5.0')
+    set('springGraalvmNative', '0.8.3')
     set('testcontainersVersion', '1.15.0')
     set('awaitilityVersion', '4.0.3')
+    set('dockerImagePrefix', 'docker.mycompany.com')
 }
 
 dependencies {
@@ -47,6 +49,8 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
     implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
+
+    implementation "org.springframework.experimental:spring-graalvm-native:${springGraalvmNative}"
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
@@ -83,9 +87,18 @@ jib {
         image = 'openjdk:11.0.9'
     }
     to {
-        image = "docker.mycompany.com/user-service:${project.version}"
+        image = "${dockerImagePrefix}/${project.name}:${project.version}"
     }
     container {
         ports = ['8080']
     }
+}
+
+bootBuildImage {
+    builder = "paketobuildpacks/builder:tiny"
+    imageName = "${dockerImagePrefix}/${project.name}:${project.version}"
+    environment = [
+            "BP_BOOT_NATIVE_IMAGE" : "1",
+            "BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS": "-Dspring.spel.ignore=true"
+    ]
 }
