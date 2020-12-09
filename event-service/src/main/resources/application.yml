@@ -8,7 +8,6 @@ spring:
       schema-action: CREATE_IF_NOT_EXISTS
   cloud:
     schema-registry-client:
-      enabled: true
       endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
     stream:
       kafka:

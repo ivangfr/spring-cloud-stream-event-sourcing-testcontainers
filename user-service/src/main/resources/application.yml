@@ -8,17 +8,17 @@ spring:
     password: secret
   cloud:
     schema-registry-client:
-      enabled: true
       endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
     stream:
+      source: users
       kafka:
         binder:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true # (*) both user-service and event-service can create topic and add partitions
       bindings:
-        output:
+        stream-out-0:
           destination: com.mycompany.userservice.user
-          content-type: application/json # it's redundant here, 'application/json' is the default
+          content-type: application/json
           producer:
             partition-key-expression: headers['partitionKey']
             partition-count: 3 # (*)
@@ -50,7 +50,7 @@ spring:
           - classpath:avro/userevent-message.avsc
     stream:
       bindings:
-        output:
+        stream-out-0:
           content-type: application/*+avro
 
 ---

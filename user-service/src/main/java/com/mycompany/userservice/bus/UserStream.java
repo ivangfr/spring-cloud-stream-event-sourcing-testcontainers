@@ -7,22 +7,25 @@ import com.mycompany.userservice.rest.dto.CreateUserDto;
 import com.mycompany.userservice.rest.dto.UpdateUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeType;
 
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@EnableBinding(Source.class)
 public class UserStream {
 
-    private final Source source;
+    private final StreamBridge streamBridge;
     private final Gson gson;
+
+    @Value("${spring.cloud.stream.bindings.stream-out-0.content-type}")
+    private String streamOutMimeType;
 
     public void userCreated(Long id, CreateUserDto createUserDto) {
         UserEventMessage userEventMessage = UserEventMessage.builder()
@@ -64,10 +67,8 @@ public class UserStream {
                 .setHeader("partitionKey", partitionKey)
                 .build();
 
-        source.output().send(message, SEND_BUS_TIMEOUT);
+        streamBridge.send("stream-out-0", message, MimeType.valueOf(streamOutMimeType));
         log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
     }
-
-    private static final long SEND_BUS_TIMEOUT = 3000;
 
 }
