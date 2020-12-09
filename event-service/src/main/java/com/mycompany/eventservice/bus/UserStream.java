@@ -21,7 +21,7 @@ public class UserStream {
     private final UserEventService userEventService;
 
     @Bean
-    public Consumer<Message<UserEventMessage>> save() {
+    public Consumer<Message<UserEventMessage>> users() {
         return message -> {
             log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
             userEventService.saveUserEvent(createUserEvent(message));

@@ -16,7 +16,7 @@ spring:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true # (*) both user-service and event-service can create topic and add partitions
       bindings:
-        stream-out-0:
+        users-out-0:
           destination: com.mycompany.userservice.user
           content-type: application/json
           producer:
@@ -50,7 +50,7 @@ spring:
           - classpath:avro/userevent-message.avsc
     stream:
       bindings:
-        stream-out-0:
+        users-out-0:
           content-type: application/*+avro
 
 ---

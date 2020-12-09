@@ -24,7 +24,7 @@ public class UserStream {
     private final StreamBridge streamBridge;
     private final Gson gson;
 
-    @Value("${spring.cloud.stream.bindings.stream-out-0.content-type}")
+    @Value("${spring.cloud.stream.bindings.users-out-0.content-type}")
     private String streamOutMimeType;
 
     public void userCreated(Long id, CreateUserDto createUserDto) {
@@ -67,7 +67,7 @@ public class UserStream {
                 .setHeader("partitionKey", partitionKey)
                 .build();
 
-        streamBridge.send("stream-out-0", message, MimeType.valueOf(streamOutMimeType));
+        streamBridge.send("users-out-0", message, MimeType.valueOf(streamOutMimeType));
         log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
     }
 
