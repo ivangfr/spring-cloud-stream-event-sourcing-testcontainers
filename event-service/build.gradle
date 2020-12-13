@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.0'
+    id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'com.commercehub.gradle.plugin.avro' version '0.9.1'
     id 'com.google.cloud.tools.jib' version '2.7.0'
@@ -17,10 +17,10 @@ configurations {
 
 ext {
     set('springCloudVersion', '2020.0.0-M6')
-    set('avroVersion', '1.9.2')
+    set('avroVersion', '1.10.1')
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
-    set('springdocOpenApiVerison', '1.5.0')
+    set('springdocOpenApiVerison', '1.5.1')
     set('springGraalvmNative', '0.8.3')
     set('cassandraUnitSpringVersion', '4.3.1.0')
     set('dockerImagePrefix', 'docker.mycompany.com')

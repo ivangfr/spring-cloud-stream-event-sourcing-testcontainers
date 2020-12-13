@@ -1,6 +1,6 @@
 # spring-cloud-stream-event-sourcing-testcontainers
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) to run the integration tests of all project.
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) to run the integration tests.
 
 > **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-kafka) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -16,7 +16,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   - **Serialization format**
 
-    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by Kafka. If `Avro` format is chosen, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
   
     | Configuration                    | Format |
     | -------------------------------- | ------ |
@@ -25,7 +25,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 - ### event-service
 
-  `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving those events in `Cassandra`.
+  `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving them in `Cassandra`.
 
   - **Deserialization**
   
@@ -55,33 +55,35 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   docker-compose up -d
   ```
 
-- Wait a bit until all containers are `Up (healthy)`. You can check by running the following command
+- Wait until all containers are `Up (healthy)`. You can check by running the following command
   ```
   docker-compose ps
   ```
 
 ## Running Applications with Gradle
 
-Inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following `Gradle` commands in different terminals.
-
-> **Note:** start `user-service` first, so it created the `com.mycompany.userservice.user` partitioned.
-
 - **user-service**
+
+  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
   
-  - Using `JSON`
-    ```
-    ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080'
-    ```
-  
-  - Using `Avro`
-    ```
-    ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
-    ```
+  - In order to run the application, you can pick between `JSON` or `Avro`
+    - Using `JSON`
+      ```
+      ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080'
+      ```
+    - Using `Avro`
+      ```
+      ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
+      ```
 
 - **event-service**
-  ```
-  ./gradlew event-service:clean event-service:bootRun --args='--server.port=9081'
-  ```
+
+  - In a new terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  
+  - Run the following command
+    ```
+    ./gradlew event-service:clean event-service:bootRun --args='--server.port=9081'
+    ```
 
 ## Running Applications as Docker containers
 
@@ -89,15 +91,15 @@ Inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the 
 
 - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
 
-- Run the following script to build the application's docker images 
-  ```
-  ./build-apps.sh
-  ```
-  In order to build the **Docker Native Image** run
-  ```
-  ./build-apps.sh native
-  ```
-  > **Note:** the building to Docker Native Image is not working yet!
+- Run the following script to build the Docker images
+  - JVM 
+    ```
+    ./build-apps.sh
+    ```
+  - Native
+    ```
+    ./build-apps.sh native
+    ```
 
 ### Application's Environment Variables
    
@@ -131,13 +133,11 @@ Inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the 
 
 - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
 
-- In order to run the application's docker containers, you can pick between `JSON` or `Avro`
-
+- In order to run the application's docker container, you can pick between `JSON` or `Avro`
   - Using `JSON`
     ```
     ./start-apps.sh
     ```
-    
   - Using `Avro`
     ```
     ./start-apps.sh avro
@@ -258,6 +258,48 @@ partitions.
       ```
 
 ## Issues
+
+- When building the Docker native image of `event-service` and `user-service`, it's throwing the following exception
+  ```
+      [creator]     Fatal error:java.lang.IllegalStateException: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
+      [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+      [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+      [creator]           at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+      [creator]           at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+      [creator]           at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:600)
+      [creator]           at java.base/java.util.concurrent.ForkJoinTask.get(ForkJoinTask.java:1006)
+      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.run(NativeImageGenerator.java:483)
+      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.buildImage(NativeImageGeneratorRunner.java:350)
+      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.build(NativeImageGeneratorRunner.java:509)
+      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.main(NativeImageGeneratorRunner.java:115)
+      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner$JDK9Plus.main(NativeImageGeneratorRunner.java:541)
+      [creator]     Caused by: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
+      [creator]           at org.springframework.graalvm.type.Type.verifyComponent(Type.java:2273)
+      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processType(ResourcesHandler.java:1282)
+      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processType(ResourcesHandler.java:960)
+      [creator]           at org.springframework.graalvm.support.ResourcesHandler.checkAndRegisterConfigurationType(ResourcesHandler.java:950)
+      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processSpringFactory(ResourcesHandler.java:849)
+      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processSpringFactories(ResourcesHandler.java:714)
+      [creator]           at org.springframework.graalvm.support.ResourcesHandler.register(ResourcesHandler.java:130)
+      [creator]           at org.springframework.graalvm.support.SpringFeature.beforeAnalysis(SpringFeature.java:107)
+      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$runPointsToAnalysis$7(NativeImageGenerator.java:696)
+      [creator]           at com.oracle.svm.hosted.FeatureHandler.forEachFeature(FeatureHandler.java:70)
+      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.runPointsToAnalysis(NativeImageGenerator.java:696)
+      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.doRun(NativeImageGenerator.java:558)
+      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$run$0(NativeImageGenerator.java:471)
+      [creator]           at java.base/java.util.concurrent.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1407)
+      [creator]           at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+      [creator]           at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+      [creator]           at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+      [creator]           at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+      [creator]           at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+      [creator]     Error: Image build request failed with exit status 1
+      [creator]     unable to invoke layer creator
+      [creator]     unable to contribute native-image layer
+      [creator]     error running build
+      [creator]     exit status 1
+      [creator]     ERROR: failed to build: exit status 1
+  ```
 
 - When using the dependency `org.springframework.cloud:spring-cloud-stream:test-binder@test-jar` instead of `org.springframework.cloud:spring-cloud-stream-test-support`, it is throwing the following exception
   ```
