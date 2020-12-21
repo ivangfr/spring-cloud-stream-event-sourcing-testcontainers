@@ -13,6 +13,8 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 - ### user-service
 
   `Spring Boot` Web Java application responsible for handling users. The user information is stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
+  
+  ![user-service](images/user-service-swagger.png)
 
   - **Serialization format**
 
@@ -26,6 +28,8 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 - ### event-service
 
   `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving them in `Cassandra`.
+
+  ![event-service](images/event-service-swagger.png)
 
   - **Deserialization**
   
@@ -152,23 +156,23 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Playing around
 
-1. Access `user-service` Swagger website http://localhost:9080/swagger-ui.html
+1. Create a user
+   ```
+   curl -i -X POST localhost:9080/api/users \
+     -H  "Content-Type: application/json" \
+     -d '{"email":"ivan.franchin@test.com","fullName":"Ivan Franchin","active":true}'
+   ```
 
-   ![user-service](images/user-service-swagger.png)
+1. Check whether the event related to the user creation was received by `event-service`
+   ```
+   curl -i localhost:9081/api/events/users/1
+   ```
 
-1. Create a new user, `POST /api/users`
-
-1. Access `event-service` Swagger website http://localhost:9081/swagger-ui.html
-
-   ![event-service](images/event-service-swagger.png)
-
-1. Get all events related to the user created, informing the user id `GET /api/events/users/{id}`
-
-1. You can also check how the event was sent by `user-service` and listened by `event-service` (as shown on the image below) using [`Zipkin`](https://zipkin.io) http://localhost:9411
+1. You can check me message trace using [`Zipkin`](https://zipkin.io) http://localhost:9411. The picture below shows an example 
 
    ![zipkin](images/zipkin.png)
 
-1. Create new users and update/delete existing ones in order to see how the application works.
+1. Access `user-service` and `event-service` Swagger website and create new users and/or update/delete existing
 
 ## Useful Commands & Links
 
@@ -213,7 +217,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
   - Click on `Save` button at the bottom of the page.
 
-  The image below shows the topics present in Kafka, including the topic `com.mycompany.userservice.user` with `2`
+  The image below shows the topics present in Kafka, including the topic `com.mycompany.userservice.user` with `3`
 partitions.
 
   ![kafka-manager](images/kafka-manager.png)

@@ -16,13 +16,14 @@ configurations {
 }
 
 ext {
-    set('springCloudVersion', '2020.0.0-M6')
+    set('springCloudVersion', '2020.0.0-RC1')
     set('avroVersion', '1.10.1')
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
     set('springdocOpenApiVerison', '1.5.1')
-    set('springGraalvmNative', '0.8.3')
+    set('springGraalvmNative', '0.8.4')
     set('cassandraUnitSpringVersion', '4.3.1.0')
+    set('openjdkImageVersion', '11.0.9')
     set('dockerImagePrefix', 'docker.mycompany.com')
 }
 
@@ -88,7 +89,7 @@ compileJava.source(generateAvro.outputs)
 
 jib {
     from {
-        image = 'openjdk:11.0.9'
+        image = "openjdk:${openjdkImageVersion}"
     }
     to {
         image ="${dockerImagePrefix}/${project.name}:${project.version}"

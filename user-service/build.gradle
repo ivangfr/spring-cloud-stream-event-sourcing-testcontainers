@@ -15,14 +15,15 @@ configurations {
 }
 
 ext {
-    set('springCloudVersion', '2020.0.0-M6')
+    set('springCloudVersion', '2020.0.0-RC1')
     set('avroVersion', '1.10.1')
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
     set('springdocOpenApiVerison', '1.5.1')
-    set('springGraalvmNative', '0.8.3')
-    set('testcontainersVersion', '1.15.0')
+    set('springGraalvmNative', '0.8.4')
+    set('testcontainersVersion', '1.15.1')
     set('awaitilityVersion', '4.0.3')
+    set('openjdkVersion', '11.0.9')
     set('dockerImagePrefix', 'docker.mycompany.com')
 }
 
@@ -84,7 +85,7 @@ dependencyManagement {
 
 jib {
     from {
-        image = 'openjdk:11.0.9'
+        image = "openjdk:${openjdkVersion}"
     }
     to {
         image = "${dockerImagePrefix}/${project.name}:${project.version}"
