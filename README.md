@@ -2,7 +2,7 @@
 
 The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) to run the integration tests.
 
-> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/user-event-sourcing-kafka) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+> **Note:** In [`kubernetes-minikube-environment`](https://github.com/ivangfr/kubernetes-minikube-environment/tree/master/user-event-sourcing-kafka) repository, it's shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Project Architecture
 
@@ -303,20 +303,6 @@ partitions.
       [creator]     error running build
       [creator]     exit status 1
       [creator]     ERROR: failed to build: exit status 1
-  ```
-
-- When using the dependency `org.springframework.cloud:spring-cloud-stream:test-binder@test-jar` instead of `org.springframework.cloud:spring-cloud-stream-test-support`, it is throwing the following exception
-  ```
-   * What went wrong:
-   Execution failed for task ':event-service:compileTestJava'.
-   > Could not resolve all files for configuration ':event-service:testCompileClasspath'.
-      > Could not find org.springframework.cloud:spring-cloud-stream:test-binder.
-        Required by:
-            project :event-service
-      > Could not find org.springframework.cloud:spring-cloud-stream:test-binder.
-        Required by:
-            project :event-service > org.springframework.cloud:spring-cloud-starter-stream-kafka:3.1.0-M4 > org.springframework.cloud:spring-cloud-stream-binder-kafka:3.1.0-M4
-            project :event-service > org.springframework.cloud:spring-cloud-starter-stream-kafka:3.1.0-M4 > org.springframework.cloud:spring-cloud-stream-binder-kafka:3.1.0-M4 > org.springframework.cloud:spring-cloud-stream-binder-kafka-core:3.1.0-M4
   ```
 
 ## References

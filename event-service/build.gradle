@@ -16,12 +16,12 @@ configurations {
 }
 
 ext {
-    set('springCloudVersion', '2020.0.0-RC1')
+    set('springCloudVersion', '2020.0.0')
     set('avroVersion', '1.10.1')
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
-    set('springdocOpenApiVerison', '1.5.1')
-    set('springGraalvmNative', '0.8.4')
+    set('springdocOpenApiVerison', '1.5.2')
+    set('springGraalvmNative', '0.8.5')
     set('cassandraUnitSpringVersion', '4.3.1.0')
     set('openjdkImageVersion', '11.0.9')
     set('dockerImagePrefix', 'docker.mycompany.com')
@@ -32,12 +32,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
+    implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
     implementation 'org.springframework.cloud:spring-cloud-schema-registry-client'
-    implementation 'org.springframework.kafka:spring-kafka'
 
     implementation "org.apache.avro:avro:${avroVersion}"
 
@@ -57,9 +58,7 @@ dependencies {
 
     testImplementation "org.cassandraunit:cassandra-unit-spring:${cassandraUnitSpringVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // --
-    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
-    // testImplementation 'org.springframework.cloud:spring-cloud-stream:test-binder@test-jar' // new format is not working
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 test {
