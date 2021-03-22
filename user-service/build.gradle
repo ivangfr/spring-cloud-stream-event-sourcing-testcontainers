@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.2'
+    id 'org.springframework.boot' version '2.4.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'com.google.cloud.tools.jib' version '2.7.1'
+    id 'com.google.cloud.tools.jib' version '2.8.0'
 }
 
 group = 'com.mycompany'
@@ -15,15 +15,15 @@ configurations {
 }
 
 ext {
-    set('springCloudVersion', '2020.0.0')
-    set('avroVersion', '1.10.1')
-    set('mapstructVersion', '1.4.1.Final')
-    set('lombokMapstructBindingVersion', '0.1.0')
-    set('springdocOpenApiVerison', '1.5.2')
-    set('springGraalvmNative', '0.8.5')
-    set('testcontainersVersion', '1.15.1')
+    set('springCloudVersion', '2020.0.2')
+    set('avroVersion', '1.10.2')
+    set('mapstructVersion', '1.4.2.Final')
+    set('lombokMapstructBindingVersion', '0.2.0')
+    set('springdocOpenApiVerison', '1.5.6')
+    set('springGraalvmNativeVersion', '0.8.5')
+    set('testcontainersVersion', '1.15.2')
     set('awaitilityVersion', '4.0.3')
-    set('openjdkVersion', '11.0.9')
+    set('openjdkVersion', '11.0.10')
     set('dockerImagePrefix', 'docker.mycompany.com')
 }
 
@@ -52,7 +52,7 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
 
-    implementation "org.springframework.experimental:spring-graalvm-native:${springGraalvmNative}"
+    implementation "org.springframework.experimental:spring-graalvm-native:${springGraalvmNativeVersion}"
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
@@ -61,7 +61,6 @@ dependencies {
 
     runtimeOnly 'mysql:mysql-connector-java'
 
-    implementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
     testImplementation 'org.testcontainers:kafka'
@@ -80,6 +79,7 @@ test {
 
 dependencyManagement {
     imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }

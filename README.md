@@ -91,21 +91,21 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Running Applications as Docker containers
 
-### Build Application's Docker Image
+### Build Docker Images
 
 - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
 
 - Run the following script to build the Docker images
   - JVM 
     ```
-    ./build-apps.sh
+    ./docker-build.sh
     ```
   - Native
     ```
-    ./build-apps.sh native
+    ./docker-build.sh native
     ```
 
-### Application's Environment Variables
+### Environment Variables
    
 - **user-service**
 
@@ -133,7 +133,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
   | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-### Start Application's Docker Container
+### Start Docker Containers
 
 - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
 
@@ -181,6 +181,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   docker exec -it mysql mysql -uroot -psecret --database userdb
   select * from users;
   ```
+  > Type `exit` to leave `MySQL Monitor`
 
 - **Cassandra**
   ```
@@ -188,6 +189,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   USE mycompany;
   SELECT * FROM user_events;
   ```
+  > Type `exit` to leave `CQL shell`
 
 - **Zipkin**
 
@@ -265,44 +267,44 @@ partitions.
 
 - When building the Docker native image of `event-service` and `user-service`, it's throwing the following exception
   ```
-      [creator]     Fatal error:java.lang.IllegalStateException: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
-      [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-      [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
-      [creator]           at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
-      [creator]           at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
-      [creator]           at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:600)
-      [creator]           at java.base/java.util.concurrent.ForkJoinTask.get(ForkJoinTask.java:1006)
-      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.run(NativeImageGenerator.java:483)
-      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.buildImage(NativeImageGeneratorRunner.java:350)
-      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.build(NativeImageGeneratorRunner.java:509)
-      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.main(NativeImageGeneratorRunner.java:115)
-      [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner$JDK9Plus.main(NativeImageGeneratorRunner.java:541)
-      [creator]     Caused by: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
-      [creator]           at org.springframework.graalvm.type.Type.verifyComponent(Type.java:2273)
-      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processType(ResourcesHandler.java:1282)
-      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processType(ResourcesHandler.java:960)
-      [creator]           at org.springframework.graalvm.support.ResourcesHandler.checkAndRegisterConfigurationType(ResourcesHandler.java:950)
-      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processSpringFactory(ResourcesHandler.java:849)
-      [creator]           at org.springframework.graalvm.support.ResourcesHandler.processSpringFactories(ResourcesHandler.java:714)
-      [creator]           at org.springframework.graalvm.support.ResourcesHandler.register(ResourcesHandler.java:130)
-      [creator]           at org.springframework.graalvm.support.SpringFeature.beforeAnalysis(SpringFeature.java:107)
-      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$runPointsToAnalysis$7(NativeImageGenerator.java:696)
-      [creator]           at com.oracle.svm.hosted.FeatureHandler.forEachFeature(FeatureHandler.java:70)
-      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.runPointsToAnalysis(NativeImageGenerator.java:696)
-      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.doRun(NativeImageGenerator.java:558)
-      [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$run$0(NativeImageGenerator.java:471)
-      [creator]           at java.base/java.util.concurrent.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1407)
-      [creator]           at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
-      [creator]           at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
-      [creator]           at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
-      [creator]           at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
-      [creator]           at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
-      [creator]     Error: Image build request failed with exit status 1
-      [creator]     unable to invoke layer creator
-      [creator]     unable to contribute native-image layer
-      [creator]     error running build
-      [creator]     exit status 1
-      [creator]     ERROR: failed to build: exit status 1
+  [creator]     Fatal error:java.lang.IllegalStateException: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
+    [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+    [creator]           at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+    [creator]           at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+    [creator]           at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:600)
+    [creator]           at java.base/java.util.concurrent.ForkJoinTask.get(ForkJoinTask.java:1006)
+    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.run(NativeImageGenerator.java:488)
+    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.buildImage(NativeImageGeneratorRunner.java:370)
+    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.build(NativeImageGeneratorRunner.java:529)
+    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.main(NativeImageGeneratorRunner.java:119)
+    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner$JDK9Plus.main(NativeImageGeneratorRunner.java:561)
+    [creator]     Caused by: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
+    [creator]           at org.springframework.nativex.type.Type.verifyComponent(Type.java:2274)
+    [creator]           at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:1285)
+    [creator]           at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:960)
+    [creator]           at org.springframework.nativex.support.ResourcesHandler.checkAndRegisterConfigurationType(ResourcesHandler.java:950)
+    [creator]           at org.springframework.nativex.support.ResourcesHandler.processSpringFactory(ResourcesHandler.java:849)
+    [creator]           at org.springframework.nativex.support.ResourcesHandler.processSpringFactories(ResourcesHandler.java:714)
+    [creator]           at org.springframework.nativex.support.ResourcesHandler.register(ResourcesHandler.java:130)
+    [creator]           at org.springframework.nativex.support.SpringFeature.beforeAnalysis(SpringFeature.java:107)
+    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$runPointsToAnalysis$7(NativeImageGenerator.java:701)
+    [creator]           at com.oracle.svm.hosted.FeatureHandler.forEachFeature(FeatureHandler.java:70)
+    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.runPointsToAnalysis(NativeImageGenerator.java:701)
+    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.doRun(NativeImageGenerator.java:563)
+    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$run$0(NativeImageGenerator.java:476)
+    [creator]           at java.base/java.util.concurrent.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1407)
+    [creator]           at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+    [creator]           at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+    [creator]           at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+    [creator]           at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+    [creator]           at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+    [creator]     Error: Image build request failed with exit status 1
+    [creator]     unable to invoke layer creator
+    [creator]     unable to contribute native-image layer
+    [creator]     error running build
+    [creator]     exit status 1
+    [creator]     ERROR: failed to build: exit status 1
   ```
 
 ## References

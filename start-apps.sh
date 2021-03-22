@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source scripts/my-functions.sh
+
 echo
 echo "Starting user-service..."
 
@@ -10,7 +12,7 @@ docker run -d --rm --name user-service \
   --health-cmd="curl -f http://localhost:8080/actuator/health || exit 1" --health-start-period=1m \
   docker.mycompany.com/user-service:1.0.0
 
-sleep 5
+wait_for_container_log "user-service" "Started"
 
 echo
 echo "Starting event-service..."
@@ -22,7 +24,7 @@ docker run -d --rm --name event-service \
   --health-cmd="curl -f http://localhost:8080/actuator/health || exit 1" --health-start-period=1m \
   docker.mycompany.com/event-service:1.0.0
 
-sleep 5
+wait_for_container_log "event-service" "Started"
 
 printf "\n"
 printf "%14s | %37s |\n" "Application" "URL"

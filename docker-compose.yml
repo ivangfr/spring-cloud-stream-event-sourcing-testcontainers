@@ -4,7 +4,7 @@ services:
 
   mysql:
     container_name: mysql
-    image: mysql:8.0.22
+    image: mysql:8.0.23
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   cassandra:
-    image: cassandra:3.11.9
+    image: cassandra:3.11.10
     container_name: cassandra
     restart: unless-stopped
     ports:
@@ -28,7 +28,7 @@ services:
       start_period: 30s
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.1
+    image: confluentinc/cp-zookeeper:6.1.0
     container_name: zookeeper
     restart: unless-stopped
     ports:
@@ -41,7 +41,7 @@ services:
 
   kafka:
     container_name: kafka
-    image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:6.1.0
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -59,7 +59,7 @@ services:
       start_period: 30s
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.1
+    image: confluentinc/cp-schema-registry:6.1.0
     container_name: schema-registry
     restart: unless-stopped
     depends_on:
@@ -89,7 +89,7 @@ services:
       start_period: 30s
 
   kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:5.5.1
+    image: confluentinc/cp-kafka-rest:6.1.0
     container_name: kafka-rest-proxy
     restart: unless-stopped
     depends_on:
@@ -141,7 +141,7 @@ services:
 
   zipkin:
     container_name: zipkin
-    image: openzipkin/zipkin:2.23.0
+    image: openzipkin/zipkin:2.23.2
     restart: unless-stopped
     ports:
       - "9411:9411"
