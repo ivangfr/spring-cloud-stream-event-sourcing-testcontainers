@@ -43,7 +43,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   
     Run the following command in `spring-cloud-stream-event-sourcing-testcontainers` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
     ```
-    ./gradlew event-service:generateAvro
+    ./mvnw compile --projects event-service
     ```
   
 ## Prerequisites
@@ -64,7 +64,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   docker-compose ps
   ```
 
-## Running Applications with Gradle
+## Running Applications with Maven
 
 - **user-service**
 
@@ -73,11 +73,11 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - In order to run the application, you can pick between `JSON` or `Avro`
     - Using `JSON`
       ```
-      ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080'
+      ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.jvmArguments="-Dserver.port=9080"
       ```
     - Using `Avro`
       ```
-      ./gradlew user-service:clean user-service:bootRun --args='--server.port=9080 --spring.profiles.active=avro'
+      ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.jvmArguments="-Dserver.port=9080" -Dspring-boot.run.profiles=avro
       ```
 
 - **event-service**
@@ -86,7 +86,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   
   - Run the following command
     ```
-    ./gradlew event-service:clean event-service:bootRun --args='--server.port=9081'
+    ./mvnw clean spring-boot:run --projects event-service -Dspring-boot.run.jvmArguments="-Dserver.port=9081"
     ```
 
 ## Running Applications as Docker containers
@@ -227,7 +227,7 @@ partitions.
 ## Shutdown
 
 - Stop applications
-  - If they were started with `Gradle`, go to the terminals where they are running and press `Ctrl+C`
+  - If they were started with `Maven`, go to the terminals where they are running and press `Ctrl+C`
   - If they were started as a Docker container, run the script below
     ```
     ./stop-apps.sh
@@ -242,9 +242,9 @@ partitions.
 
 - **event-service**
 
-  - Run the command below to start the tests
+  - Run the command below to start the unit tests
     ```
-    ./gradlew event-service:clean event-service:cleanTest event-service:test
+    ./mvnw clean test --projects event-service
     ```
 
 - **user-service**
@@ -252,15 +252,14 @@ partitions.
   - During integration tests, [`Testcontainers`](https://www.testcontainers.org/) will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra` and `event-service` containers before the tests begin and shuts them down when the tests finish.
     > **Note:** Make sure you have an updated `event-service` docker image
 
-  - Run the command below to start the tests
+  - Run the command below to start the integration tests
     - Using `JSON`
       ```
-      ./gradlew user-service:clean user-service:cleanTest user-service:test
+      ./mvnw clean verify --projects user-service  -DargLine="-Dspring.profiles.active=test"
       ```
     - Using `Avro`
-      > **Warning:** app starts with correct profile. However, messages are sent in json format.
       ```
-      SPRING_PROFILES_ACTIVE=avro ./gradlew user-service:clean user-service:cleanTest user-service:test
+      ./mvnw clean verify --projects user-service -DargLine="-Dspring.profiles.active=test,avro"
       ```
 
 ## Issues

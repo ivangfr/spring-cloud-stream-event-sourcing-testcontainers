@@ -45,7 +45,8 @@ springdoc:
 ---
 spring:
   config:
-    activate.on-profile: avro
+    activate:
+      on-profile: avro
   cloud:
     schema:
       avro:
@@ -59,18 +60,8 @@ spring:
 ---
 spring:
   config:
-    activate.on-profile: test
+    activate:
+      on-profile: test
   jpa:
     hibernate:
       ddl-auto: create-drop
-  datasource:
-    url:      # \
-    username: #  ) they will be set dynamically by AbstractTestcontainers
-    password: # /
-  cloud:
-    schema-registry-client:
-      endpoint: # it will be set dynamically by AbstractTestcontainers
-    stream:
-      kafka:
-        binder:
-          brokers: # it will be set dynamically by AbstractTestcontainers

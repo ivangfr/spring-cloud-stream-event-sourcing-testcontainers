@@ -7,8 +7,9 @@ import org.cassandraunit.spring.CassandraUnitDependencyInjectionTestExecutionLis
 import org.cassandraunit.spring.EmbeddedCassandra;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.cassandra.DataCassandraTest;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import java.util.Date;
@@ -21,9 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
         CassandraUnitDependencyInjectionTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class
 })
-@EmbeddedCassandra
+@EmbeddedCassandra(timeout = 60000)
 @CassandraDataSet(value = "event-service.cql", keyspace = "mycompany")
-@SpringBootTest({
+@DataCassandraTest
+@TestPropertySource(properties = {
         "spring.data.cassandra.contact-points=localhost:9142",
         "spring.data.cassandra.schema-action=RECREATE"
 })

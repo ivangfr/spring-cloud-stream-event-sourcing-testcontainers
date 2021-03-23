@@ -34,7 +34,10 @@ public class UserStream {
         UserEventKey key = new UserEventKey(userEventMessage.getUserId(), new Date());
         userEvent.setKey(key);
         userEvent.setType(userEventMessage.getEventType().toString());
-        userEvent.setData(userEventMessage.getUserJson());
+        CharSequence userJson = userEventMessage.getUserJson();
+        if (userJson != null) {
+            userEvent.setData(userJson.toString());
+        }
         return userEvent;
     }
 

@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserEventController.class)
-@Import(UserMapperImpl.class) // <-- if this class is missing, run: ./gradlew event-service:assemble
+@Import(UserMapperImpl.class)
 class UserEventControllerTest {
 
     @Autowired

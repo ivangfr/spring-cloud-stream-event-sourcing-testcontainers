@@ -2,9 +2,9 @@
 
 if [ "$1" = "native" ];
 then
-  ./gradlew user-service:clean user-service:bootBuildImage -x test
-  ./gradlew event-service:clean event-service:bootBuildImage -x test
+  ./mvnw clean spring-boot:build-image --projects user-service -DskipTests
+  ./mvnw clean spring-boot:build-image --projects event-service -DskipTests
 else
-  ./gradlew user-service:clean user-service:jibDockerBuild -x test
-  ./gradlew event-service:clean event-service:jibDockerBuild -x test
+  ./mvnw clean compile jib:dockerBuild --projects user-service
+  ./mvnw clean compile jib:dockerBuild --projects event-service
 fi

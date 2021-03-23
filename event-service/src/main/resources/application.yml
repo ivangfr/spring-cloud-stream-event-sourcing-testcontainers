@@ -53,7 +53,8 @@ springdoc:
 #---
 #spring:
 #  config:
-#    activate.on-profile: avro
+#    activate:
+#      on-profile: avro
 #  cloud:
 #    stream:
 #      bindings:

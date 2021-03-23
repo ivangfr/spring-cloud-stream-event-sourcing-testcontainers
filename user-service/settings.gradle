@@ -1,7 +1,0 @@
-rootProject.name = 'user-service'
-
-pluginManagement {
-    repositories {
-        maven { url 'https://repo.spring.io/milestone' }
-    }
-}

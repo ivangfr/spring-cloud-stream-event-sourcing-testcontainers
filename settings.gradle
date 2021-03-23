@@ -1,2 +1,0 @@
-rootProject.name = 'spring-cloud-stream-event-sourcing-testcontainers'
-include 'user-service', 'event-service'
