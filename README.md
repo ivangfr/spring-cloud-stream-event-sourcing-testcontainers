@@ -100,7 +100,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
     ```
     ./docker-build.sh
     ```
-  - Native
+  - Native (it's not working yet)
     ```
     ./docker-build.sh native
     ```
@@ -172,7 +172,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
    ![zipkin](images/zipkin.png)
 
-1. Access `user-service` and `event-service` Swagger website and create new users and/or update/delete existing
+1. Access `user-service` and create new users and/or update/delete existing ones. Then, access `event-service` Swagger website to validate if the events were sent correctly
 
 ## Useful Commands & Links
 
@@ -265,45 +265,47 @@ partitions.
 ## Issues
 
 - When building the Docker native image of `event-service` and `user-service`, it's throwing the following exception
-  ```
-  [creator]     Fatal error:java.lang.IllegalStateException: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
-    [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-    [creator]           at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
-    [creator]           at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
-    [creator]           at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
-    [creator]           at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:600)
-    [creator]           at java.base/java.util.concurrent.ForkJoinTask.get(ForkJoinTask.java:1006)
-    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.run(NativeImageGenerator.java:488)
-    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.buildImage(NativeImageGeneratorRunner.java:370)
-    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.build(NativeImageGeneratorRunner.java:529)
-    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner.main(NativeImageGeneratorRunner.java:119)
-    [creator]           at com.oracle.svm.hosted.NativeImageGeneratorRunner$JDK9Plus.main(NativeImageGeneratorRunner.java:561)
-    [creator]     Caused by: java.lang.IllegalStateException: ERROR: in 'org.springframework.cloud.schema.registry.avro.AvroMessageConverterAutoConfiguration' these methods are directly invoking methods marked @Bean: [avroSchemaMessageConverter] - due to the enforced proxyBeanMethods=false for components in a native-image, please consider refactoring to use instance injection. If you are confident this is not going to affect your application, you may turn this check off using -Dspring.native.verify=false.
-    [creator]           at org.springframework.nativex.type.Type.verifyComponent(Type.java:2274)
-    [creator]           at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:1285)
-    [creator]           at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:960)
-    [creator]           at org.springframework.nativex.support.ResourcesHandler.checkAndRegisterConfigurationType(ResourcesHandler.java:950)
-    [creator]           at org.springframework.nativex.support.ResourcesHandler.processSpringFactory(ResourcesHandler.java:849)
-    [creator]           at org.springframework.nativex.support.ResourcesHandler.processSpringFactories(ResourcesHandler.java:714)
-    [creator]           at org.springframework.nativex.support.ResourcesHandler.register(ResourcesHandler.java:130)
-    [creator]           at org.springframework.nativex.support.SpringFeature.beforeAnalysis(SpringFeature.java:107)
-    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$runPointsToAnalysis$7(NativeImageGenerator.java:701)
-    [creator]           at com.oracle.svm.hosted.FeatureHandler.forEachFeature(FeatureHandler.java:70)
-    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.runPointsToAnalysis(NativeImageGenerator.java:701)
-    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.doRun(NativeImageGenerator.java:563)
-    [creator]           at com.oracle.svm.hosted.NativeImageGenerator.lambda$run$0(NativeImageGenerator.java:476)
-    [creator]           at java.base/java.util.concurrent.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1407)
-    [creator]           at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
-    [creator]           at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
-    [creator]           at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
-    [creator]           at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
-    [creator]           at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
-    [creator]     Error: Image build request failed with exit status 1
-    [creator]     unable to invoke layer creator
-    [creator]     unable to contribute native-image layer
-    [creator]     error running build
-    [creator]     exit status 1
-    [creator]     ERROR: failed to build: exit status 1
+```
+  [INFO]     [creator]     Fatal error:java.lang.IllegalStateException: java.lang.IllegalStateException: No access hint found for import selector: org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinSenderConfigurationImportSelector
+  [INFO]     [creator]     	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+  [INFO]     [creator]     	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+  [INFO]     [creator]     	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+  [INFO]     [creator]     	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:600)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask.get(ForkJoinTask.java:1006)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.run(NativeImageGenerator.java:488)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner.buildImage(NativeImageGeneratorRunner.java:370)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner.build(NativeImageGeneratorRunner.java:529)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner.main(NativeImageGeneratorRunner.java:119)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner$JDK9Plus.main(NativeImageGeneratorRunner.java:561)
+  [INFO]     [creator]     Caused by: java.lang.IllegalStateException: No access hint found for import selector: org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinSenderConfigurationImportSelector
+  [INFO]     [creator]     	at org.springframework.nativex.type.Type.getHints(Type.java:1265)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:1249)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processTypesToFollow(ResourcesHandler.java:1352)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:1295)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:960)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.checkAndRegisterConfigurationType(ResourcesHandler.java:950)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processSpringFactory(ResourcesHandler.java:849)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processSpringFactories(ResourcesHandler.java:714)
+  [INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.register(ResourcesHandler.java:130)
+  [INFO]     [creator]     	at org.springframework.nativex.support.SpringFeature.beforeAnalysis(SpringFeature.java:107)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.lambda$runPointsToAnalysis$7(NativeImageGenerator.java:701)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.FeatureHandler.forEachFeature(FeatureHandler.java:70)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.runPointsToAnalysis(NativeImageGenerator.java:701)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.doRun(NativeImageGenerator.java:563)
+  [INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.lambda$run$0(NativeImageGenerator.java:476)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1407)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+  [INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+  [INFO]     [creator]     Error: Image build request failed with exit status 1
+  [INFO]     [creator]     unable to invoke layer creator
+  [INFO]     [creator]     unable to contribute native-image layer
+  [INFO]     [creator]     error running build
+  [INFO]     [creator]     exit status 1
+  [INFO]     [creator]     ERROR: failed to build: exit status 1
   ```
 
 ## References

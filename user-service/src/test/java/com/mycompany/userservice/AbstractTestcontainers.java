@@ -18,10 +18,10 @@ import java.time.Duration;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.23");
-    private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:6.1.0");
-    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.0"));
-    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:6.1.0");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.24");
+    private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:6.1.1");
+    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.1"));
+    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:6.1.1");
     private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.10");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("docker.mycompany.com/event-service:1.0.0");
 
