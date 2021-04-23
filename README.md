@@ -73,11 +73,11 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - In order to run the application, you can pick between `JSON` or `Avro`
     - Using `JSON`
       ```
-      ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.jvmArguments="-Dserver.port=9080"
+      ./mvnw clean spring-boot:run --projects user-service
       ```
     - Using `Avro`
       ```
-      ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.jvmArguments="-Dserver.port=9080" -Dspring-boot.run.profiles=avro
+      ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.profiles=avro
       ```
 
 - **event-service**
@@ -86,66 +86,64 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   
   - Run the following command
     ```
-    ./mvnw clean spring-boot:run --projects event-service -Dspring-boot.run.jvmArguments="-Dserver.port=9081"
+    ./mvnw clean spring-boot:run --projects event-service
     ```
 
 ## Running Applications as Docker containers
 
-### Build Docker Images
+- ### Build Docker Images
 
-- In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - Run the following script to build the Docker images
+    - JVM 
+      ```
+      ./docker-build.sh
+      ```
+    - Native (it's not working yet, [see Issues](#issues))
+      ```
+      ./docker-build.sh native
+      ```
 
-- Run the following script to build the Docker images
-  - JVM 
-    ```
-    ./docker-build.sh
-    ```
-  - Native (it's not working yet)
-    ```
-    ./docker-build.sh native
-    ```
-
-### Environment Variables
+- ### Environment Variables
    
-- **user-service**
+  - **user-service**
 
-  | Environment Variable   | Description                                                                          |
-  | ---------------------- | ------------------------------------------------------------------------------------ |
-  | `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
-  | `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
-  | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
-  | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
-  | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
-  | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
-  | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
-  | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+    | Environment Variable   | Description                                                                          |
+    | ---------------------- | ------------------------------------------------------------------------------------ |
+    | `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
+    | `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
+    | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
+    | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
+    | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
+    | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
+    | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+    | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-- **event-service**
+  - **event-service**
 
-  | Environment Variable   | Description                                                                          |
-  | ---------------------- | ------------------------------------------------------------------------------------ |
-  | `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
-  | `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
-  | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
-  | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
-  | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
-  | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
-  | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
-  | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
+    | Environment Variable   | Description                                                                          |
+    | ---------------------- | ------------------------------------------------------------------------------------ |
+    | `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
+    | `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
+    | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
+    | `KAFKA_PORT`           | Specify port of the `Kafka` message broker to use (default `29092`)                  |
+    | `SCHEMA_REGISTRY_HOST` | Specify host of the `Schema Registry` to use (default `localhost`)                   |
+    | `SCHEMA_REGISTRY_PORT` | Specify port of the `Schema Registry` to use (default `8081`)                        |
+    | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
+    | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-### Start Docker Containers
+- ### Start Docker Containers
 
-- In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
-
-- In order to run the application's docker container, you can pick between `JSON` or `Avro`
-  - Using `JSON`
-    ```
-    ./start-apps.sh
-    ```
-  - Using `Avro`
-    ```
-    ./start-apps.sh avro
-    ```
+  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - In order to run the application's docker container, you can pick between `JSON` or `Avro`
+    - Using `JSON`
+      ```
+      ./start-apps.sh
+      ```
+    - Using `Avro`
+      ```
+      ./start-apps.sh avro
+      ```
 
 ## Applications URLs
 
@@ -264,49 +262,117 @@ partitions.
 
 ## Issues
 
-When building the Docker native image of `event-service` and `user-service`, it's throwing the following exception
-```
-[INFO]     [creator]     Fatal error:java.lang.IllegalStateException: java.lang.IllegalStateException: No access hint found for import selector: org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinSenderConfigurationImportSelector
-[INFO]     [creator]     	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-[INFO]     [creator]     	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
-[INFO]     [creator]     	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
-[INFO]     [creator]     	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:600)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask.get(ForkJoinTask.java:1006)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.run(NativeImageGenerator.java:488)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner.buildImage(NativeImageGeneratorRunner.java:370)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner.build(NativeImageGeneratorRunner.java:529)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner.main(NativeImageGeneratorRunner.java:119)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGeneratorRunner$JDK9Plus.main(NativeImageGeneratorRunner.java:561)
-[INFO]     [creator]     Caused by: java.lang.IllegalStateException: No access hint found for import selector: org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinSenderConfigurationImportSelector
-[INFO]     [creator]     	at org.springframework.nativex.type.Type.getHints(Type.java:1265)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:1249)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processTypesToFollow(ResourcesHandler.java:1352)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:1295)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processType(ResourcesHandler.java:960)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.checkAndRegisterConfigurationType(ResourcesHandler.java:950)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processSpringFactory(ResourcesHandler.java:849)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.processSpringFactories(ResourcesHandler.java:714)
-[INFO]     [creator]     	at org.springframework.nativex.support.ResourcesHandler.register(ResourcesHandler.java:130)
-[INFO]     [creator]     	at org.springframework.nativex.support.SpringFeature.beforeAnalysis(SpringFeature.java:107)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.lambda$runPointsToAnalysis$7(NativeImageGenerator.java:701)
-[INFO]     [creator]     	at com.oracle.svm.hosted.FeatureHandler.forEachFeature(FeatureHandler.java:70)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.runPointsToAnalysis(NativeImageGenerator.java:701)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.doRun(NativeImageGenerator.java:563)
-[INFO]     [creator]     	at com.oracle.svm.hosted.NativeImageGenerator.lambda$run$0(NativeImageGenerator.java:476)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1407)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
-[INFO]     [creator]     	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
-[INFO]     [creator]     Error: Image build request failed with exit status 1
-[INFO]     [creator]     unable to invoke layer creator
-[INFO]     [creator]     unable to contribute native-image layer
-[INFO]     [creator]     error running build
-[INFO]     [creator]     exit status 1
-[INFO]     [creator]     ERROR: failed to build: exit status 1
-```
+- After building successfully the `user-service` docker native image, the following exception is thrown at runtime
+  ```
+    .   ____          _            __ _ _
+   /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+  ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+    '  |____| .__|_| |_|_| |_\__, | / / / /
+   =========|_|==============|___/=/_/_/_/
+   :: Spring Boot ::                (v2.4.5)
+  
+  2021-04-23 22:23:02.354  INFO [user-service,,] 1 --- [           main] c.m.userservice.UserServiceApplication   : No active profile set, falling back to default profiles: default
+  2021-04-23 22:23:02.557  WARN [user-service,,] 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
+  2021-04-23 22:23:02.565  INFO [user-service,,] 1 --- [           main] ConditionEvaluationReportLoggingListener :
+  
+  Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+  2021-04-23 22:23:02.573 ERROR [user-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
+  
+  org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
+  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:311) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[na:na]
+  	at java.util.ArrayList.forEach(ArrayList.java:1541) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[com.mycompany.userservice.UserServiceApplication:5.3.6]
+  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[com.mycompany.userservice.UserServiceApplication:5.3.6]
+  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[na:na]
+  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[na:na]
+  	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
+  	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
+  	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
+  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:10) ~[com.mycompany.userservice.UserServiceApplication:na]
+  Caused by: java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
+  	at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:55) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:49) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:103) ~[na:na]
+  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.createMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:86) ~[na:na]
+  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.getMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:73) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:81) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:696) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClasses(ConfigurationClassParser.java:675) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:582) ~[na:na]
+  	... 23 common frames omitted
+  ```
+
+- After building successfully the `user-service` docker native image, the following exception is thrown at runtime (it's the same as `user-service`)
+  ```
+    .   ____          _            __ _ _
+   /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+  ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+    '  |____| .__|_| |_|_| |_\__, | / / / /
+   =========|_|==============|___/=/_/_/_/
+   :: Spring Boot ::                (v2.4.5)
+  
+  2021-04-23 22:26:18.061  INFO [event-service,,] 1 --- [           main] c.m.e.EventServiceApplication            : No active profile set, falling back to default profiles: default
+  2021-04-23 22:26:18.131  WARN [event-service,,] 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
+  2021-04-23 22:26:18.133  INFO [event-service,,] 1 --- [           main] ConditionEvaluationReportLoggingListener :
+  
+  Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+  2021-04-23 22:26:18.134 ERROR [event-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
+  
+  org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
+  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:311) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[na:na]
+  	at java.util.ArrayList.forEach(ArrayList.java:1541) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[com.mycompany.eventservice.EventServiceApplication:5.3.6]
+  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[com.mycompany.eventservice.EventServiceApplication:5.3.6]
+  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[na:na]
+  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[na:na]
+  	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
+  	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
+  	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
+  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
+  	at com.mycompany.eventservice.EventServiceApplication.main(EventServiceApplication.java:10) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  Caused by: java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
+  	at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:55) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:49) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:103) ~[na:na]
+  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.createMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:86) ~[na:na]
+  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.getMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:73) ~[na:na]
+  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:81) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:696) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClasses(ConfigurationClassParser.java:675) ~[na:na]
+  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:582) ~[na:na]
+  	... 23 common frames omitted
+  ```
 
 ## References
 
