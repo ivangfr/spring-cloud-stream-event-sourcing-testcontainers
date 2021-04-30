@@ -26,6 +26,7 @@ public abstract class AbstractTestcontainers {
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("docker.mycompany.com/event-service:1.0.0");
 
     protected static String EVENT_SERVICE_API_URL;
+    private static int EVENT_SERVICE_EXPOSED_PORT = 9081;
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
@@ -70,8 +71,9 @@ public abstract class AbstractTestcontainers {
                 .withEnv("SCHEMA_REGISTRY_HOST", "schema-registry")
                 .withEnv("CASSANDRA_HOST", "cassandra")
                 .withEnv("SPRING_ZIPKIN_ENABLED", "false")
-                .withExposedPorts(8080);
-        eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health").forPort(8080).forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)));
+                .withExposedPorts(EVENT_SERVICE_EXPOSED_PORT);
+        eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health")
+                .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)));
         eventServiceContainer.start();
 
         registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
@@ -82,7 +84,7 @@ public abstract class AbstractTestcontainers {
         registry.add("spring.cloud.schema-registry-client.endpoint", () -> schemaRegistryUrl);
         registry.add("spring.cloud.stream.kafka.binder.brokers", kafkaContainer::getBootstrapServers);
 
-        EVENT_SERVICE_API_URL = String.format("http://localhost:%s/api", eventServiceContainer.getMappedPort(8080));
+        EVENT_SERVICE_API_URL = String.format("http://localhost:%s/api", eventServiceContainer.getMappedPort(EVENT_SERVICE_EXPOSED_PORT));
     }
 
 }

@@ -14,7 +14,7 @@ public class UserEventServiceImpl implements UserEventService {
     private final UserEventRepository userEventRepository;
 
     @Override
-    public List<UserEvent> getAllUserEvents(Long id) {
+    public List<UserEvent> getUserEvents(Long id) {
         return userEventRepository.findByKeyUserId(id);
     }
 

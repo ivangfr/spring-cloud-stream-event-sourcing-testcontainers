@@ -73,11 +73,11 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - In order to run the application, you can pick between `JSON` or `Avro`
     - Using `JSON`
       ```
-      ./mvnw clean spring-boot:run --projects user-service
+      ./mvnw clean package spring-boot:run --projects user-service -DskipTests
       ```
     - Using `Avro`
       ```
-      ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.profiles=avro
+      ./mvnw clean package spring-boot:run --projects user-service -DskipTests -Dspring-boot.run.profiles=avro
       ```
 
 - **event-service**
@@ -86,7 +86,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   
   - Run the following command
     ```
-    ./mvnw clean spring-boot:run --projects event-service
+    ./mvnw clean package spring-boot:run --projects event-service -DskipTests
     ```
 
 ## Running Applications as Docker containers
@@ -262,22 +262,9 @@ partitions.
 
 ## Issues
 
-- After building successfully the `user-service` docker native image, the following exception is thrown at runtime
+- After building successfully the `user-service` docker native image, the following exception is thrown at runtime. It's related to `Zipkin`
   ```
-    .   ____          _            __ _ _
-   /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-  ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
-   \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-    '  |____| .__|_| |_|_| |_\__, | / / / /
-   =========|_|==============|___/=/_/_/_/
-   :: Spring Boot ::                (v2.4.5)
-  
-  2021-04-23 22:23:02.354  INFO [user-service,,] 1 --- [           main] c.m.userservice.UserServiceApplication   : No active profile set, falling back to default profiles: default
-  2021-04-23 22:23:02.557  WARN [user-service,,] 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
-  2021-04-23 22:23:02.565  INFO [user-service,,] 1 --- [           main] ConditionEvaluationReportLoggingListener :
-  
-  Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
-  2021-04-23 22:23:02.573 ERROR [user-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
+  ERROR [user-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
   
   org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
   	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
@@ -297,12 +284,12 @@ partitions.
   	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
   	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
   	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782) ~[com.mycompany.userservice.UserServiceApplication:na]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774) ~[com.mycompany.userservice.UserServiceApplication:na]
-  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[com.mycompany.userservice.UserServiceApplication:na]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.userservice.UserServiceApplication:na]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340) ~[com.mycompany.userservice.UserServiceApplication:na]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
+  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
   	at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:10) ~[com.mycompany.userservice.UserServiceApplication:na]
   Caused by: java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
   	at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
@@ -318,22 +305,9 @@ partitions.
   	... 23 common frames omitted
   ```
 
-- After building successfully the `user-service` docker native image, the following exception is thrown at runtime (it's the same as `user-service`)
+- After building successfully the `user-service` docker native image, the following exception is thrown at runtime (it's the same as `user-service`). It's related to `Zipkin`
   ```
-    .   ____          _            __ _ _
-   /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-  ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
-   \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-    '  |____| .__|_| |_|_| |_\__, | / / / /
-   =========|_|==============|___/=/_/_/_/
-   :: Spring Boot ::                (v2.4.5)
-  
-  2021-04-23 22:26:18.061  INFO [event-service,,] 1 --- [           main] c.m.e.EventServiceApplication            : No active profile set, falling back to default profiles: default
-  2021-04-23 22:26:18.131  WARN [event-service,,] 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
-  2021-04-23 22:26:18.133  INFO [event-service,,] 1 --- [           main] ConditionEvaluationReportLoggingListener :
-  
-  Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
-  2021-04-23 22:26:18.134 ERROR [event-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
+  ERROR [event-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
   
   org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
   	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]

@@ -43,7 +43,7 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
      * ============== */
 
     @Test
-    void givenNoUsersWhenGetAllUsersThenReturnEmptyArray() {
+    void givenNoUsersWhenGetUsersThenReturnEmptyArray() {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -52,7 +52,7 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
     }
 
     @Test
-    void givenOneUserWhenGetAllUsersThenReturnArrayWithUser() {
+    void givenOneUserWhenGetUsersThenReturnArrayWithUser() {
         User user = userRepository.save(getDefaultUser());
 
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);

@@ -9,6 +9,7 @@ import com.mycompany.userservice.rest.dto.UserDto;
 import com.mycompany.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserService userService;
@@ -34,8 +35,8 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers()
+    public List<UserDto> getUsers() {
+        return userService.getUsers()
                 .stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
