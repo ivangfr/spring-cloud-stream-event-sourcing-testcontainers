@@ -262,7 +262,7 @@ partitions.
 
 ## Issues
 
-- By adding `spring-native` and `spring-cloud-schema-registry-client` dependencies, the default response of the controller endpoints are in `XML` format.
+- By adding `spring-native` and `spring-cloud-schema-registry-client` dependencies, the default response of the controller endpoints are in `XML` format, [issue #763](https://github.com/spring-projects-experimental/spring-native/issues/763). The workaround for now is setting MediaType `JSON` in `RequestMapping` annotation. However, error responses like `Bad Request` are still returned in `XML` format.
 
 - After building successfully the `user-service` docker native image, the following exception is thrown at runtime. It's related to `Zipkin`
   ```
