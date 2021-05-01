@@ -14,7 +14,7 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <springdoc-openapi.version>1.5.7</springdoc-openapi.version>
+        <springdoc-openapi.version>1.5.8</springdoc-openapi.version>
         <cassandra-unit-spring.version>4.3.1.0</cassandra-unit-spring.version>
         <avro.version>1.10.2</avro.version>
     </properties>

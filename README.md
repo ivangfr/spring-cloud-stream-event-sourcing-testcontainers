@@ -262,6 +262,8 @@ partitions.
 
 ## Issues
 
+- By adding `spring-native` and `spring-cloud-schema-registry-client` dependencies, the default response of the controller endpoints are in `XML` format.
+
 - After building successfully the `user-service` docker native image, the following exception is thrown at runtime. It's related to `Zipkin`
   ```
   ERROR [user-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
