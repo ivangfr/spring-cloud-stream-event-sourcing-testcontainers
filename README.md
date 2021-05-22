@@ -99,7 +99,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
       ```
       ./docker-build.sh
       ```
-    - Native (it's not working yet, [see Issues](#issues))
+    - Native
       ```
       ./docker-build.sh native
       ```
@@ -132,10 +132,11 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
     | `ZIPKIN_HOST`          | Specify host of the `Zipkin` distributed tracing system to use (default `localhost`) |
     | `ZIPKIN_PORT`          | Specify port of the `Zipkin` distributed tracing system to use (default `9411`)      |
 
-- ### Start Docker Containers
+- ### Run Docker Containers
 
   - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
   - In order to run the application's docker container, you can pick between `JSON` or `Avro`
+    > **Warning:**  Native is not working yet, [see Issues](#issues))
     - Using `JSON`
       ```
       ./start-apps.sh
@@ -269,42 +270,42 @@ partitions.
   ERROR [user-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
   
   org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
-  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:311) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[na:na]
-  	at java.util.ArrayList.forEach(ArrayList.java:1541) ~[com.mycompany.userservice.UserServiceApplication:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[com.mycompany.userservice.UserServiceApplication:5.3.6]
-  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[com.mycompany.userservice.UserServiceApplication:5.3.6]
-  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[na:na]
-  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[na:na]
-  	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
-  	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
-  	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.userservice.UserServiceApplication:2.4.5]
-  	at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:10) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:311) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[na:na]
+  at java.util.ArrayList.forEach(ArrayList.java:1541) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[com.mycompany.userservice.UserServiceApplication:5.3.7]
+  at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[com.mycompany.userservice.UserServiceApplication:5.3.7]
+  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[na:na]
+  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[na:na]
+  at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
+  at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
+  at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
+  at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at org.springframework.boot.SpringApplication.run(SpringApplication.java:1318) ~[com.mycompany.userservice.UserServiceApplication:na]
+  at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:10) ~[com.mycompany.userservice.UserServiceApplication:na]
   Caused by: java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
-  	at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:55) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:49) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:103) ~[na:na]
-  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.createMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:86) ~[na:na]
-  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.getMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:73) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:81) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:696) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClasses(ConfigurationClassParser.java:675) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:582) ~[na:na]
-  	... 23 common frames omitted
+  at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:55) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:49) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:103) ~[na:na]
+  at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.createMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:86) ~[na:na]
+  at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.getMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:73) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:81) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:696) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.asSourceClasses(ConfigurationClassParser.java:675) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:582) ~[na:na]
+  ... 23 common frames omitted
   ```
 
 - After building successfully the `user-service` docker native image, the following exception is thrown at runtime (it's the same as `user-service`). It's related to `Zipkin`
@@ -312,42 +313,42 @@ partitions.
   ERROR [event-service,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
   
   org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration]; nested exception is java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
-  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:311) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[na:na]
-  	at java.util.ArrayList.forEach(ArrayList.java:1541) ~[com.mycompany.eventservice.EventServiceApplication:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[com.mycompany.eventservice.EventServiceApplication:5.3.6]
-  	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[com.mycompany.eventservice.EventServiceApplication:5.3.6]
-  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[na:na]
-  	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[na:na]
-  	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
-  	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
-  	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.eventservice.EventServiceApplication:2.4.5]
-  	at com.mycompany.eventservice.EventServiceApplication.main(EventServiceApplication.java:10) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:311) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[na:na]
+  at java.util.ArrayList.forEach(ArrayList.java:1541) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[com.mycompany.eventservice.EventServiceApplication:5.3.7]
+  at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[com.mycompany.eventservice.EventServiceApplication:5.3.7]
+  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[na:na]
+  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[na:na]
+  at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:746) ~[na:na]
+  at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[na:na]
+  at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[na:na]
+  at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.boot.SpringApplication.run(SpringApplication.java:339) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at org.springframework.boot.SpringApplication.run(SpringApplication.java:1318) ~[com.mycompany.eventservice.EventServiceApplication:na]
+  at com.mycompany.eventservice.EventServiceApplication.main(EventServiceApplication.java:10) ~[com.mycompany.eventservice.EventServiceApplication:na]
   Caused by: java.io.FileNotFoundException: class path resource [org/springframework/cloud/sleuth/autoconfig/zipkin2/ZipkinRestTemplateSenderConfiguration.class] cannot be opened because it does not exist
-  	at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:55) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:49) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:103) ~[na:na]
-  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.createMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:86) ~[na:na]
-  	at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.getMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:73) ~[na:na]
-  	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:81) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:696) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClasses(ConfigurationClassParser.java:675) ~[na:na]
-  	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:582) ~[na:na]
-  	... 23 common frames omitted
+  at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:187) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:55) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:49) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:103) ~[na:na]
+  at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.createMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:86) ~[na:na]
+  at org.springframework.boot.type.classreading.ConcurrentReferenceCachingMetadataReaderFactory.getMetadataReader(ConcurrentReferenceCachingMetadataReaderFactory.java:73) ~[na:na]
+  at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:81) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:696) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.asSourceClasses(ConfigurationClassParser.java:675) ~[na:na]
+  at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:582) ~[na:na]
+  ... 23 common frames omitted
   ```
 
 ## References

@@ -18,15 +18,15 @@ import java.time.Duration;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.24");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.25");
     private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:6.1.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.1"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:6.1.1");
     private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.10");
-    private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("docker.mycompany.com/event-service:1.0.0");
+    private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("ivanfranchin/event-service:1.0.0");
 
     protected static String EVENT_SERVICE_API_URL;
-    private static int EVENT_SERVICE_EXPOSED_PORT = 9081;
+    private static final int EVENT_SERVICE_EXPOSED_PORT = 9081;
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {

@@ -10,7 +10,7 @@ docker run -d --rm --name user-service \
   -e SPRING_PROFILES_ACTIVE=${1:-default} -e MYSQL_HOST=mysql -e KAFKA_HOST=kafka -e KAFKA_PORT=9092\
   -e SCHEMA_REGISTRY_HOST=schema-registry -e ZIPKIN_HOST=zipkin \
   --health-cmd="curl -f http://localhost:9080/actuator/health || exit 1" --health-start-period=1m \
-  docker.mycompany.com/user-service:1.0.0
+  ivanfranchin/user-service:1.0.0
 
 wait_for_container_log "user-service" "Started"
 
@@ -22,7 +22,7 @@ docker run -d --rm --name event-service \
   -e CASSANDRA_HOST=cassandra -e KAFKA_HOST=kafka -e KAFKA_PORT=9092 \
   -e SCHEMA_REGISTRY_HOST=schema-registry -e ZIPKIN_HOST=zipkin \
   --health-cmd="curl -f http://localhost:9081/actuator/health || exit 1" --health-start-period=1m \
-  docker.mycompany.com/event-service:1.0.0
+  ivanfranchin/event-service:1.0.0
 
 wait_for_container_log "event-service" "Started"
 
