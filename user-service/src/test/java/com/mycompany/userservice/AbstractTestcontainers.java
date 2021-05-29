@@ -79,6 +79,7 @@ public abstract class AbstractTestcontainers {
         registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
+        registry.add("spring.jpa.properties.hibernate.dialect.storage_engine", () -> "innodb");
 
         String schemaRegistryUrl = String.format("http://localhost:%s", schemaRegistryContainer.getMappedPort(8081));
         registry.add("spring.cloud.schema-registry-client.endpoint", () -> schemaRegistryUrl);

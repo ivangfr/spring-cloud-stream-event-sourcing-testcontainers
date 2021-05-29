@@ -24,6 +24,8 @@ spring:
           destination: com.mycompany.userservice.user
           content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup
+          consumer:
+            ack-mode: RECORD # setting it explicitly as suggest in https://githubmemory.com/repo/spring-cloud/spring-cloud-stream-binder-kafka/issues/1079
   sleuth:
     sampler:
       probability: 1.0
