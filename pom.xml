@@ -21,7 +21,7 @@
         <spring-native.version>0.10.0-SNAPSHOT</spring-native.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <spring-cloud.version>2020.0.3-SNAPSHOT</spring-cloud.version>
+        <spring-cloud.version>2020.0.3</spring-cloud.version>
         <jib-maven-plugin.version>3.0.0</jib-maven-plugin.version>
         <openjdk-image.version>11.0.11</openjdk-image.version>
         <docker-image.prefix>ivanfranchin</docker-image.prefix>
@@ -156,14 +156,6 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -173,6 +165,5 @@
             <url>https://repo.spring.io/snapshot</url>
         </pluginRepository>
     </pluginRepositories>
-
 
 </project>
