@@ -78,10 +78,10 @@
                         <builder>paketobuildpacks/builder:tiny</builder>
                         <name>${docker-image.prefix}/${project.artifactId}:${project.version}</name>
                         <env>
-                            <BP_BOOT_NATIVE_IMAGE>1</BP_BOOT_NATIVE_IMAGE>
-                            <BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                            <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
                                 --initialize-at-build-time=com.datastax.oss.driver.internal.core.util.Reflection <!-- it is needed for event-service -->
-                            </BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                            </BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
                         </env>
                     </image>
                 </configuration>
