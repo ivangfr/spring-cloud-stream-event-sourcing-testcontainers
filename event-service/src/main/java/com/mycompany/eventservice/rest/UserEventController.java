@@ -5,7 +5,6 @@ import com.mycompany.eventservice.rest.dto.UserEventDto;
 import com.mycompany.eventservice.service.UserEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/api/events/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/api/events/users")
 public class UserEventController {
 
     private final UserEventService userEventService;

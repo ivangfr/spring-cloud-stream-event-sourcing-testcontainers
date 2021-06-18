@@ -45,6 +45,7 @@ springdoc:
   show-actuator: true
   swagger-ui:
     groups-order: DESC
+    disable-swagger-default-url: true
 
 # In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 # strategy (https://cloud.spring.io/spring-cloud-static/spring-cloud-stream/current/reference/html/spring-cloud-stream.html#content-type-management).
