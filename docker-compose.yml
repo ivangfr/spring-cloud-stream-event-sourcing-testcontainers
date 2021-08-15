@@ -3,8 +3,8 @@ version: '3.8'
 services:
 
   mysql:
+    image: mysql:8.0.26
     container_name: mysql
-    image: mysql:8.0.25
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   cassandra:
-    image: cassandra:3.11.10
+    image: cassandra:3.11.11
     container_name: cassandra
     restart: unless-stopped
     ports:
@@ -40,8 +40,8 @@ services:
       start_period: 30s
 
   kafka:
-    container_name: kafka
     image: confluentinc/cp-kafka:6.1.1
+    container_name: kafka
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -124,8 +124,8 @@ services:
       start_period: 30s
 
   kafka-manager:
-    container_name: kafka-manager
     image: hlebalbau/kafka-manager:3.0.0.5
+    container_name: kafka-manager
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -140,8 +140,8 @@ services:
       start_period: 30s
 
   zipkin:
-    container_name: zipkin
     image: openzipkin/zipkin:2.23.2
+    container_name: zipkin
     restart: unless-stopped
     ports:
       - "9411:9411"

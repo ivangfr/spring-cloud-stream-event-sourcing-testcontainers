@@ -40,6 +40,8 @@ management:
   health:
     probes:
       enabled: true
+    cassandra:
+      enabled: false # Disabled for now to avoid issue when using native mode. See issue section in README.
 
 springdoc:
   show-actuator: true
