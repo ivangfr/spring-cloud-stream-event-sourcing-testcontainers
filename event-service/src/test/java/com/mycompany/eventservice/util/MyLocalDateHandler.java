@@ -25,5 +25,4 @@ public class MyLocalDateHandler {
         ZonedDateTime zdt = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of(ZONE_ID));
         return zdt.format(DTF);
     }
-
 }

@@ -1,4 +1,4 @@
-package com.mycompany.userservice.bus;
+package com.mycompany.userservice.kafka;
 
 import com.google.gson.Gson;
 import com.mycompany.userservice.messages.EventType;
@@ -27,7 +27,7 @@ public class UserStream {
     @Value("${spring.cloud.stream.bindings.users-out-0.content-type}")
     private String streamOutMimeType;
 
-    public void userCreated(Long id, CreateUserDto createUserDto) {
+    public Message<UserEventMessage> userCreated(Long id, CreateUserDto createUserDto) {
         UserEventMessage userEventMessage = UserEventMessage.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventTimestamp(System.currentTimeMillis())
@@ -36,10 +36,10 @@ public class UserStream {
                 .userJson(gson.toJson(createUserDto))
                 .build();
 
-        sendToBus(id, userEventMessage);
+        return sendToBus(id, userEventMessage);
     }
 
-    public void userUpdated(Long id, UpdateUserDto updateUserDto) {
+    public Message<UserEventMessage> userUpdated(Long id, UpdateUserDto updateUserDto) {
         UserEventMessage userEventMessage = UserEventMessage.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventTimestamp(System.currentTimeMillis())
@@ -48,10 +48,10 @@ public class UserStream {
                 .userJson(gson.toJson(updateUserDto))
                 .build();
 
-        sendToBus(id, userEventMessage);
+        return sendToBus(id, userEventMessage);
     }
 
-    public void userDeleted(Long id) {
+    public Message<UserEventMessage> userDeleted(Long id) {
         UserEventMessage userEventMessage = UserEventMessage.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventTimestamp(System.currentTimeMillis())
@@ -59,16 +59,18 @@ public class UserStream {
                 .userId(id)
                 .build();
 
-        sendToBus(id, userEventMessage);
+        return sendToBus(id, userEventMessage);
     }
 
-    private void sendToBus(Long partitionKey, UserEventMessage userEventMessage) {
+    private Message<UserEventMessage> sendToBus(Long partitionKey, UserEventMessage userEventMessage) {
         Message<UserEventMessage> message = MessageBuilder.withPayload(userEventMessage)
                 .setHeader("partitionKey", partitionKey)
                 .build();
 
         streamBridge.send("users-out-0", message, MimeType.valueOf(streamOutMimeType));
         log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
+
+        return message;
     }
 
 }

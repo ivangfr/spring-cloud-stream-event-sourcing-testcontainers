@@ -24,8 +24,6 @@ spring:
           destination: com.mycompany.userservice.user
           content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup
-          consumer:
-            ack-mode: RECORD # setting it explicitly as suggest in https://githubmemory.com/repo/spring-cloud/spring-cloud-stream-binder-kafka/issues/1079
   sleuth:
     sampler:
       probability: 1.0
@@ -41,7 +39,7 @@ management:
     probes:
       enabled: true
     cassandra:
-      enabled: false # Disabled for now to avoid issue when using native mode. See issue section in README.
+      enabled: false # Disabled for now to avoid issue when using native mode.
 
 springdoc:
   show-actuator: true

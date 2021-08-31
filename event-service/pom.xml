@@ -85,6 +85,11 @@
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>cassandra</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Cassandra Unit Spring -->
         <dependency>

@@ -1,6 +1,6 @@
 package com.mycompany.userservice.rest;
 
-import com.mycompany.userservice.bus.UserStream;
+import com.mycompany.userservice.kafka.UserStream;
 import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.rest.dto.CreateUserDto;

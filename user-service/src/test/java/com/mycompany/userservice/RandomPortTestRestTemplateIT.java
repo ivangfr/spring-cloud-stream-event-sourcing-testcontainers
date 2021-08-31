@@ -17,7 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -28,22 +28,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @Slf4j
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
 
     @Autowired
-    private UserRepository userRepository;
+    private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
+    private UserRepository userRepository;
 
     /*
      * GET /api/users
      * ============== */
 
     @Test
-    void givenNoUsersWhenGetUsersThenReturnEmptyArray() {
+    void testGetUsersWhenThereIsNone() {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -52,7 +53,7 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
     }
 
     @Test
-    void givenOneUserWhenGetUsersThenReturnArrayWithUser() {
+    void testGetUsersWhenThereIsOne() {
         User user = userRepository.save(getDefaultUser());
 
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);
@@ -70,8 +71,8 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
      * =================== */
 
     @Test
-    void givenNoUsersWhenGetUserByIdThenReturnNotFound() {
-        long id = 1L;
+    void testGetUserWhenNonExistent() {
+        Long id = 1L;
         String url = String.format(API_USERS_USER_ID_URL, id);
         ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity(url, MessageError.class);
 
@@ -86,7 +87,7 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
     }
 
     @Test
-    void givenOneUserWhenGetUserByIdThenReturnUserJson() {
+    void testGetUserWhenExistent() {
         User user = userRepository.save(getDefaultUser());
 
         String url = String.format(API_USERS_USER_ID_URL, user.getId());
@@ -105,11 +106,10 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
      * =============== */
 
     @Test
-    void givenNoUsersWhenCreateUserThenReturnUserJson() {
+    void testCreateUser() {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, UserDto.class);
 
-        log.info("{}", responseEntity);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isPositive();
@@ -117,13 +117,13 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(createUserDto.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(createUserDto.getActive());
 
-        final Long userId = responseEntity.getBody().getId();
+        Long userId = responseEntity.getBody().getId();
         Optional<User> userFound = userRepository.findById(userId);
         assertThat(userFound).isPresent();
 
-        await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
+        await().atMost(AT_MOST_DURATION).pollInterval(POLL_INTERVAL_DURATION).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
-            String eventServiceUrl = String.format("%s/events/users/%s", EVENT_SERVICE_API_URL, userId);
+            String eventServiceUrl = String.format("%s/events?userId=%s", EVENT_SERVICE_API_URL, userId);
             ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity(eventServiceUrl, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
@@ -138,9 +138,9 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
      * =================== */
 
     @Test
-    void givenOneUserWhenUpdateUserThenReturnUserJson() {
+    void testUpdateUser() {
         User user = userRepository.save(getDefaultUser());
-        final long userId = user.getId();
+        Long userId = user.getId();
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setActive(false);
@@ -156,9 +156,9 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
         assertThat(responseEntity.getBody().getActive()).isEqualTo(updateUserDto.getActive());
 
-        await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
+        await().atMost(AT_MOST_DURATION).pollInterval(POLL_INTERVAL_DURATION).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
-            String eventServiceUrl = String.format("%s/events/users/%s", EVENT_SERVICE_API_URL, userId);
+            String eventServiceUrl = String.format("%s/events?userId=%s", EVENT_SERVICE_API_URL, userId);
             ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity(eventServiceUrl, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
@@ -173,9 +173,9 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
      * ====================== */
 
     @Test
-    void givenOneUserWhenDeleteUserThenReturnUserJson() {
+    void testDeleteUser() {
         User user = userRepository.save(getDefaultUser());
-        final long userId = user.getId();
+        Long userId = user.getId();
 
         String url = String.format(API_USERS_USER_ID_URL, userId);
         ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, UserDto.class);
@@ -190,9 +190,9 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
         Optional<User> userNotFound = userRepository.findById(userId);
         assertThat(userNotFound).isNotPresent();
 
-        await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
+        await().atMost(AT_MOST_DURATION).pollInterval(POLL_INTERVAL_DURATION).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
-            String eventServiceUrl = String.format("%s/events/users/%s", EVENT_SERVICE_API_URL, userId);
+            String eventServiceUrl = String.format("%s/events?userId=%s", EVENT_SERVICE_API_URL, userId);
             ResponseEntity<EventServiceUserEventDto[]> eventServiceResponseEntity = testRestTemplate.getForEntity(eventServiceUrl, EventServiceUserEventDto[].class);
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
@@ -207,15 +207,11 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
      * ============ */
 
     private User getDefaultUser() {
-        User user = new User();
-        user.setEmail("ivan.franchin@test.com");
-        user.setFullName("Ivan Franchin");
-        user.setActive(true);
-        return user;
+        return new User("email@test", "fullName", true);
     }
 
     private CreateUserDto getDefaultCreateUserDto() {
-        return new CreateUserDto("ivan.franchin@test.com", "Ivan Franchin", true);
+        return new CreateUserDto("email@test", "fullName", true);
     }
 
     @Data
@@ -250,4 +246,6 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
     private static final String API_USERS_URL = "/api/users";
     private static final String API_USERS_USER_ID_URL = "/api/users/%s";
 
+    public static final Duration AT_MOST_DURATION = Duration.ofSeconds(10);
+    public static final Duration POLL_INTERVAL_DURATION = Duration.ofSeconds(1);
 }

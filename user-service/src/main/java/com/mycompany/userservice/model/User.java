@@ -1,6 +1,7 @@
 package com.mycompany.userservice.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "users")
@@ -35,6 +37,12 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public User(String email, String fullName, Boolean active) {
+        this.email = email;
+        this.fullName = fullName;
+        this.active = active;
+    }
 
     @PrePersist
     public void onPrePersist() {

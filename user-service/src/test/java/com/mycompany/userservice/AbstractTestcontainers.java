@@ -18,7 +18,7 @@ import java.time.Duration;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.26");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.35");
     private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:6.1.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.1"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:6.1.1");
@@ -27,6 +27,8 @@ public abstract class AbstractTestcontainers {
 
     protected static String EVENT_SERVICE_API_URL;
     private static final int EVENT_SERVICE_EXPOSED_PORT = 9081;
+
+    public static final Duration STARTUP_TIMEOUT = Duration.ofMinutes(2);
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
@@ -42,7 +44,7 @@ public abstract class AbstractTestcontainers {
         zookeeperContainer.withNetwork(network).withNetworkAliases("zookeeper")
                 .withEnv("ZOOKEEPER_CLIENT_PORT", "2181")
                 .withExposedPorts(2181);
-        zookeeperContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(2)));
+        zookeeperContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT));
         zookeeperContainer.start();
 
         // Kafka
@@ -57,7 +59,7 @@ public abstract class AbstractTestcontainers {
                 .withEnv("SCHEMA_REGISTRY_HOST_NAME", "schema-registry")
                 .withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
                 .withExposedPorts(8081);
-        schemaRegistryContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(2)));
+        schemaRegistryContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT));
         schemaRegistryContainer.start();
 
         // Cassandra
@@ -73,7 +75,7 @@ public abstract class AbstractTestcontainers {
                 .withEnv("SPRING_ZIPKIN_ENABLED", "false")
                 .withExposedPorts(EVENT_SERVICE_EXPOSED_PORT);
         eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health")
-                .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)));
+                .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT));
         eventServiceContainer.start();
 
         registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
@@ -87,5 +89,4 @@ public abstract class AbstractTestcontainers {
 
         EVENT_SERVICE_API_URL = String.format("http://localhost:%s/api", eventServiceContainer.getMappedPort(EVENT_SERVICE_EXPOSED_PORT));
     }
-
 }

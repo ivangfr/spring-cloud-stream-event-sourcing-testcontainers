@@ -15,14 +15,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
 import static com.mycompany.eventservice.util.MyLocalDateHandler.fromDateToString;
-import static com.mycompany.eventservice.util.MyLocalDateHandler.fromStringToDate;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,11 +41,10 @@ class UserEventControllerTest {
     private UserEventService userEventService;
 
     @Test
-    void givenNoUserEventsWhenGetUserEventByUserIdThenReturnEmptyJsonArray() throws Exception {
-        Long userId = 1L;
-        given(userEventService.getUserEvents(userId)).willReturn(new ArrayList<>());
+    void testGetUserEventsWhenThereIsNone() throws Exception {
+        given(userEventService.getUserEvents(anyLong())).willReturn(Collections.emptyList());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId))
+        ResultActions resultActions = mockMvc.perform(get("/api/events?userId=1"))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -55,25 +53,20 @@ class UserEventControllerTest {
     }
 
     @Test
-    void givenOneUserEventWhenGetUserEventByUserIdThenReturnArrayWithUserEventJson() throws Exception {
-        Long userId = 1L;
-        Date datetime = fromStringToDate("2018-12-03T10:15:30.000+0100");
-        String data = "data123";
-        String type = "type123";
-        UserEvent userEvent = new UserEvent(new UserEventKey(userId, datetime), type, data);
+    void testGetUserEventsWhenThereIsOne() throws Exception {
+        UserEvent userEvent = new UserEvent(new UserEventKey(1L, new Date()), "type", "data");
 
-        given(userEventService.getUserEvents(userId)).willReturn(Collections.singletonList(userEvent));
+        given(userEventService.getUserEvents(anyLong())).willReturn(Collections.singletonList(userEvent));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/events/users/" + userId))
+        ResultActions resultActions = mockMvc.perform(get("/api/events?userId=" + 1))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].datetime", is(fromDateToString(datetime))))
-                .andExpect(jsonPath("$[0].data", is(data)))
-                .andExpect(jsonPath("$[0].type", is(type)));
+                .andExpect(jsonPath("$[0].userId", is(userEvent.getKey().getUserId().intValue())))
+                .andExpect(jsonPath("$[0].datetime", is(fromDateToString(userEvent.getKey().getDatetime()))))
+                .andExpect(jsonPath("$[0].data", is(userEvent.getData())))
+                .andExpect(jsonPath("$[0].type", is(userEvent.getType())));
     }
-
 }
