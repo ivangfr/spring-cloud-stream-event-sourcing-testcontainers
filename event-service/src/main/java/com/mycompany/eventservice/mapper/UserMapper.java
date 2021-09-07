@@ -34,5 +34,4 @@ public interface UserMapper {
         }
         return userEvent;
     }
-
 }

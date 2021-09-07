@@ -16,7 +16,6 @@ public class UserEvent {
     private UserEventKey key;
 
     private String type;
-
     private String data;
 
 }

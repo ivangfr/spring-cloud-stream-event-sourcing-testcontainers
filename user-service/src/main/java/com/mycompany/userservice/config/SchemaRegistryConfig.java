@@ -15,5 +15,4 @@ public class SchemaRegistryConfig {
         client.setEndpoint(endpoint);
         return client;
     }
-
 }

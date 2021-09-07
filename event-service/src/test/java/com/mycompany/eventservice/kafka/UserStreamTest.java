@@ -51,7 +51,7 @@ class UserStreamTest {
     }
 
     @Test
-    void testConsumerUsers() {
+    void testUsers() {
         String eventId = UUID.randomUUID().toString();
         Date datetime = new Date();
         EventType eventType = EventType.CREATED;

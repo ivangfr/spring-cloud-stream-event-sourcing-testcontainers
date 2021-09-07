@@ -92,5 +92,4 @@ public class UserController {
 
         return userMapper.toUserDto(user);
     }
-
 }

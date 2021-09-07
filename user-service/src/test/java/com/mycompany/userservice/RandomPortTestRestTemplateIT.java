@@ -5,7 +5,7 @@ import com.mycompany.userservice.repository.UserRepository;
 import com.mycompany.userservice.rest.dto.CreateUserDto;
 import com.mycompany.userservice.rest.dto.UpdateUserDto;
 import com.mycompany.userservice.rest.dto.UserDto;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,32 +214,32 @@ class RandomPortTestRestTemplateIT extends AbstractTestcontainers {
         return new CreateUserDto("email@test", "fullName", true);
     }
 
-    @Data
+    @Value
     private static class EventServiceUserEventDto {
-        private Long userId;
-        private String datetime;
-        private String type;
-        private String data;
+        Long userId;
+        String datetime;
+        String type;
+        String data;
     }
 
-    @Data
+    @Value
     private static class MessageError {
-        private String timestamp;
-        private int status;
-        private String error;
-        private String message;
-        private String path;
-        private List<ErrorDetail> errors;
+        String timestamp;
+        int status;
+        String error;
+        String message;
+        String path;
+        List<ErrorDetail> errors;
 
-        @Data
+        @Value
         static class ErrorDetail {
-            private List<String> codes;
-            private String defaultMessage;
-            private String objectName;
-            private String field;
-            private String rejectedValue;
-            private boolean bindingFailure;
-            private String code;
+            List<String> codes;
+            String defaultMessage;
+            String objectName;
+            String field;
+            String rejectedValue;
+            boolean bindingFailure;
+            String code;
         }
     }
 

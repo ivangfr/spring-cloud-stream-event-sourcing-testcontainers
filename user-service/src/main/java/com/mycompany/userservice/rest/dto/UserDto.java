@@ -1,13 +1,12 @@
 package com.mycompany.userservice.rest.dto;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class UserDto {
 
-    private Long id;
-    private String email;
-    private String fullName;
-    private Boolean active;
-
+    Long id;
+    String email;
+    String fullName;
+    Boolean active;
 }

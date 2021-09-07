@@ -32,7 +32,7 @@ class UserStream2Test {
     private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.11");
 
     @Test
-    void testConsumerUsers() {
+    void testUsers() {
         String contractPoints = String.format("%s:%s",
                 cassandraContainer.getHost(),
                 cassandraContainer.getMappedPort(9042));

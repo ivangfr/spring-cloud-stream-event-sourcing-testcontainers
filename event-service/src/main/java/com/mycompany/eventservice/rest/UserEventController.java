@@ -30,5 +30,4 @@ public class UserEventController {
                 .map(userMapper::toUserEventDto)
                 .collect(Collectors.toList());
     }
-
 }

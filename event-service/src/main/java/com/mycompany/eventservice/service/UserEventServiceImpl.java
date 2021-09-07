@@ -22,5 +22,4 @@ public class UserEventServiceImpl implements UserEventService {
     public UserEvent saveUserEvent(UserEvent userEvent) {
         return userEventRepository.save(userEvent);
     }
-
 }

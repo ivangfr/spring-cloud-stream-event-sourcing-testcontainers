@@ -28,37 +28,20 @@ public class UserStream {
     private String streamOutMimeType;
 
     public Message<UserEventMessage> userCreated(Long id, CreateUserDto createUserDto) {
-        UserEventMessage userEventMessage = UserEventMessage.builder()
-                .eventId(UUID.randomUUID().toString())
-                .eventTimestamp(System.currentTimeMillis())
-                .eventType(EventType.CREATED)
-                .userId(id)
-                .userJson(gson.toJson(createUserDto))
-                .build();
-
+        UserEventMessage userEventMessage = UserEventMessage.of(
+                getId(),System.currentTimeMillis(), EventType.CREATED, id, gson.toJson(createUserDto));
         return sendToBus(id, userEventMessage);
     }
 
     public Message<UserEventMessage> userUpdated(Long id, UpdateUserDto updateUserDto) {
-        UserEventMessage userEventMessage = UserEventMessage.builder()
-                .eventId(UUID.randomUUID().toString())
-                .eventTimestamp(System.currentTimeMillis())
-                .eventType(EventType.UPDATED)
-                .userId(id)
-                .userJson(gson.toJson(updateUserDto))
-                .build();
-
+        UserEventMessage userEventMessage = UserEventMessage.of(
+                getId(), System.currentTimeMillis(), EventType.UPDATED, id, gson.toJson(updateUserDto));
         return sendToBus(id, userEventMessage);
     }
 
     public Message<UserEventMessage> userDeleted(Long id) {
-        UserEventMessage userEventMessage = UserEventMessage.builder()
-                .eventId(UUID.randomUUID().toString())
-                .eventTimestamp(System.currentTimeMillis())
-                .eventType(EventType.DELETED)
-                .userId(id)
-                .build();
-
+        UserEventMessage userEventMessage = UserEventMessage.of(
+                getId(), System.currentTimeMillis(), EventType.DELETED, id, null);
         return sendToBus(id, userEventMessage);
     }
 
@@ -69,8 +52,10 @@ public class UserStream {
 
         streamBridge.send("users-out-0", message, MimeType.valueOf(streamOutMimeType));
         log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
-
         return message;
     }
 
+    private String getId() {
+        return UUID.randomUUID().toString();
+    }
 }

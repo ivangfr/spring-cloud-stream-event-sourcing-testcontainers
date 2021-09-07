@@ -1,16 +1,13 @@
 package com.mycompany.userservice.messages;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
-@Builder
+@Value(staticConstructor = "of")
 public class UserEventMessage {
 
-    private String eventId;
-    private Long eventTimestamp;
-    private EventType eventType;
-    private Long userId;
-    private String userJson;
-
+    String eventId;
+    Long eventTimestamp;
+    EventType eventType;
+    Long userId;
+    String userJson;
 }

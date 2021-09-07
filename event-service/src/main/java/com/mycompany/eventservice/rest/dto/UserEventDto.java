@@ -1,20 +1,18 @@
 package com.mycompany.eventservice.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import lombok.Value;
 
 import java.util.Date;
 
-@Data
+@Value
 public class UserEventDto {
 
-    private Long userId;
+    Long userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
-    private Date datetime;
+    Date datetime;
 
-    private String type;
-
-    private String data;
-
+    String type;
+    String data;
 }
