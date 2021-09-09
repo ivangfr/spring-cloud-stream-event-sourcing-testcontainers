@@ -21,9 +21,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @Import(UserServiceImpl.class)
@@ -75,7 +74,7 @@ class UserServiceImplTest {
 
         userService.deleteUser(user);
 
-        verify(userRepository, times(1)).delete(any(User.class));
+        then(userRepository).should().delete(any(User.class));
     }
 
     @Test
@@ -114,7 +113,7 @@ class UserServiceImplTest {
 
         userService.validateUserExistsByEmail("email@test");
 
-        verify(userRepository, times(1)).findUserByEmail(anyString());
+        then(userRepository).should().findUserByEmail(anyString());
     }
 
     private User getDefaultUser() {

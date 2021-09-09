@@ -101,10 +101,6 @@
                         <name>${docker-image.prefix}/${project.artifactId}:${project.version}</name>
                         <env>
                             <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-                            <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
-                                --initialize-at-build-time=com.datastax.oss.driver.internal.core.util.Reflection <!-- it is needed for event-service -->
-                                --enable-url-protocols=http
-                            </BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
                         </env>
                     </image>
                 </configuration>

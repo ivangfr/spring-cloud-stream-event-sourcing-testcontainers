@@ -59,7 +59,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   docker-compose up -d
   ```
 
-- Wait until all containers are `Up (healthy)`. You can check by running the following command
+- Wait until all containers are `running (healthy)`. You can check by running the following command
   ```
   docker-compose ps
   ```
@@ -239,13 +239,6 @@ partitions.
   docker-compose down -v
   ```
 
-## Cleanup
-
-To remove the Docker images created by this project, go to a terminal and, inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script
-```
-./remove-docker-images.sh
-```
-
 ## Running tests
 
 - **event-service**
@@ -277,6 +270,13 @@ To remove the Docker images created by this project, go to a terminal and, insid
       ```
       ./mvnw clean verify --projects user-service -DargLine="-Dspring.profiles.active=test,avro"
       ```
+
+## Cleanup
+
+To remove the Docker images created by this project, go to a terminal and, inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script
+```
+./remove-docker-images.sh
+```
 
 ## Using Tracing Agent to generate the missing configuration for native image
 
@@ -314,7 +314,7 @@ To remove the Docker images created by this project, go to a terminal and, insid
 
 - After building `user-service` Docker native image, the application starts and runs fine when using `default` profile, i.e, `JSON` serialization format.
 
-  However, a warning is logged at startup when using `avro` profile
+  However, a warning is logged at startup when using both `default` and `avro` profiles
   ```
   WARN [user-service,,] 1 --- [           main] o.s.c.s.binder.DefaultBinderFactory      : Failed to add additional Message Converters from child context
   
@@ -348,11 +348,106 @@ To remove the Docker images created by this project, go to a terminal and, insid
   	at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:19) ~[com.mycompany.userservice.UserServiceApplication:na]
   ```
 
-  Once the application is up and running using `avro` profile, the following exception is thrown when submitting a POST request to create a user
+  Once the application is up and running using `avro` profile, the following exception is thrown when submitting a POST request to create a new user
   ```
-   WARN [user-service,9f16e9c3858269ff,9f16e9c3858269ff] 1 --- [nio-9080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: S1009
-  2021-09-01 09:43:12.799 ERROR [user-service,9f16e9c3858269ff,9f16e9c3858269ff] 1 --- [nio-9080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : Unsupported character encoding 'CP1252'
-  2021-09-01 09:43:12.814 ERROR [user-service,,] 1 --- [nio-9080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.orm.jpa.JpaSystemException: could not execute query; nested exception is org.hibernate.exception.GenericJDBCException: could not execute query] with root cause
+  ERROR [user-service,,] 1 --- [nio-9080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed; nested exception is java.lang.ExceptionInInitializerError] with root cause
+  
+  org.apache.avro.AvroRuntimeException: Unable to load a functional FieldAccess class!
+  	at org.apache.avro.reflect.ReflectionUtil.resetFieldAccess(ReflectionUtil.java:74) ~[na:na]
+  	at org.apache.avro.reflect.ReflectionUtil.<clinit>(ReflectionUtil.java:51) ~[na:na]
+  	at com.oracle.svm.core.classinitialization.ClassInitializationInfo.invokeClassInitializer(ClassInitializationInfo.java:375) ~[na:na]
+  	at com.oracle.svm.core.classinitialization.ClassInitializationInfo.initialize(ClassInitializationInfo.java:295) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData$ClassAccessorData.<init>(ReflectData.java:278) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData$ClassAccessorData.<init>(ReflectData.java:266) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData$1.computeValue(ReflectData.java:260) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData$1.computeValue(ReflectData.java:256) ~[na:na]
+  	at java.lang.ClassValue.get(JavaLangSubstitutions.java:599) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData.getClassAccessorData(ReflectData.java:317) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData.getFieldAccessors(ReflectData.java:321) ~[na:na]
+  	at org.apache.avro.reflect.ReflectData.getRecordState(ReflectData.java:874) ~[na:na]
+  	at org.apache.avro.generic.GenericDatumWriter.writeRecord(GenericDatumWriter.java:193) ~[na:na]
+  	at org.apache.avro.specific.SpecificDatumWriter.writeRecord(SpecificDatumWriter.java:83) ~[na:na]
+  	at org.apache.avro.generic.GenericDatumWriter.writeWithoutConversion(GenericDatumWriter.java:130) ~[na:na]
+  	at org.apache.avro.generic.GenericDatumWriter.write(GenericDatumWriter.java:82) ~[na:na]
+  	at org.apache.avro.reflect.ReflectDatumWriter.write(ReflectDatumWriter.java:158) ~[na:na]
+  	at org.apache.avro.generic.GenericDatumWriter.write(GenericDatumWriter.java:72) ~[na:na]
+  	at org.springframework.cloud.schema.registry.avro.AbstractAvroMessageConverter.convertToInternal(AbstractAvroMessageConverter.java:127) ~[na:na]
+  	at org.springframework.messaging.converter.AbstractMessageConverter.toMessage(AbstractMessageConverter.java:201) ~[na:na]
+  	at org.springframework.messaging.converter.AbstractMessageConverter.toMessage(AbstractMessageConverter.java:191) ~[na:na]
+  	at org.springframework.cloud.function.context.config.SmartCompositeMessageConverter.toMessage(SmartCompositeMessageConverter.java:86) ~[na:na]
+  	at org.springframework.cloud.function.context.catalog.SimpleFunctionRegistry$FunctionInvocationWrapper.convertOutputMessageIfNecessary(SimpleFunctionRegistry.java:1207) ~[na:na]
+  	at org.springframework.cloud.function.context.catalog.SimpleFunctionRegistry$FunctionInvocationWrapper.convertOutputIfNecessary(SimpleFunctionRegistry.java:1018) ~[na:na]
+  	at org.springframework.cloud.function.context.catalog.SimpleFunctionRegistry$FunctionInvocationWrapper.apply(SimpleFunctionRegistry.java:492) ~[na:na]
+  	at org.springframework.cloud.stream.function.PartitionAwareFunctionWrapper.apply(PartitionAwareFunctionWrapper.java:77) ~[na:na]
+  	at org.springframework.cloud.stream.function.StreamBridge.send(StreamBridge.java:214) ~[com.mycompany.userservice.UserServiceApplication:3.1.3]
+  	at org.springframework.cloud.stream.function.StreamBridge.send(StreamBridge.java:156) ~[com.mycompany.userservice.UserServiceApplication:3.1.3]
+  	at com.mycompany.userservice.kafka.UserStream.sendToBus(UserStream.java:53) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at com.mycompany.userservice.kafka.UserStream.userCreated(UserStream.java:33) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at com.mycompany.userservice.rest.UserController.createUser(UserController.java:58) ~[com.mycompany.userservice.UserServiceApplication:na]
+  	at java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+  	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:197) ~[na:na]
+  	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:141) ~[na:na]
+  	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:106) ~[na:na]
+  	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[na:na]
+  	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1064) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) ~[na:na]
+  	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909) ~[na:na]
+  	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681) ~[com.mycompany.userservice.UserServiceApplication:4.0.FR]
+  	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) ~[na:na]
+  	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764) ~[com.mycompany.userservice.UserServiceApplication:4.0.FR]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[com.mycompany.userservice.UserServiceApplication:9.0.52]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.springframework.cloud.sleuth.instrument.web.servlet.TracingFilter.doFilter(TracingFilter.java:89) ~[na:na]
+  	at org.springframework.cloud.sleuth.autoconfig.instrument.web.LazyTracingFilter.doFilter(TraceWebServletConfiguration.java:114) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.springframework.boot.actuate.metrics.web.servlet.WebMvcMetricsFilter.doFilterInternal(WebMvcMetricsFilter.java:96) ~[na:na]
+  	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[com.mycompany.userservice.UserServiceApplication:5.3.9]
+  	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[na:na]
+  	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[na:na]
+  	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) ~[na:na]
+  	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) ~[na:na]
+  	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542) ~[na:na]
+  	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) ~[na:na]
+  	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[com.mycompany.userservice.UserServiceApplication:9.0.52]
+  	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) ~[na:na]
+  	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357) ~[na:na]
+  	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:382) ~[na:na]
+  	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[na:na]
+  	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:893) ~[na:na]
+  	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1726) ~[na:na]
+  	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[na:na]
+  	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[na:na]
+  	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[na:na]
+  	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[na:na]
+  	at java.lang.Thread.run(Thread.java:829) ~[na:na]
+  	at com.oracle.svm.core.thread.JavaThreads.threadStartRoutine(JavaThreads.java:567) ~[na:na]
+  	at com.oracle.svm.core.posix.thread.PosixJavaThreads.pthreadStartRoutine(PosixJavaThreads.java:192) ~[na:na]
+  ```
+
+  The following exception is thrown (in both `default` and `avro` profiles) when creating a user with already existing email
+  ```
+   WARN [user-service,87db7c7769a9510a,87db7c7769a9510a] 1 --- [nio-9080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: S1009
+  ERROR [user-service,87db7c7769a9510a,87db7c7769a9510a] 1 --- [nio-9080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : Unsupported character encoding 'CP1252'
+  ERROR [user-service,,] 1 --- [nio-9080-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.orm.jpa.JpaSystemException: could not execute query; nested exception is org.hibernate.exception.GenericJDBCException: could not execute query] with root cause
   
   java.io.UnsupportedEncodingException: CP1252
   	at java.lang.StringCoding.decode(StringCoding.java:243) ~[na:na]
@@ -417,7 +512,7 @@ To remove the Docker images created by this project, go to a terminal and, insid
   	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97) ~[na:na]
   	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[na:na]
   	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215) ~[na:na]
-  	at com.sun.proxy.$Proxy448.findUserByEmail(Unknown Source) ~[na:na]
+  	at com.sun.proxy.$Proxy450.findUserByEmail(Unknown Source) ~[na:na]
   	at com.mycompany.userservice.service.UserServiceImpl.validateUserExistsByEmail(UserServiceImpl.java:41) ~[com.mycompany.userservice.UserServiceApplication:na]
   	at com.mycompany.userservice.rest.UserController.createUser(UserController.java:53) ~[com.mycompany.userservice.UserServiceApplication:na]
   	at java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
