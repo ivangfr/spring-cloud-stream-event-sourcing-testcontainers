@@ -1,10 +1,12 @@
 package com.mycompany.userservice.kafka;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycompany.userservice.exception.UserStreamJsonProcessingException;
 import com.mycompany.userservice.messages.EventType;
 import com.mycompany.userservice.messages.UserEventMessage;
-import com.mycompany.userservice.rest.dto.CreateUserDto;
-import com.mycompany.userservice.rest.dto.UpdateUserDto;
+import com.mycompany.userservice.rest.dto.CreateUserRequest;
+import com.mycompany.userservice.rest.dto.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,20 +24,20 @@ import java.util.UUID;
 public class UserStream {
 
     private final StreamBridge streamBridge;
-    private final Gson gson;
+    private final ObjectMapper objectMapper;
 
     @Value("${spring.cloud.stream.bindings.users-out-0.content-type}")
     private String streamOutMimeType;
 
-    public Message<UserEventMessage> userCreated(Long id, CreateUserDto createUserDto) {
+    public Message<UserEventMessage> userCreated(Long id, CreateUserRequest createUserRequest) {
         UserEventMessage userEventMessage = UserEventMessage.of(
-                getId(),System.currentTimeMillis(), EventType.CREATED, id, gson.toJson(createUserDto));
+                getId(), System.currentTimeMillis(), EventType.CREATED, id, writeValueAsString(createUserRequest));
         return sendToBus(id, userEventMessage);
     }
 
-    public Message<UserEventMessage> userUpdated(Long id, UpdateUserDto updateUserDto) {
+    public Message<UserEventMessage> userUpdated(Long id, UpdateUserRequest updateUserRequest) {
         UserEventMessage userEventMessage = UserEventMessage.of(
-                getId(), System.currentTimeMillis(), EventType.UPDATED, id, gson.toJson(updateUserDto));
+                getId(), System.currentTimeMillis(), EventType.UPDATED, id, writeValueAsString(updateUserRequest));
         return sendToBus(id, userEventMessage);
     }
 
@@ -57,5 +59,13 @@ public class UserStream {
 
     private String getId() {
         return UUID.randomUUID().toString();
+    }
+
+    private String writeValueAsString(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new UserStreamJsonProcessingException(e);
+        }
     }
 }

@@ -44,9 +44,7 @@ class UserStreamTest {
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
-        String contractPoints = String.format("%s:%s",
-                cassandraContainer.getHost(),
-                cassandraContainer.getMappedPort(9042));
+        String contractPoints = String.format("%s:%s", cassandraContainer.getHost(), cassandraContainer.getMappedPort(9042));
         registry.add("spring.data.cassandra.contact-points", () -> contractPoints);
     }
 

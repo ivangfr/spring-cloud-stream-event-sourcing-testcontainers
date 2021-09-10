@@ -21,5 +21,4 @@ public class UserEventKey {
 
     @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.ASCENDING)
     private Date datetime;
-
 }

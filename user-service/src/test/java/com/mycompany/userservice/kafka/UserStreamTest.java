@@ -1,9 +1,9 @@
 package com.mycompany.userservice.kafka;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.userservice.messages.UserEventMessage;
-import com.mycompany.userservice.rest.dto.CreateUserDto;
-import com.mycompany.userservice.rest.dto.UpdateUserDto;
+import com.mycompany.userservice.rest.dto.CreateUserRequest;
+import com.mycompany.userservice.rest.dto.UpdateUserRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,40 +37,40 @@ class UserStreamTest {
     private UserStream userStream;
 
     @Autowired
-    private Gson gson;
+    private ObjectMapper objectMapper;
 
     @Test
-    void testUserCreated() {
-        CreateUserDto createUserDto = new CreateUserDto("email@test", "fullName", true);
+    void testUserCreated() throws IOException {
+        CreateUserRequest createUserRequest = new CreateUserRequest("email@test", "fullName", true);
 
-        Message<UserEventMessage> message = userStream.userCreated(1L, createUserDto);
+        Message<UserEventMessage> message = userStream.userCreated(1L, createUserRequest);
 
         Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
         assertThat(outputMessage).isNotNull();
         assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
                 .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        assertThat(gson.fromJson(new String(outputMessage.getPayload(), StandardCharsets.UTF_8), UserEventMessage.class))
-                .isEqualTo(message.getPayload());
+        UserEventMessage userEventMessage = objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+        assertThat(userEventMessage).isEqualTo(message.getPayload());
     }
 
     @Test
-    void testUserUpdated() {
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setEmail("email@test");
-        updateUserDto.setActive(false);
+    void testUserUpdated() throws IOException {
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setEmail("email@test");
+        updateUserRequest.setActive(false);
 
-        Message<UserEventMessage> message = userStream.userUpdated(1L, updateUserDto);
+        Message<UserEventMessage> message = userStream.userUpdated(1L, updateUserRequest);
 
         Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
         assertThat(outputMessage).isNotNull();
         assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
                 .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        assertThat(gson.fromJson(new String(outputMessage.getPayload(), StandardCharsets.UTF_8), UserEventMessage.class))
-                .isEqualTo(message.getPayload());
+        UserEventMessage userEventMessage = objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+        assertThat(userEventMessage).isEqualTo(message.getPayload());
     }
 
     @Test
-    void testUserDeleted() {
+    void testUserDeleted() throws IOException {
         Message<UserEventMessage> message = userStream.userDeleted(1L);
 
         Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
@@ -78,8 +78,8 @@ class UserStreamTest {
         assertThat(outputMessage).isNotNull();
         assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
                 .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        assertThat(gson.fromJson(new String(outputMessage.getPayload(), StandardCharsets.UTF_8), UserEventMessage.class))
-                .isEqualTo(message.getPayload());
+        UserEventMessage userEventMessage = objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+        assertThat(userEventMessage).isEqualTo(message.getPayload());
     }
 
     private final static String BINDING_NAME = "com.mycompany.userservice.user";

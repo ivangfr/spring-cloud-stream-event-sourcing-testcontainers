@@ -1,9 +1,9 @@
 package com.mycompany.userservice.mapper;
 
 import com.mycompany.userservice.model.User;
-import com.mycompany.userservice.rest.dto.CreateUserDto;
-import com.mycompany.userservice.rest.dto.UpdateUserDto;
-import com.mycompany.userservice.rest.dto.UserDto;
+import com.mycompany.userservice.rest.dto.CreateUserRequest;
+import com.mycompany.userservice.rest.dto.UpdateUserRequest;
+import com.mycompany.userservice.rest.dto.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,47 +26,47 @@ class UserMapperTest {
 
     @Test
     void testToUser() {
-        CreateUserDto createUserDto = new CreateUserDto("email@test", "fullName", true);
+        CreateUserRequest createUserRequest = new CreateUserRequest("email@test", "fullName", true);
 
-        User user = userMapper.toUser(createUserDto);
+        User user = userMapper.toUser(createUserRequest);
 
         assertThat(user.getId()).isNull();
-        assertThat(user.getEmail()).isEqualTo(createUserDto.getEmail());
-        assertThat(user.getFullName()).isEqualTo(createUserDto.getFullName());
-        assertThat(user.getActive()).isEqualTo(createUserDto.getActive());
+        assertThat(user.getEmail()).isEqualTo(createUserRequest.getEmail());
+        assertThat(user.getFullName()).isEqualTo(createUserRequest.getFullName());
+        assertThat(user.getActive()).isEqualTo(createUserRequest.getActive());
         assertThat(user.getCreatedAt()).isNull();
         assertThat(user.getUpdatedAt()).isNull();
     }
 
     @Test
-    void testToUserDto() {
+    void testToUserResponse() {
         User user = new User("email@test", "fullName", true);
 
-        UserDto userDto = userMapper.toUserDto(user);
+        UserResponse userResponse = userMapper.toUserResponse(user);
 
-        assertThat(userDto.getId()).isNull();
-        assertThat(userDto.getEmail()).isEqualTo(user.getEmail());
-        assertThat(userDto.getFullName()).isEqualTo(user.getFullName());
-        assertThat(userDto.getActive()).isEqualTo(user.getActive());
+        assertThat(userResponse.getId()).isNull();
+        assertThat(userResponse.getEmail()).isEqualTo(user.getEmail());
+        assertThat(userResponse.getFullName()).isEqualTo(user.getFullName());
+        assertThat(userResponse.getActive()).isEqualTo(user.getActive());
         assertThat(user.getCreatedAt()).isNull();
         assertThat(user.getUpdatedAt()).isNull();
     }
 
     @ParameterizedTest
-    @MethodSource("provideUpdateUserFromDto")
-    void testUpdateUserFromDto(String newEmail, String newFullName, Boolean newActive, User expectedUser) {
+    @MethodSource("provideUpdateUserFromRequest")
+    void testUpdateUserFromRequest(String newEmail, String newFullName, Boolean newActive, User expectedUser) {
         User user = new User("email@test", "fullName", true);
 
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setEmail(newEmail);
-        updateUserDto.setFullName(newFullName);
-        updateUserDto.setActive(newActive);
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setEmail(newEmail);
+        updateUserRequest.setFullName(newFullName);
+        updateUserRequest.setActive(newActive);
 
-        userMapper.updateUserFromDto(updateUserDto, user);
+        userMapper.updateUserFromRequest(updateUserRequest, user);
         assertThat(user).isEqualTo(expectedUser);
     }
 
-    private static Stream<Arguments> provideUpdateUserFromDto() {
+    private static Stream<Arguments> provideUpdateUserFromRequest() {
         return Stream.of(
                 Arguments.of("email2@test.com", "fullName2", false, new User("email2@test.com", "fullName2", false)),
                 Arguments.of("email2@test.com", null, null, new User("email2@test.com", "fullName", true)),

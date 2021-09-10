@@ -1,6 +1,5 @@
 package com.mycompany.userservice;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.CassandraContainer;
@@ -14,7 +13,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
 
-@Slf4j
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
@@ -35,56 +33,62 @@ public abstract class AbstractTestcontainers {
         Network network = Network.SHARED;
 
         // MySQL
-        mySQLContainer.withNetwork(network).withNetworkAliases("mysql")
+        mySQLContainer.withNetwork(network)
+                .withNetworkAliases("mysql")
                 .withUrlParam("characterEncoding", "UTF-8")
-                .withUrlParam("serverTimezone", "UTC");
-        mySQLContainer.start();
+                .withUrlParam("serverTimezone", "UTC")
+                .start();
 
         // Zookeeper
-        zookeeperContainer.withNetwork(network).withNetworkAliases("zookeeper")
+        zookeeperContainer.withNetwork(network)
+                .withNetworkAliases("zookeeper")
                 .withEnv("ZOOKEEPER_CLIENT_PORT", "2181")
-                .withExposedPorts(2181);
-        zookeeperContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT));
-        zookeeperContainer.start();
+                .withExposedPorts(2181)
+                .waitingFor(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT))
+                .start();
 
         // Kafka
-        kafkaContainer.withNetwork(network).withNetworkAliases("kafka")
+        kafkaContainer.withNetwork(network)
+                .withNetworkAliases("kafka")
                 .withExternalZookeeper("zookeeper:2181")
-                .withExposedPorts(9092, 9093);
-        kafkaContainer.start();
+                .withExposedPorts(9092, 9093)
+                .start();
 
         // Schema Registry
-        schemaRegistryContainer.withNetwork(network).withNetworkAliases("schema-registry")
+        schemaRegistryContainer.withNetwork(network)
+                .withNetworkAliases("schema-registry")
                 .withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "kafka:9092")
                 .withEnv("SCHEMA_REGISTRY_HOST_NAME", "schema-registry")
                 .withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
-                .withExposedPorts(8081);
-        schemaRegistryContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT));
-        schemaRegistryContainer.start();
+                .withExposedPorts(8081)
+                .waitingFor(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT))
+                .start();
 
         // Cassandra
-        cassandraContainer.withNetwork(network).withNetworkAliases("cassandra");
-        cassandraContainer.start();
+        cassandraContainer.withNetwork(network)
+                .withNetworkAliases("cassandra")
+                .start();
 
         // event-service
-        eventServiceContainer.withNetwork(network).withNetworkAliases("event-service")
+        eventServiceContainer.withNetwork(network)
+                .withNetworkAliases("event-service")
                 .withEnv("KAFKA_HOST", "kafka")
                 .withEnv("KAFKA_PORT", "9092")
                 .withEnv("SCHEMA_REGISTRY_HOST", "schema-registry")
                 .withEnv("CASSANDRA_HOST", "cassandra")
                 .withEnv("SPRING_ZIPKIN_ENABLED", "false")
-                .withExposedPorts(EVENT_SERVICE_EXPOSED_PORT);
-        eventServiceContainer.setWaitStrategy(Wait.forHttp("/actuator/health")
-                .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT));
-        eventServiceContainer.start();
+                .withExposedPorts(EVENT_SERVICE_EXPOSED_PORT)
+                .waitingFor(Wait.forHttp("/actuator/health")
+                        .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT))
+                .start();
 
         registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
         registry.add("spring.jpa.properties.hibernate.dialect.storage_engine", () -> "innodb");
 
-        String schemaRegistryUrl = String.format("http://localhost:%s", schemaRegistryContainer.getMappedPort(8081));
-        registry.add("spring.cloud.schema-registry-client.endpoint", () -> schemaRegistryUrl);
+        String schemaRegistryEndpoint = String.format("http://localhost:%s", schemaRegistryContainer.getMappedPort(8081));
+        registry.add("spring.cloud.schema-registry-client.endpoint", () -> schemaRegistryEndpoint);
         registry.add("spring.cloud.stream.kafka.binder.brokers", kafkaContainer::getBootstrapServers);
 
         EVENT_SERVICE_API_URL = String.format("http://localhost:%s/api", eventServiceContainer.getMappedPort(EVENT_SERVICE_EXPOSED_PORT));

@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 
 @Data
-public class UpdateUserDto {
+public class UpdateUserRequest {
 
     @Schema(example = "ivan.franchin.2@test.com")
     @Email
@@ -17,5 +17,4 @@ public class UpdateUserDto {
 
     @Schema(example = "false")
     private Boolean active;
-
 }

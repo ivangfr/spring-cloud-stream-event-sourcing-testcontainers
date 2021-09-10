@@ -1,7 +1,7 @@
 package com.mycompany.eventservice.rest;
 
 import com.mycompany.eventservice.mapper.UserMapper;
-import com.mycompany.eventservice.rest.dto.UserEventDto;
+import com.mycompany.eventservice.rest.dto.UserEventResponse;
 import com.mycompany.eventservice.service.UserEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +23,11 @@ public class UserEventController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public List<UserEventDto> getUserEvents(@RequestParam(name = "userId") Long id) {
+    public List<UserEventResponse> getUserEvents(@RequestParam(name = "userId") Long id) {
         log.info("GET Request, id: {}", id);
         return userEventService.getUserEvents(id)
                 .stream()
-                .map(userMapper::toUserEventDto)
+                .map(userMapper::toUserEventResponse)
                 .collect(Collectors.toList());
     }
 }

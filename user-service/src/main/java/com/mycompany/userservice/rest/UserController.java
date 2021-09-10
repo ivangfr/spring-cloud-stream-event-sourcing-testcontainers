@@ -3,9 +3,9 @@ package com.mycompany.userservice.rest;
 import com.mycompany.userservice.kafka.UserStream;
 import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
-import com.mycompany.userservice.rest.dto.CreateUserDto;
-import com.mycompany.userservice.rest.dto.UpdateUserDto;
-import com.mycompany.userservice.rest.dto.UserDto;
+import com.mycompany.userservice.rest.dto.CreateUserRequest;
+import com.mycompany.userservice.rest.dto.UpdateUserRequest;
+import com.mycompany.userservice.rest.dto.UserResponse;
 import com.mycompany.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,55 +34,55 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public List<UserDto> getUsers() {
+    public List<UserResponse> getUsers() {
         return userService.getUsers()
                 .stream()
-                .map(userMapper::toUserDto)
+                .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Long id) {
+    public UserResponse getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
-        userService.validateUserExistsByEmail(createUserDto.getEmail());
-        User user = userMapper.toUser(createUserDto);
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        userService.validateUserExistsByEmail(createUserRequest.getEmail());
+        User user = userMapper.toUser(createUserRequest);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         user = userService.saveUser(user);
-        userStream.userCreated(user.getId(), createUserDto);
+        userStream.userCreated(user.getId(), createUserRequest);
         //--
 
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) {
+    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User user = userService.validateAndGetUserById(id);
 
         String userEmail = user.getEmail();
-        String updateUserDtoEmail = updateUserDto.getEmail();
-        if (StringUtils.hasText(updateUserDtoEmail) && !updateUserDtoEmail.equals(userEmail)) {
-            userService.validateUserExistsByEmail(updateUserDtoEmail);
+        String updateUserRequestEmail = updateUserRequest.getEmail();
+        if (StringUtils.hasText(updateUserRequestEmail) && !updateUserRequestEmail.equals(userEmail)) {
+            userService.validateUserExistsByEmail(updateUserRequestEmail);
         }
 
-        userMapper.updateUserFromDto(updateUserDto, user);
+        userMapper.updateUserFromRequest(updateUserRequest, user);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         user = userService.saveUser(user);
-        userStream.userUpdated(user.getId(), updateUserDto);
+        userStream.userUpdated(user.getId(), updateUserRequest);
         //--
 
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable Long id) {
+    public UserResponse deleteUser(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
 
         //-- Deleting from MySQL and sending event to Kafka is not an atomic transaction!
@@ -90,6 +90,6 @@ public class UserController {
         userStream.userDeleted(user.getId());
         //--
 
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 }

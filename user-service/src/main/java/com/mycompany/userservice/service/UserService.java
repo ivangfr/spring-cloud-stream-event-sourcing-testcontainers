@@ -15,5 +15,4 @@ public interface UserService {
     User validateAndGetUserById(Long id);
 
     void validateUserExistsByEmail(String email);
-
 }

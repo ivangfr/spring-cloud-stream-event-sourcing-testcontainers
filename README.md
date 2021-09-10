@@ -1,6 +1,6 @@
 # spring-cloud-stream-event-sourcing-testcontainers
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) to run the integration tests.
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) for integration testing.
 
 > **Note:** In [`kubernetes-minikube-environment`](https://github.com/ivangfr/kubernetes-minikube-environment/tree/master/user-event-sourcing-kafka) repository, it's shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -252,13 +252,12 @@ partitions.
 - **user-service**
 
   - Run the command below to start the **Unit Tests**
-    > **Note:** `Testcontainers` will start automatically `MySQL` Docker container before some tests begin and will shut it down when the tests finish.
     ```
     ./mvnw clean test --projects user-service
     ```
 
-  - Run the command below to start the **Integration Tests**
-    > **Important:** Make sure you have an updated `event-service` Docker image
+  - Run the command below to start the **Unit** and **Integration Tests**
+    > **Important:** Make sure you have an updated `event-service` Docker image.
     
     > **Note:** `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
  

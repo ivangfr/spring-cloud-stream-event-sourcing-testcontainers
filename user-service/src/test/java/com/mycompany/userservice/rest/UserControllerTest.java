@@ -6,8 +6,8 @@ import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.kafka.UserStream;
 import com.mycompany.userservice.mapper.UserMapperImpl;
 import com.mycompany.userservice.model.User;
-import com.mycompany.userservice.rest.dto.CreateUserDto;
-import com.mycompany.userservice.rest.dto.UpdateUserDto;
+import com.mycompany.userservice.rest.dto.CreateUserRequest;
+import com.mycompany.userservice.rest.dto.UpdateUserRequest;
 import com.mycompany.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -115,10 +115,10 @@ class UserControllerTest {
         User user = getDefaultUser();
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        CreateUserDto createUserDto = getDefaultCreateUserDto();
+        CreateUserRequest createUserRequest = getDefaultCreateUserRequest();
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createUserDto)))
+                        .content(objectMapper.writeValueAsString(createUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isCreated())
@@ -133,7 +133,7 @@ class UserControllerTest {
     void testCreateUserInformingInvalidInput() throws Exception {
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateUserDto())))
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest())))
                 .andDo(print());
 
         resultActions.andExpect(status().isBadRequest());
@@ -145,7 +145,7 @@ class UserControllerTest {
 
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(getDefaultCreateUserDto())))
+                        .content(objectMapper.writeValueAsString(getDefaultCreateUserRequest())))
                 .andDo(print());
 
         resultActions.andExpect(status().isConflict());
@@ -157,22 +157,22 @@ class UserControllerTest {
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setEmail("email2@test");
-        updateUserDto.setFullName("fullName2");
-        updateUserDto.setActive(false);
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setEmail("email2@test");
+        updateUserRequest.setFullName("fullName2");
+        updateUserRequest.setActive(false);
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDto)))
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserDto.getEmail())))
-                .andExpect(jsonPath(JSON_$_FULL_NAME, is(updateUserDto.getFullName())))
-                .andExpect(jsonPath(JSON_$_ACTIVE, is(updateUserDto.getActive())));
+                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserRequest.getEmail())))
+                .andExpect(jsonPath(JSON_$_FULL_NAME, is(updateUserRequest.getFullName())))
+                .andExpect(jsonPath(JSON_$_ACTIVE, is(updateUserRequest.getActive())));
     }
 
     @Test
@@ -181,7 +181,7 @@ class UserControllerTest {
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UpdateUserDto())))
+                        .content(objectMapper.writeValueAsString(new UpdateUserRequest())))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
@@ -220,8 +220,8 @@ class UserControllerTest {
         return user;
     }
 
-    private CreateUserDto getDefaultCreateUserDto() {
-        return new CreateUserDto("email@test", "fullName", true);
+    private CreateUserRequest getDefaultCreateUserRequest() {
+        return new CreateUserRequest("email@test", "fullName", true);
     }
 
     private static final String API_USERS_URL = "/api/users";

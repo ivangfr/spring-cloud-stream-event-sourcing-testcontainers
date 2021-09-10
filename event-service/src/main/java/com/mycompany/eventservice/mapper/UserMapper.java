@@ -2,7 +2,7 @@ package com.mycompany.eventservice.mapper;
 
 import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.model.UserEventKey;
-import com.mycompany.eventservice.rest.dto.UserEventDto;
+import com.mycompany.eventservice.rest.dto.UserEventResponse;
 import com.mycompany.userservice.messages.UserEventMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +17,7 @@ public interface UserMapper {
 
     @Mapping(source = "key.userId", target = "userId")
     @Mapping(source = "key.datetime", target = "datetime")
-    UserEventDto toUserEventDto(UserEvent userEvent);
+    UserEventResponse toUserEventResponse(UserEvent userEvent);
 
     default UserEvent createUserEvent(Message<UserEventMessage> message) {
         UserEventMessage userEventMessage = message.getPayload();

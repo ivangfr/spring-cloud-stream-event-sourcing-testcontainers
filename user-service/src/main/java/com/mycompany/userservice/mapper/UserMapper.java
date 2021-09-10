@@ -1,8 +1,8 @@
 package com.mycompany.userservice.mapper;
 
-import com.mycompany.userservice.rest.dto.CreateUserDto;
-import com.mycompany.userservice.rest.dto.UpdateUserDto;
-import com.mycompany.userservice.rest.dto.UserDto;
+import com.mycompany.userservice.rest.dto.CreateUserRequest;
+import com.mycompany.userservice.rest.dto.UpdateUserRequest;
+import com.mycompany.userservice.rest.dto.UserResponse;
 import com.mycompany.userservice.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -18,10 +18,9 @@ import org.springframework.context.annotation.Configuration;
 )
 public interface UserMapper {
 
-    User toUser(CreateUserDto createUserDto);
+    User toUser(CreateUserRequest createUserRequest);
 
-    UserDto toUserDto(User user);
+    UserResponse toUserResponse(User user);
 
-    void updateUserFromDto(UpdateUserDto updateUserDto, @MappingTarget User user);
-
+    void updateUserFromRequest(UpdateUserRequest updateUserRequest, @MappingTarget User user);
 }

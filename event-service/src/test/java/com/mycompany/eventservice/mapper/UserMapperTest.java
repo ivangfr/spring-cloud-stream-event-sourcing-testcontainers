@@ -2,7 +2,7 @@ package com.mycompany.eventservice.mapper;
 
 import com.mycompany.eventservice.model.UserEvent;
 import com.mycompany.eventservice.model.UserEventKey;
-import com.mycompany.eventservice.rest.dto.UserEventDto;
+import com.mycompany.eventservice.rest.dto.UserEventResponse;
 import com.mycompany.userservice.messages.EventType;
 import com.mycompany.userservice.messages.UserEventMessage;
 import org.junit.jupiter.api.Test;
@@ -25,20 +25,20 @@ class UserMapperTest {
     private UserMapper userMapper;
 
     @Test
-    void testToUserEventDto() {
+    void testToUserEventResponse() {
         Long userId = 1L;
         Date datetime = new Date();
         String data = "data";
         String type = "type";
         UserEvent userEvent = new UserEvent(new UserEventKey(userId, datetime), type, data);
 
-        UserEventDto userEventDto = userMapper.toUserEventDto(userEvent);
+        UserEventResponse userEventResponse = userMapper.toUserEventResponse(userEvent);
 
-        assertThat(userEventDto).isNotNull();
-        assertThat(userEventDto.getUserId()).isEqualTo(userId);
-        assertThat(userEventDto.getDatetime()).isEqualTo(datetime);
-        assertThat(userEventDto.getData()).isEqualTo(data);
-        assertThat(userEventDto.getType()).isEqualTo(type);
+        assertThat(userEventResponse).isNotNull();
+        assertThat(userEventResponse.getUserId()).isEqualTo(userId);
+        assertThat(userEventResponse.getDatetime()).isEqualTo(datetime);
+        assertThat(userEventResponse.getData()).isEqualTo(data);
+        assertThat(userEventResponse.getType()).isEqualTo(type);
     }
 
     @Test

@@ -9,5 +9,4 @@ public interface UserEventService {
     List<UserEvent> getUserEvents(Long id);
 
     UserEvent saveUserEvent(UserEvent userEvent);
-
 }

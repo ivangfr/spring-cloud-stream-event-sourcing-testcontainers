@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUserDto {
+public class CreateUserRequest {
 
     @Schema(example = "ivan.franchin@test.com")
     @NotBlank
@@ -26,5 +26,4 @@ public class CreateUserDto {
     @Schema(example = "true")
     @NotNull
     private Boolean active;
-
 }

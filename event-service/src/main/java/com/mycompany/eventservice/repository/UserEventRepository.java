@@ -11,5 +11,4 @@ import java.util.List;
 public interface UserEventRepository extends CassandraRepository<UserEvent, UserEventKey> {
 
     List<UserEvent> findByKeyUserId(Long id);
-
 }

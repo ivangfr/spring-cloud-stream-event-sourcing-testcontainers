@@ -17,5 +17,4 @@ public class UserEvent {
 
     private String type;
     private String data;
-
 }
