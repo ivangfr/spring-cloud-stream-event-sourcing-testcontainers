@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserStream2Test {
 
     @Container
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:3.11.11");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.0.1");
 
     @Test
     void testUsers() {
