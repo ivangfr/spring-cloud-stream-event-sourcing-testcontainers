@@ -21,7 +21,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
     `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
   
     | Configuration                    | Format |
-    | -------------------------------- | ------ |
+    |----------------------------------|--------|
     | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
     | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
@@ -110,7 +110,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - **user-service**
 
     | Environment Variable   | Description                                                                          |
-    | ---------------------- | ------------------------------------------------------------------------------------ |
+    |------------------------|--------------------------------------------------------------------------------------|
     | `MYSQL_HOST`           | Specify host of the `MySQL` database to use (default `localhost`)                    |
     | `MYSQL_PORT`           | Specify port of the `MySQL` database to use (default `3306`)                         |
     | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
@@ -123,7 +123,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - **event-service**
 
     | Environment Variable   | Description                                                                          |
-    | ---------------------- | ------------------------------------------------------------------------------------ |
+    |------------------------|--------------------------------------------------------------------------------------|
     | `CASSANDRA_HOST`       | Specify host of the `Cassandra` database to use (default `localhost`)                |
     | `CASSANDRA_PORT`       | Specify port of the `Cassandra` database to use (default `9042`)                     |
     | `KAFKA_HOST`           | Specify host of the `Kafka` message broker to use (default `localhost`)              |
@@ -151,7 +151,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 ## Applications URLs
 
 | Application   | URL                                   |
-| ------------- | ------------------------------------- |
+|---------------|---------------------------------------|
 | user-service  | http://localhost:9080/swagger-ui.html |
 | event-service | http://localhost:9081/swagger-ui.html |
 
