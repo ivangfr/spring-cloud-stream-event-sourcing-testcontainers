@@ -26,7 +26,7 @@ services:
       test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.2.1
+    image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
     restart: unless-stopped
     ports:
@@ -37,7 +37,7 @@ services:
       test: "echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT"
 
   kafka:
-    image: confluentinc/cp-kafka:6.2.1
+    image: confluentinc/cp-kafka:7.0.1
     container_name: kafka
     restart: unless-stopped
     depends_on:
@@ -55,7 +55,7 @@ services:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.2.1
+    image: confluentinc/cp-schema-registry:7.0.1
     container_name: schema-registry
     restart: unless-stopped
     depends_on:
@@ -83,7 +83,7 @@ services:
       test: "wget --quiet --tries=1 --spider http://localhost:8000 || exit 1"
 
   kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:6.2.1
+    image: confluentinc/cp-kafka-rest:7.0.1
     container_name: kafka-rest-proxy
     restart: unless-stopped
     depends_on:
