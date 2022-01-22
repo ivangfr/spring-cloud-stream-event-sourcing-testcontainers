@@ -24,7 +24,6 @@ spring:
           content-type: application/json
           producer:
             partition-key-expression: headers['partitionKey']
-            partition-count: 3 # (*)
   sleuth:
     sampler:
       probability: 1.0
