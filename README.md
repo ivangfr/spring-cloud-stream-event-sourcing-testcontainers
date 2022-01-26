@@ -283,6 +283,15 @@ To remove the Docker images created by this project, go to a terminal and, insid
 
 ## Issues
 
-Unable to run `user-service` and `event-service` tests and to build the Docker native images as **Mockito** is still not supported in AOT.
+- Unable to run `user-service` and `event-service` tests as **Mockito** is still not supported in AOT. See `spring-native` issues [#1343](https://github.com/spring-projects-experimental/spring-native/issues/1343) and [#1063](https://github.com/spring-projects-experimental/spring-native/issues/1063)
 
-See `spring-native` issues [#1343](https://github.com/spring-projects-experimental/spring-native/issues/1343) and [#1063](https://github.com/spring-projects-experimental/spring-native/issues/1063)
+- Unable to build `user-service` and `event-service` Docker native images. It's throwing the following error
+  ```
+  [INFO] -------------------------------------------------------------
+  [ERROR] COMPILATION ERROR :
+  [INFO] -------------------------------------------------------------
+  [ERROR] /spring-cloud-stream-event-sourcing-testcontainers/user-service/target/generated-runtime-sources/spring-aot/src/main/java/org/springframework/cloud/stream/config/ContextBootstrapInitializer.java:[72,111] org.springframework.cloud.stream.config.BindersHealthIndicatorAutoConfiguration.BindersHealthContributor has private access in org.springframework.cloud.stream.config.BindersHealthIndicatorAutoConfiguration
+  [ERROR] /spring-cloud-stream-event-sourcing-testcontainers/user-service/target/generated-runtime-sources/spring-aot/src/main/java/org/springframework/cloud/stream/config/ContextBootstrapInitializer.java:[78,253] org.springframework.cloud.stream.config.BindersHealthIndicatorAutoConfiguration.BindersHealthContributor has private access in org.springframework.cloud.stream.config.BindersHealthIndicatorAutoConfiguration
+  [INFO] 2 errors
+  [INFO] -------------------------------------------------------------
+  ```
