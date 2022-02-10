@@ -24,7 +24,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <spring-cloud.version>2021.0.0</spring-cloud.version>
         <awaitility.version>4.1.1</awaitility.version>
-        <testcontainers.version>1.16.2</testcontainers.version>
+        <testcontainers.version>1.16.3</testcontainers.version>
         <jib-maven-plugin.version>3.2.0</jib-maven-plugin.version>
         <openjdk-image.version>11.0.13</openjdk-image.version>
         <docker-image.prefix>ivanfranchin</docker-image.prefix>
