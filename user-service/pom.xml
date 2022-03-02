@@ -71,6 +71,11 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${springdoc-openapi.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-native</artifactId>
+            <version>${springdoc-openapi.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
