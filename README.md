@@ -178,8 +178,8 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 - **MySQL**
   ```
-  docker exec -it mysql mysql -uroot -psecret --database userdb
-  select * from users;
+  docker exec -it -e MYSQL_PWD="secret" mysql mysql -uroot --database userdb
+  SELECT * FROM users;
   ```
   > Type `exit` to leave `MySQL Monitor`
 
@@ -285,48 +285,50 @@ To remove the Docker images created by this project, go to a terminal and, insid
 - Unable to run `user-service` and `event-service` tests as **Mockito** is still not supported in AOT. See `spring-native` issues [#1343](https://github.com/spring-projects-experimental/spring-native/issues/1343) and [#1063](https://github.com/spring-projects-experimental/spring-native/issues/1063)
 
 - Unable to run `user-service` and `event-service` Docker native images. It looks like, properties defined in `bootstrap.yml` are not read. It's throwing the following exception
-  ```
-  ERROR [,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
-  
-  org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'swaggerConfig': Unexpected exception during bean creation; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.application.name' in value "${spring.application.name}"
-  	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:555) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[na:na]
-  	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[na:na]
-  	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:953) ~[na:na]
-  	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918) ~[na:na]
-  	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[na:na]
-  	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145) ~[na:na]
-  	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:740) ~[com.mycompany.userservice.UserServiceApplication:2.6.4]
-  	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:415) ~[com.mycompany.userservice.UserServiceApplication:2.6.4]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) ~[com.mycompany.userservice.UserServiceApplication:2.6.4]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312) ~[com.mycompany.userservice.UserServiceApplication:2.6.4]
-  	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301) ~[com.mycompany.userservice.UserServiceApplication:2.6.4]
-  	at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:27) ~[com.mycompany.userservice.UserServiceApplication:na]
-  Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.application.name' in value "${spring.application.name}"
-  	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180) ~[na:na]
-  	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126) ~[na:na]
-  	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239) ~[na:na]
-  	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210) ~[na:na]
-  	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:191) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:936) ~[na:na]
-  	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1330) ~[na:na]
-  	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1309) ~[na:na]
-  	at org.springframework.aot.beans.factory.InjectedFieldResolver.resolve(InjectedFieldResolver.java:43) ~[na:na]
-  	at org.springframework.aot.beans.factory.InjectedElementResolver.resolve(InjectedElementResolver.java:35) ~[na:na]
-  	at org.springframework.aot.beans.factory.InjectedElementResolver.invoke(InjectedElementResolver.java:53) ~[na:na]
-  	at com.mycompany.userservice.config.ContextBootstrapInitializer.lambda$registerSwaggerConfig$1(CException in thread "Thread-2" zipkin2.reporter.ClosedSenderException
-  	at zipkin2.reporter.AsyncReporter$BoundedAsyncReporter.flush(AsyncReporter.java:265)
-  	at org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration$2.run(ZipkinAutoConfiguration.java:142)
-  	at com.oracle.svm.core.thread.JavaThreads.threadStartRoutine(JavaThreads.java:597)
-  	at com.oracle.svm.core.posix.thread.PosixJavaThreads.pthreadStartRoutine(PosixJavaThreads.java:194)
-  ontextBootstrapInitializer.java:16) ~[na:na]
-  	at org.springframework.aot.beans.factory.BeanDefinitionRegistrar$ThrowableFunction.apply(BeanDefinitionRegistrar.java:294) ~[na:na]
-  	at org.springframework.aot.beans.factory.BeanDefinitionRegistrar.lambda$instanceSupplier$0(BeanDefinitionRegistrar.java:115) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.obtainFromSupplier(AbstractAutowireCapableBeanFactory.java:1249) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1191) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[na:na]
-  	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[na:na]
-  	... 14 common frames omitted
-  ```
+```
+ERROR [,,] 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'swaggerConfig': Unexpected exception during bean creation; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.application.name' in value "${spring.application.name}"
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:555) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[na:na]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[na:na]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:953) ~[na:na]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918) ~[na:na]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[na:na]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145) ~[na:na]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:740) ~[com.mycompany.userservice.UserServiceApplication:2.6.6]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:415) ~[com.mycompany.userservice.UserServiceApplication:2.6.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) ~[com.mycompany.userservice.UserServiceApplication:2.6.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312) ~[com.mycompany.userservice.UserServiceApplication:2.6.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301) ~[com.mycompany.userservice.UserServiceApplication:2.6.6]
+	at com.mycompany.userservice.UserServiceApplication.main(UserServiceApplication.java:27) ~[com.mycompany.userservice.UserServiceApplication:na]
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.application.name' in value "${spring.application.name}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180) ~[na:na]
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126) ~[na:na]
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239) ~[na:na]
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210) ~[na:na]
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:191) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:936) ~[na:na]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1330) ~[na:na]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1309) ~[na:na]
+	at org.springframework.aot.beans.factory.InjectedFieldResolver.resolve(InjectedFieldResolver.java:43) ~[na:na]
+	at org.springframework.aot.beans.factory.InjectedElementResolver.resolve(InjectedElementResolver.java:35) ~[na:na]
+	at org.springframework.aot.beans.factory.InjectedElementResolver.invoke(InjectedElementResolver.java:53) ~[na:na]
+	at com.mycompany.userservice.config.ContextBootstrapInitializer.lambda$registerSwaggerConfig$1(ContextBootstrapInitializer.java:16) ~[na:na]
+	at org.springframework.aot.beans.factory.BeanDefinitionRegistrar$ThrowableFunction.apply(BeanDefinitionRegistrar.java:294) ~[na:na]
+	at org.springframework.aot.beans.factory.BeanDefinitionRegistrar.lambda$instanceSupplier$0(BeanDefinitionRegistrar.java:115) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.obtainFromSupplier(AbstractAutowireCapableBeanFactory.java:1249) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1191) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[na:na]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[na:na]
+	... 14 common frames omitted
+
+INFO [,,] 1 --- [       Thread-2] o.s.c.s.a.z.ZipkinAutoConfiguration      : Flushing remaining spans on shutdown
+Exception in thread "Thread-2" zipkin2.reporter.ClosedSenderException
+	at zipkin2.reporter.AsyncReporter$BoundedAsyncReporter.flush(AsyncReporter.java:265)
+	at org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration$2.run(ZipkinAutoConfiguration.java:142)
+	at com.oracle.svm.core.thread.JavaThreads.threadStartRoutine(JavaThreads.java:597)
+	at com.oracle.svm.core.posix.thread.PosixJavaThreads.pthreadStartRoutine(PosixJavaThreads.java:194)
+```
