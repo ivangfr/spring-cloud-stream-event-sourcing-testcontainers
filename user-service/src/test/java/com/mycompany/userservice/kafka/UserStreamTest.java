@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(properties = {
         "spring.zipkin.enabled=false",
         "spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1",
-        "spring.datasource.username: sa",
-        "spring.datasource.password: sa",
-        "spring.datasource.driver-class-name: org.h2.Driver"
+        "spring.datasource.username=sa",
+        "spring.datasource.password=sa",
+        "spring.datasource.driver-class-name=org.h2.Driver"
 })
 @Import(TestChannelBinderConfiguration.class)
 class UserStreamTest {

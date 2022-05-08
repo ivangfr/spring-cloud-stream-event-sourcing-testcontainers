@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   mysql:
-    image: mysql:5.7.36
+    image: mysql:5.7.38
     container_name: mysql
     restart: unless-stopped
     ports:
@@ -15,7 +15,7 @@ services:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
 
   cassandra:
-    image: cassandra:4.0.1
+    image: cassandra:4.0.3
     container_name: cassandra
     restart: unless-stopped
     ports:
@@ -26,7 +26,7 @@ services:
       test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.1.1
+    image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
     restart: unless-stopped
     ports:
@@ -37,7 +37,7 @@ services:
       test: "echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT"
 
   kafka:
-    image: confluentinc/cp-kafka:6.1.1
+    image: confluentinc/cp-kafka:7.0.1
     container_name: kafka
     restart: unless-stopped
     depends_on:
@@ -50,12 +50,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_DELETE_TOPIC_ENABLE: "true"
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.1.1
+    image: confluentinc/cp-schema-registry:7.0.1
     container_name: schema-registry
     restart: unless-stopped
     depends_on:
@@ -83,7 +82,7 @@ services:
       test: "wget --quiet --tries=1 --spider http://localhost:8000 || exit 1"
 
   kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:6.1.1
+    image: confluentinc/cp-kafka-rest:7.0.1
     container_name: kafka-rest-proxy
     restart: unless-stopped
     depends_on:
@@ -131,7 +130,7 @@ services:
       test: "curl -f http://localhost:9000 || exit 1"
 
   zipkin:
-    image: openzipkin/zipkin:2.23.4
+    image: openzipkin/zipkin:2.23.16
     container_name: zipkin
     restart: unless-stopped
     ports:

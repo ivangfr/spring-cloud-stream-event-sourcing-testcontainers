@@ -24,10 +24,11 @@ spring:
           content-type: application/json
           producer:
             partition-key-expression: headers['partitionKey']
-            partition-count: 3 # (*)
   sleuth:
     sampler:
       probability: 1.0
+  main:
+    allow-bean-definition-overriding: true
 
 management:
   endpoints:
@@ -45,6 +46,10 @@ springdoc:
   swagger-ui:
     groups-order: DESC
     disable-swagger-default-url: true
+
+logging:
+  level:
+    org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
 
 ---
 spring:

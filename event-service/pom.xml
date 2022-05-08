@@ -14,9 +14,10 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <springdoc-openapi.version>1.5.12</springdoc-openapi.version>
+        <spring-cloud-schema-registry-client.version>1.1.5</spring-cloud-schema-registry-client.version>
+        <springdoc-openapi.version>1.6.8</springdoc-openapi.version>
         <cassandra-unit-spring.version>4.3.1.0</cassandra-unit-spring.version>
-        <avro.version>1.10.2</avro.version>
+        <avro.version>1.10.2</avro.version> <!-- when using avro '1.11.0', the UserEventMessage class is generated with errors -->
     </properties>
 
     <dependencies>
@@ -43,6 +44,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-schema-registry-client</artifactId>
+            <version>${spring-cloud-schema-registry-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
