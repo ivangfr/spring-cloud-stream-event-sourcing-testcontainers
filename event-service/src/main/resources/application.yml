@@ -47,6 +47,10 @@ springdoc:
     groups-order: DESC
     disable-swagger-default-url: true
 
+logging:
+  level:
+    org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
+
 # In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 # strategy (https://cloud.spring.io/spring-cloud-static/spring-cloud-stream/current/reference/html/spring-cloud-stream.html#content-type-management).
 # The precedence orders are: 1st, content-type present in the message header; 2nd content-type defined in the binding;

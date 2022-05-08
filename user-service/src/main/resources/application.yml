@@ -47,6 +47,10 @@ springdoc:
     groups-order: DESC
     disable-swagger-default-url: true
 
+logging:
+  level:
+    org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
+
 ---
 spring:
   config:
