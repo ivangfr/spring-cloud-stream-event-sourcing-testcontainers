@@ -29,7 +29,7 @@ public class CassandraConfig {
     private String password;
 
     @Bean
-    CqlSessionFactoryBean session() {
+    public CqlSessionFactoryBean session() {
         CqlSessionFactoryBean session = new CqlSessionFactoryBean();
         session.setContactPoints(contactPoints);
         session.setLocalDatacenter(localDatacenter);

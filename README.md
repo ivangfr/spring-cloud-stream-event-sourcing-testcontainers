@@ -14,11 +14,11 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   `Spring Boot` Web Java application responsible for handling users. The user information is stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
   
-  ![user-service](documentation/user-service-swagger.png)
+  ![user-service](documentation/user-service-swagger.jpeg)
 
   - **Serialization format**
 
-    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/current/schema-registry/docs/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/platform/current/schema-registry/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
   
     | Configuration                    | Format |
     |----------------------------------|--------|
@@ -29,13 +29,13 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving them in `Cassandra`.
 
-  ![event-service](documentation/event-service-swagger.png)
+  ![event-service](documentation/event-service-swagger.jpeg)
 
   - **Deserialization**
   
-    Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
+    Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
     
-    In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
+    In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
     
     The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
   
@@ -149,10 +149,10 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Applications URLs
 
-| Application   | URL                                   |
-|---------------|---------------------------------------|
-| user-service  | http://localhost:9080/swagger-ui.html |
-| event-service | http://localhost:9081/swagger-ui.html |
+| Application   | URL                                         |
+|---------------|---------------------------------------------|
+| user-service  | http://localhost:9080/swagger-ui/index.html |
+| event-service | http://localhost:9081/swagger-ui/index.html |
 
 ## Playing around
 
@@ -170,7 +170,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 1. You can check me message trace using [`Zipkin`](https://zipkin.io) http://localhost:9411. The picture below shows an example 
 
-   ![zipkin](documentation/zipkin.png)
+   ![zipkin](documentation/zipkin.jpeg)
 
 1. Access `user-service` and create new users and/or update/delete existing ones. Then, access `event-service` Swagger website to validate if the events were sent correctly
 
@@ -178,7 +178,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 - **MySQL**
   ```
-  docker exec -it -e MYSQL_PWD="secret" mysql mysql -uroot --database userdb
+  docker exec -it -e MYSQL_PWD=secret mysql mysql -uroot --database userdb
   SELECT * FROM users;
   ```
   > Type `exit` to leave `MySQL Monitor`
@@ -199,13 +199,13 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   `Kafka Topics UI` can be accessed at http://localhost:8085
 
-  ![kafka-topics-ui](documentation/kafka-topics-ui.png)
+  ![kafka-topics-ui](documentation/kafka-topics-ui.jpeg)
 
 - **Schema Registry UI**
 
   `Schema Registry UI` can be accessed at http://localhost:8001
 
-  ![schema-registry-ui](documentation/schema-registry-ui.png)
+  ![schema-registry-ui](documentation/schema-registry-ui.jpeg)
 
 - **Kafka Manager**
 
@@ -222,7 +222,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   The image below shows the topics present in Kafka, including the topic `com.mycompany.userservice.user` with `3`
 partitions.
 
-  ![kafka-manager](documentation/kafka-manager.png)
+  ![kafka-manager](documentation/kafka-manager.jpeg)
 
 ## Shutdown
 
@@ -275,7 +275,3 @@ To remove the Docker images created by this project, go to a terminal and, insid
 ```
 ./remove-docker-images.sh
 ```
-
-## References
-
-- https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html

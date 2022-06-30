@@ -27,8 +27,8 @@ docker run -d --rm --name event-service -p 9081:9081 \
 wait_for_container_log "event-service" "Started"
 
 printf "\n"
-printf "%14s | %37s |\n" "Application" "URL"
-printf "%14s + %37s |\n" "--------------" "-------------------------------------"
-printf "%14s | %37s |\n" "user-service" "http://localhost:9080/swagger-ui.html"
-printf "%14s | %37s |\n" "event-service" "http://localhost:9081/swagger-ui.html"
+printf "%14s | %43s |\n" "Application" "URL"
+printf "%14s + %43s |\n" "--------------" "-------------------------------------------"
+printf "%14s | %43s |\n" "user-service" "http://localhost:9080/swagger-ui/index.html"
+printf "%14s | %43s |\n" "event-service" "http://localhost:9081/swagger-ui/index.html"
 printf "\n"
