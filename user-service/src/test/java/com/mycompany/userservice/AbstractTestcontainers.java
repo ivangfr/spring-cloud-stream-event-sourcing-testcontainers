@@ -16,11 +16,11 @@ import java.time.Duration;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.38");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.39");
     private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:7.0.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.0.1"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.0.1");
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.0.4");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.0.5");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("ivanfranchin/event-service:1.0.0");
 
     protected static String EVENT_SERVICE_API_URL;

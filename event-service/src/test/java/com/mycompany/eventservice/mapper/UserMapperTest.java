@@ -35,10 +35,10 @@ class UserMapperTest {
         UserEventResponse userEventResponse = userMapper.toUserEventResponse(userEvent);
 
         assertThat(userEventResponse).isNotNull();
-        assertThat(userEventResponse.getUserId()).isEqualTo(userId);
-        assertThat(userEventResponse.getDatetime()).isEqualTo(datetime);
-        assertThat(userEventResponse.getData()).isEqualTo(data);
-        assertThat(userEventResponse.getType()).isEqualTo(type);
+        assertThat(userEventResponse.userId()).isEqualTo(userId);
+        assertThat(userEventResponse.datetime()).isEqualTo(datetime);
+        assertThat(userEventResponse.data()).isEqualTo(data);
+        assertThat(userEventResponse.type()).isEqualTo(type);
     }
 
     @Test

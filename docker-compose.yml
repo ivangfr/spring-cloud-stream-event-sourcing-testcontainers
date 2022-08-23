@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   mysql:
-    image: mysql:5.7.38
+    image: mysql:5.7.39
     container_name: mysql
     restart: unless-stopped
     ports:
@@ -15,7 +15,7 @@ services:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
 
   cassandra:
-    image: cassandra:4.0.4
+    image: cassandra:4.0.5
     container_name: cassandra
     restart: unless-stopped
     ports:

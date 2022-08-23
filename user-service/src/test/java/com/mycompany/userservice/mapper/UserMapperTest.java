@@ -44,10 +44,10 @@ class UserMapperTest {
 
         UserResponse userResponse = userMapper.toUserResponse(user);
 
-        assertThat(userResponse.getId()).isNull();
-        assertThat(userResponse.getEmail()).isEqualTo(user.getEmail());
-        assertThat(userResponse.getFullName()).isEqualTo(user.getFullName());
-        assertThat(userResponse.getActive()).isEqualTo(user.getActive());
+        assertThat(userResponse.id()).isNull();
+        assertThat(userResponse.email()).isEqualTo(user.getEmail());
+        assertThat(userResponse.fullName()).isEqualTo(user.getFullName());
+        assertThat(userResponse.active()).isEqualTo(user.getActive());
         assertThat(user.getCreatedAt()).isNull();
         assertThat(user.getUpdatedAt()).isNull();
     }

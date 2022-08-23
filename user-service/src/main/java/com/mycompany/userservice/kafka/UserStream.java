@@ -30,19 +30,19 @@ public class UserStream {
     private String streamOutMimeType;
 
     public Message<UserEventMessage> userCreated(Long id, CreateUserRequest createUserRequest) {
-        UserEventMessage userEventMessage = UserEventMessage.of(
+        UserEventMessage userEventMessage = new UserEventMessage(
                 getId(), System.currentTimeMillis(), EventType.CREATED, id, writeValueAsString(createUserRequest));
         return sendToBus(id, userEventMessage);
     }
 
     public Message<UserEventMessage> userUpdated(Long id, UpdateUserRequest updateUserRequest) {
-        UserEventMessage userEventMessage = UserEventMessage.of(
+        UserEventMessage userEventMessage = new UserEventMessage(
                 getId(), System.currentTimeMillis(), EventType.UPDATED, id, writeValueAsString(updateUserRequest));
         return sendToBus(id, userEventMessage);
     }
 
     public Message<UserEventMessage> userDeleted(Long id) {
-        UserEventMessage userEventMessage = UserEventMessage.of(
+        UserEventMessage userEventMessage = new UserEventMessage(
                 getId(), System.currentTimeMillis(), EventType.DELETED, id, null);
         return sendToBus(id, userEventMessage);
     }

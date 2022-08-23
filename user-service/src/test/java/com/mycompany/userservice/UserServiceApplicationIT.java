@@ -5,7 +5,6 @@ import com.mycompany.userservice.repository.UserRepository;
 import com.mycompany.userservice.rest.dto.CreateUserRequest;
 import com.mycompany.userservice.rest.dto.UpdateUserRequest;
 import com.mycompany.userservice.rest.dto.UserResponse;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +60,9 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody()).hasSize(1);
-        assertThat(responseEntity.getBody()[0].getId()).isEqualTo(user.getId());
-        assertThat(responseEntity.getBody()[0].getEmail()).isEqualTo(user.getEmail());
-        assertThat(responseEntity.getBody()[0].getActive()).isEqualTo(user.getActive());
+        assertThat(responseEntity.getBody()[0].id()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody()[0].email()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody()[0].active()).isEqualTo(user.getActive());
     }
 
     /*
@@ -78,12 +77,12 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
-        assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with id '1' doesn't exist.");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
-        assertThat(responseEntity.getBody().getErrors()).isNull();
+        assertThat(responseEntity.getBody().timestamp()).isNotEmpty();
+        assertThat(responseEntity.getBody().status()).isEqualTo(404);
+        assertThat(responseEntity.getBody().error()).isEqualTo("Not Found");
+        assertThat(responseEntity.getBody().message()).isEqualTo("User with id '1' doesn't exist.");
+        assertThat(responseEntity.getBody().path()).isEqualTo(url);
+        assertThat(responseEntity.getBody().errors()).isNull();
     }
 
     @Test
@@ -95,10 +94,10 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
-        assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
-        assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
-        assertThat(responseEntity.getBody().getActive()).isEqualTo(user.getActive());
+        assertThat(responseEntity.getBody().id()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody().email()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody().fullName()).isEqualTo(user.getFullName());
+        assertThat(responseEntity.getBody().active()).isEqualTo(user.getActive());
     }
 
     /*
@@ -112,12 +111,12 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isPositive();
-        assertThat(responseEntity.getBody().getEmail()).isEqualTo(createUserRequest.getEmail());
-        assertThat(responseEntity.getBody().getFullName()).isEqualTo(createUserRequest.getFullName());
-        assertThat(responseEntity.getBody().getActive()).isEqualTo(createUserRequest.getActive());
+        assertThat(responseEntity.getBody().id()).isPositive();
+        assertThat(responseEntity.getBody().email()).isEqualTo(createUserRequest.getEmail());
+        assertThat(responseEntity.getBody().fullName()).isEqualTo(createUserRequest.getFullName());
+        assertThat(responseEntity.getBody().active()).isEqualTo(createUserRequest.getActive());
 
-        Long userId = responseEntity.getBody().getId();
+        Long userId = responseEntity.getBody().id();
         Optional<User> userFound = userRepository.findById(userId);
         assertThat(userFound).isPresent();
 
@@ -129,7 +128,7 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
             assertThat(Arrays.stream(eventServiceResponseEntity.getBody())
-                    .anyMatch(userEventResponse -> userEventResponse.getType().equals("CREATED"))).isTrue();
+                    .anyMatch(userEventResponse -> userEventResponse.type().equals("CREATED"))).isTrue();
         });
     }
 
@@ -153,10 +152,10 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isEqualTo(userId);
-        assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
-        assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
-        assertThat(responseEntity.getBody().getActive()).isEqualTo(updateUserRequest.getActive());
+        assertThat(responseEntity.getBody().id()).isEqualTo(userId);
+        assertThat(responseEntity.getBody().email()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody().fullName()).isEqualTo(user.getFullName());
+        assertThat(responseEntity.getBody().active()).isEqualTo(updateUserRequest.getActive());
 
         await().atMost(AT_MOST_DURATION).pollInterval(POLL_INTERVAL_DURATION).untilAsserted(() -> {
             log.info("Waiting for event-service to receive the message and process ...");
@@ -166,7 +165,7 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
             assertThat(Arrays.stream(eventServiceResponseEntity.getBody())
-                    .anyMatch(userEventResponse -> userEventResponse.getType().equals("UPDATED"))).isTrue();
+                    .anyMatch(userEventResponse -> userEventResponse.type().equals("UPDATED"))).isTrue();
         });
     }
 
@@ -186,10 +185,10 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isEqualTo(userId);
-        assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
-        assertThat(responseEntity.getBody().getFullName()).isEqualTo(user.getFullName());
-        assertThat(responseEntity.getBody().getActive()).isEqualTo(user.getActive());
+        assertThat(responseEntity.getBody().id()).isEqualTo(userId);
+        assertThat(responseEntity.getBody().email()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody().fullName()).isEqualTo(user.getFullName());
+        assertThat(responseEntity.getBody().active()).isEqualTo(user.getActive());
 
         Optional<User> userNotFound = userRepository.findById(userId);
         assertThat(userNotFound).isNotPresent();
@@ -202,7 +201,7 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
             assertThat(eventServiceResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(eventServiceResponseEntity.getBody()).isNotNull();
             assertThat(Arrays.stream(eventServiceResponseEntity.getBody())
-                    .anyMatch(userEventResponse -> userEventResponse.getType().equals("DELETED"))).isTrue();
+                    .anyMatch(userEventResponse -> userEventResponse.type().equals("DELETED"))).isTrue();
         });
     }
 
@@ -220,32 +219,13 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
         return new CreateUserRequest("email@test", "fullName", true);
     }
 
-    @Value
-    private static class EventServiceUserEventResponse {
-        Long userId;
-        String datetime;
-        String type;
-        String data;
+    private record EventServiceUserEventResponse(Long userId, String datetime, String type, String data) {
     }
 
-    @Value
-    private static class MessageError {
-        String timestamp;
-        int status;
-        String error;
-        String message;
-        String path;
-        List<ErrorDetail> errors;
-
-        @Value
-        static class ErrorDetail {
-            List<String> codes;
-            String defaultMessage;
-            String objectName;
-            String field;
-            String rejectedValue;
-            boolean bindingFailure;
-            String code;
+    private record MessageError(String timestamp, int status, String error, String message, String path,
+                                List<ErrorDetail> errors) {
+        record ErrorDetail(List<String> codes, String defaultMessage, String objectName, String field,
+                           String rejectedValue, boolean bindingFailure, String code) {
         }
     }
 

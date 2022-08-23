@@ -15,7 +15,7 @@
 
     <properties>
         <spring-cloud-schema-registry-client.version>1.1.5</spring-cloud-schema-registry-client.version>
-        <springdoc-openapi.version>1.6.9</springdoc-openapi.version>
+        <springdoc-openapi.version>1.6.11</springdoc-openapi.version>
     </properties>
 
     <dependencies>
