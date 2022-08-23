@@ -186,7 +186,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 - **Cassandra**
   ```
   docker exec -it cassandra cqlsh
-  USE mycompany;
+  USE ivanfranchin;
   SELECT * FROM user_events;
   ```
   > Type `exit` to leave `CQL shell`
@@ -219,7 +219,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
   - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
   - Click on `Save` button at the bottom of the page.
 
-  The image below shows the topics present in Kafka, including the topic `com.mycompany.userservice.user` with `3`
+  The image below shows the topics present in Kafka, including the topic `com.ivanfranchin.userservice.user` with `3`
 partitions.
 
   ![kafka-manager](documentation/kafka-manager.jpeg)

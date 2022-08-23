@@ -20,7 +20,7 @@ spring:
       source: users
       bindings:
         users-out-0:
-          destination: com.mycompany.userservice.user
+          destination: com.ivanfranchin.userservice.user
           content-type: application/json
           producer:
             partition-key-expression: headers['partitionKey']

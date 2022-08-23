@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.mycompany</groupId>
+    <groupId>com.ivanfranchin</groupId>
     <artifactId>spring-cloud-stream-event-sourcing-testcontainers</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>

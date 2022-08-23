@@ -1,5 +1,5 @@
 {
-	"namespace": "com.mycompany.userservice.messages",
+	"namespace": "com.ivanfranchin.userservice.messages",
 	"type": "record",
 	"name": "UserEventMessage",
 	"fields": [

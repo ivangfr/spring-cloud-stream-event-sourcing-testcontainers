@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS mycompany.user_events (
+CREATE TABLE IF NOT EXISTS ivanfranchin.user_events (
   userId bigint,
   datetime timestamp,
   type text,

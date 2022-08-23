@@ -4,7 +4,7 @@ server:
 spring:
   data:
     cassandra:
-      keyspace-name: mycompany
+      keyspace-name: ivanfranchin
       contact-points: ${CASSANDRA_HOST:localhost}:${CASSANDRA_PORT:9042}
       local-datacenter: datacenter1
       schema-action: CREATE_IF_NOT_EXISTS
@@ -21,7 +21,7 @@ spring:
           min-partition-count: 3    # /
       bindings:
         users-in-0:
-          destination: com.mycompany.userservice.user
+          destination: com.ivanfranchin.userservice.user
           content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup
   sleuth:
