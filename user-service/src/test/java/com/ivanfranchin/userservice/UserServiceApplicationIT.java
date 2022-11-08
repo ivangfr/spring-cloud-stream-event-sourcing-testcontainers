@@ -6,6 +6,7 @@ import com.ivanfranchin.userservice.rest.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UserResponse;
 import com.ivanfranchin.userservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +30,6 @@ import static org.awaitility.Awaitility.await;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserServiceApplicationIT extends AbstractTestcontainers {
 
     @Autowired
@@ -37,6 +37,11 @@ class UserServiceApplicationIT extends AbstractTestcontainers {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+    }
 
     /*
      * GET /api/users

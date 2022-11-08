@@ -40,7 +40,7 @@ class UserStreamTest {
     private UserEventRepository userEventRepository;
 
     @Container
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.0.5");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.0.6");
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
