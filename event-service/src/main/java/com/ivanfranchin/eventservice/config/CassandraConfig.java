@@ -3,9 +3,14 @@ package com.ivanfranchin.eventservice.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.cassandra.SessionFactory;
 import org.springframework.data.cassandra.config.CqlSessionFactoryBean;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption;
+import org.springframework.data.cassandra.core.cql.session.init.KeyspacePopulator;
+import org.springframework.data.cassandra.core.cql.session.init.ResourceKeyspacePopulator;
+import org.springframework.data.cassandra.core.cql.session.init.SessionFactoryInitializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,12 +45,24 @@ public class CassandraConfig {
         return session;
     }
 
-    private List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+    @Bean
+    public SessionFactoryInitializer sessionFactoryInitializer(SessionFactory sessionFactory) {
+        SessionFactoryInitializer initializer = new SessionFactoryInitializer();
+        initializer.setSessionFactory(sessionFactory);
+        initializer.setKeyspacePopulator(keyspacePopulator());
+        return initializer;
+    }
+
+    public List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         final CreateKeyspaceSpecification specification =
                 CreateKeyspaceSpecification.createKeyspace(keyspaceName)
                         .ifNotExists()
                         .with(KeyspaceOption.DURABLE_WRITES, true)
                         .withSimpleReplication();
         return Collections.singletonList(specification);
+    }
+
+    protected KeyspacePopulator keyspacePopulator() {
+        return new ResourceKeyspacePopulator(new ClassPathResource("event-service.cql"));
     }
 }

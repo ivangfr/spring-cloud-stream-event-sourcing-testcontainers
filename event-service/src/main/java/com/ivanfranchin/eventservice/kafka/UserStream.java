@@ -23,7 +23,11 @@ public class UserStream {
     public Consumer<Message<UserEventMessage>> users() {
         return message -> {
             log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
-            userEventService.saveUserEvent(userMapper.createUserEvent(message));
+            try {
+                userEventService.saveUserEvent(userMapper.createUserEvent(message));
+            } catch (Exception e) {
+                log.error("An error occurred while saving userEvent {}", message, e);
+            }
         };
     }
 }

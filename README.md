@@ -281,5 +281,5 @@ To remove the Docker images created by this project, go to a terminal and, insid
 - Disabled `UserEventRepositoryTest` as it's getting stuck at line shown below
   ```
   ...
-  21:37:32.140 [main] DEBUG org.apache.cassandra.db.commitlog.AbstractCommitLogService - Will update the commitlog markers every 100ms and flush every 10000ms
+  [main] DEBUG org.apache.cassandra.db.commitlog.AbstractCommitLogService - Will update the commitlog markers every 100ms and flush every 10000ms
   ```
