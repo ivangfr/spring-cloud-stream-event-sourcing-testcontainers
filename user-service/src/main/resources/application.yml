@@ -24,9 +24,6 @@ spring:
           content-type: application/json
           producer:
             partition-key-expression: headers['partitionKey']
-  sleuth:
-    sampler:
-      probability: 1.0
   main:
     allow-bean-definition-overriding: true
 
@@ -40,6 +37,9 @@ management:
   health:
     probes:
       enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
 
 springdoc:
   show-actuator: true
@@ -50,6 +50,8 @@ springdoc:
 logging:
   level:
     org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 ---
 spring:

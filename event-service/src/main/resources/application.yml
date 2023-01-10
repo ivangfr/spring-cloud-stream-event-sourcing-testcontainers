@@ -24,9 +24,6 @@ spring:
           destination: com.ivanfranchin.userservice.user
           content-type: application/json # it's redundant here, 'application/json' is the default
           group: eventServiceGroup
-  sleuth:
-    sampler:
-      probability: 1.0
   main:
     allow-bean-definition-overriding: true
 
@@ -40,6 +37,9 @@ management:
   health:
     probes:
       enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
 
 springdoc:
   show-actuator: true
@@ -50,6 +50,8 @@ springdoc:
 logging:
   level:
     org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 # In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 # strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#content-type-management).

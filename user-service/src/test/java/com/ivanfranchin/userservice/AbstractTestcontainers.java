@@ -76,7 +76,7 @@ public abstract class AbstractTestcontainers {
                 .withEnv("KAFKA_PORT", "9092")
                 .withEnv("SCHEMA_REGISTRY_HOST", "schema-registry")
                 .withEnv("CASSANDRA_HOST", "cassandra")
-                .withEnv("SPRING_ZIPKIN_ENABLED", "false")
+                .withEnv("MANAGEMENT_TRACING_ENABLED", "false")
                 .withExposedPorts(EVENT_SERVICE_EXPOSED_PORT)
                 .waitingFor(Wait.forHttp("/actuator/health")
                         .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT))

@@ -7,6 +7,7 @@ import com.ivanfranchin.userservice.rest.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UserResponse;
 import com.ivanfranchin.userservice.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 

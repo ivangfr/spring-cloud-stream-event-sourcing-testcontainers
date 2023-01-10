@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisabledIf("#{environment.acceptsProfiles('avro')}")
 @SpringBootTest(properties = {
-        "spring.zipkin.enabled=false",
         "spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1",
         "spring.datasource.username=sa",
         "spring.datasource.password=sa",

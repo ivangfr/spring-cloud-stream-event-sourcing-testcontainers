@@ -1,7 +1,7 @@
 package com.ivanfranchin.eventservice.kafka;
 
-import com.ivanfranchin.eventservice.model.UserEvent;
 import com.ivanfranchin.eventservice.EventServiceApplication;
+import com.ivanfranchin.eventservice.model.UserEvent;
 import com.ivanfranchin.eventservice.repository.UserEventRepository;
 import com.ivanfranchin.userservice.messages.EventType;
 import com.ivanfranchin.userservice.messages.UserEventMessage;
@@ -41,8 +41,7 @@ class UserStream2Test {
                 TestChannelBinderConfiguration
                         .getCompleteConfiguration(EventServiceApplication.class))
                 .web(WebApplicationType.NONE)
-                .run("--spring.zipkin.enabled=false",
-                        "--spring.data.cassandra.contact-points=" + contractPoints)) {
+                .run("--spring.data.cassandra.contact-points=" + contractPoints)) {
 
             String eventId = UUID.randomUUID().toString();
             Date datetime = new Date();
