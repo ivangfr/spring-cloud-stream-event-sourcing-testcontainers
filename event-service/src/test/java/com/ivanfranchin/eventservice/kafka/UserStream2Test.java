@@ -41,7 +41,8 @@ class UserStream2Test {
                 TestChannelBinderConfiguration
                         .getCompleteConfiguration(EventServiceApplication.class))
                 .web(WebApplicationType.NONE)
-                .run("--spring.data.cassandra.contact-points=" + contractPoints)) {
+                .run("--management.tracing.enabled=false",
+                        "--spring.data.cassandra.contact-points=" + contractPoints)) {
 
             String eventId = UUID.randomUUID().toString();
             Date datetime = new Date();
