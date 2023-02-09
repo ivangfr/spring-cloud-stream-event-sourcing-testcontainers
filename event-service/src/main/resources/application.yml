@@ -61,7 +61,7 @@ logging:
 # The producer (in the case user-service) always sets the content-type in the message header. The content-type can be
 # "application/json" or "application/*+avro", depending on with which profile user-service is started.
 #
-# So, define the content-type in the binding is not needed. Anyway, I will keep the definition here but commented.
+# So, defining the content-type in the binding is not needed. Anyway, I will keep the definition here but commented.
 #---
 #spring:
 #  config:

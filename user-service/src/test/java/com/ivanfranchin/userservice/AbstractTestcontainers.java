@@ -17,7 +17,6 @@ import java.time.Duration;
 public abstract class AbstractTestcontainers {
 
     private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.41");
-    private static final GenericContainer<?> zookeeperContainer = new GenericContainer<>("confluentinc/cp-zookeeper:7.3.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.1"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.3.1");
     private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.0");
@@ -39,18 +38,9 @@ public abstract class AbstractTestcontainers {
                 .withUrlParam("serverTimezone", "UTC")
                 .start();
 
-        // Zookeeper
-        zookeeperContainer.withNetwork(network)
-                .withNetworkAliases("zookeeper")
-                .withEnv("ZOOKEEPER_CLIENT_PORT", "2181")
-                .withExposedPorts(2181)
-                .waitingFor(Wait.forListeningPort().withStartupTimeout(STARTUP_TIMEOUT))
-                .start();
-
         // Kafka
         kafkaContainer.withNetwork(network)
                 .withNetworkAliases("kafka")
-                .withExternalZookeeper("zookeeper:2181")
                 .withExposedPorts(9092, 9093)
                 .start();
 
