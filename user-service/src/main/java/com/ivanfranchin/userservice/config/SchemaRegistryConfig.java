@@ -2,6 +2,7 @@ package com.ivanfranchin.userservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.schema.registry.avro.AvroSchemaMessageConverter;
+import org.springframework.cloud.schema.registry.avro.AvroSchemaServiceManagerImpl;
 import org.springframework.cloud.schema.registry.client.ConfluentSchemaRegistryClient;
 import org.springframework.cloud.schema.registry.client.SchemaRegistryClient;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ public class SchemaRegistryConfig {
 
     @Bean
     public MessageConverter avroSchemaMessageConverter() {
-        AvroSchemaMessageConverter converter = new AvroSchemaMessageConverter(MimeType.valueOf("application/*+avro"));
+        AvroSchemaMessageConverter converter = new AvroSchemaMessageConverter(MimeType.valueOf("application/*+avro"), new AvroSchemaServiceManagerImpl());
         converter.setSchemaLocation(new ClassPathResource("avro/userevent-message.avsc"));
         return converter;
     }
