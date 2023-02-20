@@ -2,6 +2,8 @@ server:
   port: 9081
 
 spring:
+  application:
+    name: event-service
   data:
     cassandra:
       keyspace-name: ivanfranchin
@@ -40,6 +42,9 @@ management:
   tracing:
     sampling:
       probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/api/v2/spans
 
 springdoc:
   show-actuator: true
@@ -52,6 +57,16 @@ logging:
     org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+management:
+  tracing:
+    enabled: false
 
 # In order to handle different content-types, Spring Cloud Stream has a "content-type negotiation and transformation"
 # strategy (https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#content-type-management).
