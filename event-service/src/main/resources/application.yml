@@ -51,6 +51,7 @@ springdoc:
   swagger-ui:
     groups-order: DESC
     disable-swagger-default-url: true
+  enable-native-support: true
 
 logging:
   level:

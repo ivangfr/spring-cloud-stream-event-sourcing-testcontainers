@@ -7,10 +7,12 @@ import org.springframework.cloud.schema.registry.client.ConfluentSchemaRegistryC
 import org.springframework.cloud.schema.registry.client.SchemaRegistryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.util.MimeType;
 
+@ImportRuntimeHints(NativeRuntimeHintsRegistrar.class)
 @Configuration
 public class SchemaRegistryConfig {
 
