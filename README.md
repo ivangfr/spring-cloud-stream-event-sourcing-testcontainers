@@ -6,7 +6,7 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
 ## Project Architecture
 
-![project-diagram](documentation/project-diagram.png)
+![project-diagram](documentation/project-diagram.jpeg)
 
 ## Applications
 
@@ -163,14 +163,14 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
      -d '{"email":"ivan.franchin@test.com","fullName":"Ivan Franchin","active":true}'
    ```
 
-1. Check whether the event related to the user creation was received by `event-service`
+2. Check whether the event related to the user creation was received by `event-service`
    ```
    curl -i "localhost:9081/api/events?userId=1"
    ```
 
-1. You can check the traces in [`Zipkin`](https://zipkin.io) http://localhost:9411.
+3. You can check the traces in [`Zipkin`](https://zipkin.io) http://localhost:9411.
 
-1. Access `user-service` and create new users and/or update/delete existing ones. Then, access `event-service` Swagger website to validate if the events were sent correctly
+4. Access `user-service` and create new users and/or update/delete existing ones. Then, access `event-service` Swagger website to validate if the events were sent correctly
 
 ## Useful Commands & Links
 
