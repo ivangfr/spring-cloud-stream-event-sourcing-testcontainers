@@ -193,6 +193,8 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
 
   `Zipkin` can be accessed at http://localhost:9411
 
+  ![zipkin](documentation/zipkin.jpeg)
+
 - **Kafka Topics UI**
 
   `Kafka Topics UI` can be accessed at http://localhost:8085
@@ -283,37 +285,3 @@ To remove the Docker images created by this project, go to a terminal and, insid
   ```
 
 - The integration tests `testCreateUser`, `testUpdateUser` and `testDeleteUser` in `user-service` are failing because the application is not connecting to Kafka container, so the events are not sent.
-
-- Differently from before, the traceId does not propagate from `user-service` to `event-service`. Furthermore, the traceId/spanId is just present in log of the first message that `event-service` consumes. Sample below
-
-  **user-service logs**
-  ```
-  2023-01-09T18:58:39.029Z  INFO [user-service,63bc63de96c50a98efc7d77186e6f6aa,efc7d77186e6f6aa] 1 --- [nio-9080-exec-8] c.i.userservice.kafka.UserStream         :
-  ---
-  Headers: {partitionKey=9, id=bfd112d2-87e2-8004-5382-4c5896cd54a6, timestamp=1673290718971}
-  
-  Payload: UserEventMessage(eventId=7f4d2b1a-341e-499b-a8c0-ac7bb7e6de11, eventTimestamp=1673290718965, eventType=CREATED, userId=9, userJson={"email":"ivan9.franchin@test.com","fullName":"Ivan Franchin","active":true})
-  ---
-  2023-01-09T18:58:54.381Z  INFO [user-service,63bc63eee1e7f04a9497dd8278089048,9497dd8278089048] 1 --- [nio-9080-exec-1] c.i.userservice.kafka.UserStream         :
-  ---
-  Headers: {partitionKey=10, id=e202d905-7efa-18bc-d624-af480e77b6d3, timestamp=1673290734377}
-  
-  Payload: UserEventMessage(eventId=b42f7a2c-5bdc-4e83-b40f-8990f30c52cd, eventTimestamp=1673290734377, eventType=CREATED, userId=10, userJson={"email":"ivan10.franchin@test.com","fullName":"Ivan Franchin","active":true})
-  ---
-  ```
-  
-  **event-service logs**
-  ```
-  2023-01-09T18:58:39.247Z  INFO [event-service,63bc63df64b701de43c6b88640895ac1,43c6b88640895ac1] 1 --- [container-0-C-1] c.i.eventservice.kafka.UserStream        :
-  ---
-  Headers: {deliveryAttempt=1, kafka_timestampType=CREATE_TIME, scst_partition=0, kafka_receivedTopic=com.ivanfranchin.userservice.user, kafka_offset=7, partitionKey=9, scst_nativeHeadersPresent=true, kafka_consumer=org.apache.kafka.clients.consumer.KafkaConsumer@3f161e43, source-type=kafka, id=393e13b3-35f5-2d9f-d2f6-4263f7bd994c, kafka_receivedPartitionId=0, contentType=application/json, kafka_receivedTimestamp=1673290719008, kafka_groupId=eventServiceGroup, timestamp=1673290719243}
-  
-  Payload: {"eventId": "7f4d2b1a-341e-499b-a8c0-ac7bb7e6de11", "eventTimestamp": 1673290718965, "eventType": "CREATED", "userId": 9, "userJson": "{\"email\":\"ivan9.franchin@test.com\",\"fullName\":\"Ivan Franchin\",\"active\":true}"}
-  ---
-  2023-01-09T18:58:54.397Z  INFO [event-service,,] 1 --- [container-0-C-1] c.i.eventservice.kafka.UserStream        :
-  ---
-  Headers: {deliveryAttempt=1, kafka_timestampType=CREATE_TIME, scst_partition=0, kafka_receivedTopic=com.ivanfranchin.userservice.user, kafka_offset=8, partitionKey=10, scst_nativeHeadersPresent=true, kafka_consumer=org.apache.kafka.clients.consumer.KafkaConsumer@3f161e43, source-type=kafka, id=aa18c615-ac2a-b8cf-ff26-c34e5687da6b, kafka_receivedPartitionId=0, contentType=application/json, kafka_receivedTimestamp=1673290734380, kafka_groupId=eventServiceGroup, timestamp=1673290734397}
-  
-  Payload: {"eventId": "b42f7a2c-5bdc-4e83-b40f-8990f30c52cd", "eventTimestamp": 1673290734377, "eventType": "CREATED", "userId": 10, "userJson": "{\"email\":\"ivan10.franchin@test.com\",\"fullName\":\"Ivan Franchin\",\"active\":true}"}
-  ---
-  ```

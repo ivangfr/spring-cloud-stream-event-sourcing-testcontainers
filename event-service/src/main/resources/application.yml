@@ -21,6 +21,7 @@ spring:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true # \ both event-service and user-service can create topic and add partitions
           min-partition-count: 3    # /
+          enable-observation: true
       bindings:
         users-in-0:
           destination: com.ivanfranchin.userservice.user
