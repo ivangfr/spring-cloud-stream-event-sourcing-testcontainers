@@ -1,4 +1,4 @@
-package com.ivanfranchin.userservice.messages;
+package com.ivanfranchin.userservice.kafka;
 
 import lombok.Value;
 

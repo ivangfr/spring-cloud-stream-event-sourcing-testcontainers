@@ -1,7 +1,6 @@
 package com.ivanfranchin.userservice.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivanfranchin.userservice.messages.UserEventMessage;
 import com.ivanfranchin.userservice.rest.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UpdateUserRequest;
 import org.junit.jupiter.api.Test;
