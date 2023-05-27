@@ -4,14 +4,13 @@ server:
 spring:
   application:
     name: event-service
-  data:
-    cassandra:
-      keyspace-name: ivanfranchin
-      contact-points: ${CASSANDRA_HOST:localhost}:${CASSANDRA_PORT:9042}
-      local-datacenter: datacenter1
-      schema-action: CREATE_IF_NOT_EXISTS
-      request:
-        timeout: 10s
+  cassandra:
+    keyspace-name: ivanfranchin
+    contact-points: ${CASSANDRA_HOST:localhost}:${CASSANDRA_PORT:9042}
+    local-datacenter: datacenter1
+    schema-action: CREATE_IF_NOT_EXISTS
+    request:
+      timeout: 10s
   cloud:
     schema-registry-client:
       endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}

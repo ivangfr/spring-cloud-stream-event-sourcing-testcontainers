@@ -16,7 +16,6 @@
     <properties>
         <spring-cloud-schema-registry-client.version>1.1.5</spring-cloud-schema-registry-client.version>
         <springdoc-openapi.version>2.1.0</springdoc-openapi.version>
-        <cassandra-unit-spring.version>4.3.1.0</cassandra-unit-spring.version>
         <avro.version>1.10.2</avro.version> <!-- when using avro '1.11.x', the UserEventMessage class is generated with errors -->
     </properties>
 
@@ -72,6 +71,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-stream-test-binder</artifactId>
             <scope>test</scope>
@@ -86,12 +90,14 @@
             <artifactId>cassandra</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- Cassandra Unit Spring -->
         <dependency>
-            <groupId>org.cassandraunit</groupId>
-            <artifactId>cassandra-unit-spring</artifactId>
-            <version>${cassandra-unit-spring.version}</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

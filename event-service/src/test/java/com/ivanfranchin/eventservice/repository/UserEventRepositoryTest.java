@@ -1,39 +1,33 @@
 package com.ivanfranchin.eventservice.repository;
 
+import com.ivanfranchin.eventservice.CassandraTestcontainers;
+import com.ivanfranchin.eventservice.config.CassandraConfig;
 import com.ivanfranchin.eventservice.model.UserEvent;
 import com.ivanfranchin.eventservice.model.UserEventKey;
-import org.cassandraunit.spring.CassandraDataSet;
-import org.cassandraunit.spring.CassandraUnitDependencyInjectionTestExecutionListener;
-import org.cassandraunit.spring.EmbeddedCassandra;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.cassandra.DataCassandraTest;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import org.springframework.context.annotation.Import;
 
 import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled
-@TestExecutionListeners({
-        CassandraUnitDependencyInjectionTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class
-})
-@EmbeddedCassandra(timeout = 60000)
-@CassandraDataSet(value = "event-service.cql", keyspace = "ivanfranchin")
 @DataCassandraTest
-@TestPropertySource(properties = {
-        "spring.data.cassandra.contact-points=localhost:9142",
-        "spring.data.cassandra.schema-action=RECREATE"
-})
+@Import(CassandraConfig.class)
+@ImportTestcontainers(CassandraTestcontainers.class)
 class UserEventRepositoryTest {
 
     @Autowired
     private UserEventRepository userEventRepository;
+
+    @BeforeEach
+    void setUp() {
+        userEventRepository.deleteAll();
+    }
 
     @Test
     void testFindByKeyUserIdWhenThereIsNone() {

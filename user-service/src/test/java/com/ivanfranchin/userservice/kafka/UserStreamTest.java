@@ -1,11 +1,13 @@
 package com.ivanfranchin.userservice.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ivanfranchin.userservice.MySQLTestcontainers;
 import com.ivanfranchin.userservice.rest.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UpdateUserRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.cloud.stream.binder.test.OutputDestination;
 import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
 import org.springframework.context.annotation.Import;
@@ -19,12 +21,8 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisabledIf("#{environment.acceptsProfiles('avro')}")
-@SpringBootTest(properties = {
-        "spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=sa",
-        "spring.datasource.driver-class-name=org.h2.Driver"
-})
+@SpringBootTest
+@ImportTestcontainers(MySQLTestcontainers.class)
 @Import(TestChannelBinderConfiguration.class)
 class UserStreamTest {
 

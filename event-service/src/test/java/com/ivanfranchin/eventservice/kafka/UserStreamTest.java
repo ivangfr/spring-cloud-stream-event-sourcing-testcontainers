@@ -1,22 +1,20 @@
 package com.ivanfranchin.eventservice.kafka;
 
+import com.ivanfranchin.eventservice.CassandraTestcontainers;
 import com.ivanfranchin.eventservice.model.UserEvent;
 import com.ivanfranchin.eventservice.repository.UserEventRepository;
 import com.ivanfranchin.userservice.messages.EventType;
 import com.ivanfranchin.userservice.messages.UserEventMessage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.cloud.stream.binder.test.InputDestination;
 import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.CassandraContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Date;
 import java.util.List;
@@ -28,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * This class has the same test as {@link UserStream2Test} using a different style
  */
 @ActiveProfiles("test")
-@Testcontainers
 @SpringBootTest
 @Import(TestChannelBinderConfiguration.class)
+@ImportTestcontainers(CassandraTestcontainers.class)
 class UserStreamTest {
 
     @Autowired
@@ -39,13 +37,9 @@ class UserStreamTest {
     @Autowired
     private UserEventRepository userEventRepository;
 
-    @Container
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.1");
-
-    @DynamicPropertySource
-    private static void dynamicProperties(DynamicPropertyRegistry registry) {
-        String contractPoints = String.format("%s:%s", cassandraContainer.getHost(), cassandraContainer.getMappedPort(9042));
-        registry.add("spring.data.cassandra.contact-points", () -> contractPoints);
+    @BeforeEach
+    void setUp() {
+        userEventRepository.deleteAll();
     }
 
     @Test

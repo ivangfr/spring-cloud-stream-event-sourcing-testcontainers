@@ -18,19 +18,19 @@ import java.util.List;
 @Configuration
 public class CassandraConfig {
 
-    @Value("${spring.data.cassandra.local-datacenter}")
+    @Value("${spring.cassandra.local-datacenter}")
     private String localDatacenter;
 
-    @Value("${spring.data.cassandra.contact-points}")
+    @Value("${spring.cassandra.contact-points}")
     private String contactPoints;
 
-    @Value("${spring.data.cassandra.keyspace-name}")
+    @Value("${spring.cassandra.keyspace-name}")
     private String keyspaceName;
 
-    @Value("${spring.data.cassandra.username:@null}")
+    @Value("${spring.cassandra.username:@null}")
     private String username;
 
-    @Value("${spring.data.cassandra.password:@null}")
+    @Value("${spring.cassandra.password:@null}")
     private String password;
 
     @Bean
