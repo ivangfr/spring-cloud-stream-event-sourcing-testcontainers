@@ -30,6 +30,7 @@
     <modules>
         <module>user-service</module>
         <module>event-service</module>
+        <module>end-to-end-test</module>
     </modules>
 
     <dependencies>

@@ -1,5 +1,6 @@
-package com.ivanfranchin.userservice;
+package com.ivanfranchin.endtoendtest;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.CassandraContainer;
@@ -12,15 +13,20 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
+import java.util.List;
 
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
     private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.42");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.1");
     private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.1"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.3.1");
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.1");
+    private static final GenericContainer<?> userServiceContainer = new GenericContainer<>("ivanfranchin/user-service:1.0.0");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("ivanfranchin/event-service:1.0.0");
+
+    protected static String USER_SERVICE_API_URL;
+    private static final int USER_SERVICE_EXPOSED_PORT = 9080;
 
     protected static String EVENT_SERVICE_API_URL;
     private static final int EVENT_SERVICE_EXPOSED_PORT = 9081;
@@ -36,6 +42,8 @@ public abstract class AbstractTestcontainers {
                 .withNetworkAliases("mysql")
                 .withUrlParam("characterEncoding", "UTF-8")
                 .withUrlParam("serverTimezone", "UTC")
+                .withPassword("secret")
+                .withDatabaseName("userdb")
                 .start();
 
         // Kafka
@@ -59,6 +67,20 @@ public abstract class AbstractTestcontainers {
                 .withNetworkAliases("cassandra")
                 .start();
 
+        // user-service
+        userServiceContainer.withNetwork(network)
+                .withNetworkAliases("user-service")
+                .withEnv("SPRING_PROFILES_ACTIVE", hasAvroAsProfilesActive() ? "test,avro" : "test")
+                .withEnv("KAFKA_HOST", "kafka")
+                .withEnv("KAFKA_PORT", "9092")
+                .withEnv("SCHEMA_REGISTRY_HOST", "schema-registry")
+                .withEnv("MYSQL_HOST", "mysql")
+                .withEnv("MANAGEMENT_TRACING_ENABLED", "false")
+                .withExposedPorts(USER_SERVICE_EXPOSED_PORT)
+                .waitingFor(Wait.forHttp("/actuator/health")
+                        .forPort(USER_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT))
+                .start();
+
         // event-service
         eventServiceContainer.withNetwork(network)
                 .withNetworkAliases("event-service")
@@ -72,15 +94,12 @@ public abstract class AbstractTestcontainers {
                         .forPort(EVENT_SERVICE_EXPOSED_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT))
                 .start();
 
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mySQLContainer::getUsername);
-        registry.add("spring.datasource.password", mySQLContainer::getPassword);
-        registry.add("spring.jpa.properties.hibernate.dialect.storage_engine", () -> "innodb");
-
-        String schemaRegistryEndpoint = String.format("http://localhost:%s", schemaRegistryContainer.getMappedPort(8081));
-        registry.add("spring.cloud.schema-registry-client.endpoint", () -> schemaRegistryEndpoint);
-        registry.add("spring.cloud.stream.kafka.binder.brokers", kafkaContainer::getBootstrapServers);
-
+        USER_SERVICE_API_URL = String.format("http://localhost:%s/api", userServiceContainer.getMappedPort(USER_SERVICE_EXPOSED_PORT));
         EVENT_SERVICE_API_URL = String.format("http://localhost:%s/api", eventServiceContainer.getMappedPort(EVENT_SERVICE_EXPOSED_PORT));
+    }
+
+    private static boolean hasAvroAsProfilesActive() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        return List.of(context.getEnvironment().getActiveProfiles()).contains("avro");
     }
 }

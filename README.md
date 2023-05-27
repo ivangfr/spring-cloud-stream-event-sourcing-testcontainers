@@ -1,6 +1,6 @@
 # spring-cloud-stream-event-sourcing-testcontainers
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) for integration testing.
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://www.testcontainers.org) for end-to-end testing.
 
 > **Note**: In [`kubernetes-minikube-environment`](https://github.com/ivangfr/kubernetes-minikube-environment/tree/master/user-event-sourcing-kafka) repository, it's shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -45,6 +45,10 @@ The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/s
     ```
     ./mvnw compile --projects event-service
     ```
+
+- ### end-to-end-test
+
+  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
   
 ## Prerequisites
 
@@ -255,20 +259,18 @@ partitions.
     ./mvnw clean test --projects user-service
     ```
 
-  - Run the command below to start the **Unit** and **Integration Tests**
-    > **Warning**: The integration test cases `testCreateUser`, `testUpdateUser` and `testDeleteUser` in `user-service` are failing because we are mixing both the test binder and a regular middleware binder for testing purposes in the same module. For more, see [Special Note on Mixing Test Binder and Regular Middleware Binder for Testing](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#_special_note_on_mixing_test_binder_and_regular_middleware_binder_for_testing)
-  
-    > **Warning**: Make sure you have an updated `event-service` Docker image.
+  - Run the command below to start the End-To-End Tests
+    > **Warning**: Make sure you have `user-service` and `event-service` Docker images.
     
-    > **Note**: `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
+    > **Note**: `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
  
     - Using `JSON`
       ```
-      ./mvnw clean verify --projects user-service -DargLine="-Dspring.profiles.active=test"
+      ./mvnw clean test --projects end-to-end-test -DargLine="-Dspring.profiles.active=test"
       ```
     - Using `Avro`
       ```
-      ./mvnw clean verify --projects user-service -DargLine="-Dspring.profiles.active=test,avro"
+      ./mvnw clean test --projects end-to-end-test -DargLine="-Dspring.profiles.active=test,avro"
       ```
 
 ## Cleanup
