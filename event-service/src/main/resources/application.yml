@@ -10,7 +10,10 @@ spring:
     local-datacenter: datacenter1
     schema-action: CREATE_IF_NOT_EXISTS
     request:
-      timeout: 10s
+      timeout: 60s
+    connection:
+      connect-timeout: 60s
+      init-query-timeout: 60s
   cloud:
     schema-registry-client:
       endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
