@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +27,6 @@ public class UserEventController {
         return userEventService.getUserEvents(id)
                 .stream()
                 .map(userMapper::toUserEventResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
