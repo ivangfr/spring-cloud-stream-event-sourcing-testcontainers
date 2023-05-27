@@ -256,6 +256,8 @@ partitions.
     ```
 
   - Run the command below to start the **Unit** and **Integration Tests**
+    > **Warning**: The integration test cases `testCreateUser`, `testUpdateUser` and `testDeleteUser` in `user-service` are failing because we are mixing both the test binder and a regular middleware binder for testing purposes in the same module. For more, see [Special Note on Mixing Test Binder and Regular Middleware Binder for Testing](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#_special_note_on_mixing_test_binder_and_regular_middleware_binder_for_testing)
+  
     > **Warning**: Make sure you have an updated `event-service` Docker image.
     
     > **Note**: `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
@@ -275,13 +277,3 @@ To remove the Docker images created by this project, go to a terminal and, insid
 ```
 ./remove-docker-images.sh
 ```
-
-## Issues
-
-- Disabled `UserEventRepositoryTest` as it's getting stuck at line shown below
-  ```
-  ...
-  [main] DEBUG org.apache.cassandra.db.commitlog.AbstractCommitLogService - Will update the commitlog markers every 100ms and flush every 10000ms
-  ```
-
-- The integration tests `testCreateUser`, `testUpdateUser` and `testDeleteUser` in `user-service` are failing because the application is not connecting to Kafka container, so the events are not sent.
