@@ -130,7 +130,7 @@ services:
       test: "curl -f http://localhost:9000 || exit 1"
 
   zipkin:
-    image: openzipkin/zipkin:2.24.1
+    image: openzipkin/zipkin:2.24.3
     container_name: zipkin
     restart: unless-stopped
     ports:
