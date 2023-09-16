@@ -9,7 +9,7 @@ public class CassandraTestcontainers {
 
     @Container
     //@ServiceConnection // It is not setting correctly the spring.cassandra.contact-points property.
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.1");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.3");
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {

@@ -9,7 +9,7 @@ public class MySQLTestcontainers {
 
     @Container
     //@ServiceConnection // It is not setting correctly the spring.datasource properties
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.42")
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.43")
             .withUrlParam("characterEncoding", "UTF-8")
             .withUrlParam("serverTimezone", "UTC");
 
