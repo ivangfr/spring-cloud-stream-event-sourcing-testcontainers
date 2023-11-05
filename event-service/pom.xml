@@ -15,7 +15,7 @@
 
     <properties>
         <spring-cloud-schema-registry-client.version>1.1.5</spring-cloud-schema-registry-client.version>
-        <avro.version>1.11.2</avro.version>
+        <avro.version>1.11.3</avro.version>
         <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
     </properties>
 
