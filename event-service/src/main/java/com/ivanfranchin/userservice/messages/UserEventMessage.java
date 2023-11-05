@@ -15,16 +15,18 @@ import org.apache.avro.message.SchemaStore;
 @org.apache.avro.specific.AvroGenerated
 public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = -943644479468478271L;
+
+
   public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"UserEventMessage\",\"namespace\":\"com.ivanfranchin.userservice.messages\",\"fields\":[{\"name\":\"eventId\",\"type\":\"string\"},{\"name\":\"eventTimestamp\",\"type\":\"long\"},{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"EventType\",\"symbols\":[\"CREATED\",\"UPDATED\",\"DELETED\"]}},{\"name\":\"userId\",\"type\":\"long\"},{\"name\":\"userJson\",\"type\":[\"null\",\"string\"],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
-  private static SpecificData MODEL$ = new SpecificData();
+  private static final SpecificData MODEL$ = new SpecificData();
 
   private static final BinaryMessageEncoder<UserEventMessage> ENCODER =
-      new BinaryMessageEncoder<UserEventMessage>(MODEL$, SCHEMA$);
+      new BinaryMessageEncoder<>(MODEL$, SCHEMA$);
 
   private static final BinaryMessageDecoder<UserEventMessage> DECODER =
-      new BinaryMessageDecoder<UserEventMessage>(MODEL$, SCHEMA$);
+      new BinaryMessageDecoder<>(MODEL$, SCHEMA$);
 
   /**
    * Return the BinaryMessageEncoder instance used by this class.
@@ -48,7 +50,7 @@ public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBas
    * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
    */
   public static BinaryMessageDecoder<UserEventMessage> createDecoder(SchemaStore resolver) {
-    return new BinaryMessageDecoder<UserEventMessage>(MODEL$, SCHEMA$, resolver);
+    return new BinaryMessageDecoder<>(MODEL$, SCHEMA$, resolver);
   }
 
   /**
@@ -71,11 +73,11 @@ public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBas
     return DECODER.decode(b);
   }
 
-   private java.lang.CharSequence eventId;
-   private long eventTimestamp;
-   private com.ivanfranchin.userservice.messages.EventType eventType;
-   private long userId;
-   private java.lang.CharSequence userJson;
+  private java.lang.CharSequence eventId;
+  private long eventTimestamp;
+  private com.ivanfranchin.userservice.messages.EventType eventType;
+  private long userId;
+  private java.lang.CharSequence userJson;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -100,9 +102,14 @@ public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBas
     this.userJson = userJson;
   }
 
+  @Override
   public org.apache.avro.specific.SpecificData getSpecificData() { return MODEL$; }
+
+  @Override
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
+
   // Used by DatumWriter.  Applications should not call.
+  @Override
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return eventId;
@@ -115,6 +122,7 @@ public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBas
   }
 
   // Used by DatumReader.  Applications should not call.
+  @Override
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
@@ -261,7 +269,7 @@ public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBas
 
     /** Creates a new Builder */
     private Builder() {
-      super(SCHEMA$);
+      super(SCHEMA$, MODEL$);
     }
 
     /**
@@ -297,7 +305,7 @@ public class UserEventMessage extends org.apache.avro.specific.SpecificRecordBas
      * @param other The existing instance to copy.
      */
     private Builder(com.ivanfranchin.userservice.messages.UserEventMessage other) {
-      super(SCHEMA$);
+      super(SCHEMA$, MODEL$);
       if (isValidValue(fields()[0], other.eventId)) {
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
         fieldSetFlags()[0] = true;

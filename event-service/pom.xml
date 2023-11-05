@@ -15,8 +15,8 @@
 
     <properties>
         <spring-cloud-schema-registry-client.version>1.1.5</spring-cloud-schema-registry-client.version>
+        <avro.version>1.11.2</avro.version>
         <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
-        <avro.version>1.10.2</avro.version> <!-- when using avro '1.11.x', the UserEventMessage class is generated with errors -->
     </properties>
 
     <dependencies>
@@ -56,6 +56,13 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- Avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
         </dependency>
 
         <!-- SpringDoc OpenApi -->
@@ -111,7 +118,7 @@
                         </goals>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java/avro</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
