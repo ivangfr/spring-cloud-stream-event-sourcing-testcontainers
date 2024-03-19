@@ -18,10 +18,10 @@ import java.util.List;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7.43");
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.2.0");
     private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.3");
-    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.1"));
-    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.4.1");
+    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.3"));
+    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.5.3");
     private static final GenericContainer<?> userServiceContainer = new GenericContainer<>("ivanfranchin/user-service:1.0.0");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("ivanfranchin/event-service:1.0.0");
 
