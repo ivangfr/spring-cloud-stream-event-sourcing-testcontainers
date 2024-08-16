@@ -69,12 +69,12 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Start Environment
 
-- In a terminal and inside `spring-cloud-stream-event-sourcing-testcontainers` root folder run
+- In a terminal and inside `spring-cloud-stream-event-sourcing-testcontainers` root folder run:
   ```
   docker compose up -d
   ```
 
-- Wait for Docker containers to be up and running. To check it, run
+- Wait for Docker containers to be up and running. To check it, run:
   ```
   docker compose ps
   ```
@@ -83,9 +83,9 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - **user-service**
 
-  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
   
-  - In order to run the application, you can pick between `JSON` or `Avro`
+  - In order to run the application, you can pick between `JSON` or `Avro`:
     - Using `JSON`
       ```
       ./mvnw clean spring-boot:run --projects user-service
@@ -97,9 +97,9 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - **event-service**
 
-  - In a new terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - In a new terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
   
-  - Run the following command
+  - Run the following command:
     ```
     ./mvnw clean spring-boot:run --projects event-service
     ```
@@ -108,9 +108,9 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - ### Build Docker Images
 
-  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
 
-  - Run the following script to build the Docker images
+  - Run the following script to build the Docker images:
     - JVM 
       ```
       ./docker-build.sh
@@ -150,9 +150,9 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - ### Run Docker Containers
 
-  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder
+  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
 
-  - In order to run the application's Docker container, you can pick between `JSON` or `Avro`
+  - In order to run the application's Docker container, you can pick between `JSON` or `Avro`:
     - Using `JSON`
       ```
       ./start-apps.sh
@@ -171,21 +171,21 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Playing around
 
-1. Create a user
+1. Create a user:
    ```
    curl -i -X POST localhost:9080/api/users \
      -H  "Content-Type: application/json" \
      -d '{"email":"ivan.franchin@test.com","fullName":"Ivan Franchin","active":true}'
    ```
 
-2. Check whether the event related to the user creation was received by `event-service`
+2. Check whether the event related to the user creation was received by `event-service`:
    ```
    curl -i "localhost:9081/api/events?userId=1"
    ```
 
 3. You can check the traces in [`Zipkin`](https://zipkin.io) http://localhost:9411.
 
-4. Access `user-service` and create new users and/or update/delete existing ones. Then, access `event-service` Swagger website to validate if the events were sent correctly
+4. Access `user-service` and create new users and/or update/delete existing ones. Then, access `event-service` Swagger website to validate if the events were sent correctly.
 
 ## Useful Commands & Links
 
@@ -242,13 +242,13 @@ partitions.
 ## Shutdown
 
 - Stop applications
-  - If they were started with `Maven`, go to the terminals where they are running and press `Ctrl+C`
-  - If they were started as a Docker container, run the script below
+  - If they were started with `Maven`, go to the terminals where they are running and press `Ctrl+C`;
+  - If they were started as a Docker container, run the script below:
     ```
     ./stop-apps.sh
     ```
 
-- To stop and remove docker compose containers, networks and volumes, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder and run
+- To stop and remove docker compose containers, networks and volumes, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder and run:
   ```
   docker compose down -v
   ```
@@ -286,7 +286,7 @@ partitions.
 
 ## Cleanup
 
-To remove the Docker images created by this project, go to a terminal and, inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script
+To remove the Docker images created by this project, go to a terminal and, inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script:
 ```
 ./remove-docker-images.sh
 ```
