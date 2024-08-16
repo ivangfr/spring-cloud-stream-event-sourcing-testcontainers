@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled("It was disabled because the @ImportTestcontainers stop working since upgrade to Spring Boot 3.2.x")
+@Disabled("It was disabled because after upgrading to Spring Boot 3.2.x, it started failing")
 @DataCassandraTest
 @Import(CassandraConfig.class)
 @ImportTestcontainers(CassandraTestcontainers.class)

@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * This class has the same test as {@link UserStream2Test} using a different style
  */
-@Disabled("It was disabled because the @ImportTestcontainers stop working since upgrade to Spring Boot 3.2.x")
+@Disabled("It was disabled because after upgrading to Spring Boot 3.2.x, it started failing")
 @ActiveProfiles("test")
 @SpringBootTest
 @Import(TestChannelBinderConfiguration.class)
