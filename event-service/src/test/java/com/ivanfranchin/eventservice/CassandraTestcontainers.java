@@ -8,5 +8,5 @@ public class CassandraTestcontainers {
 
     @Container
     @ServiceConnection
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:4.1.5");
+    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:5.0.2");
 }

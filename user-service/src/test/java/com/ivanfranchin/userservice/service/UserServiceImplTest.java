@@ -1,14 +1,14 @@
 package com.ivanfranchin.userservice.service;
 
+import com.ivanfranchin.userservice.exception.UserEmailDuplicatedException;
 import com.ivanfranchin.userservice.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.model.User;
-import com.ivanfranchin.userservice.exception.UserEmailDuplicatedException;
 import com.ivanfranchin.userservice.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ class UserServiceImplTest {
     @Autowired
     private UserService userService;
 
-    @MockBean
+    @MockitoBean
     private UserRepository userRepository;
 
     @Test

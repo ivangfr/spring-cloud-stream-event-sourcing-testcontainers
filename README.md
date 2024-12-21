@@ -10,10 +10,10 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Additional Readings
 
-- \[**Medium**\] [**Implementing a Kafka Producer and Consumer using Spring Cloud Stream**](https://medium.com/javarevisited/implementing-a-kafka-producer-and-consumer-using-spring-cloud-stream-d4b9a6a9eab1)
-- \[**Medium**\] [**Implementing Unit Tests for a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/javarevisited/implementing-unit-tests-for-a-kafka-producer-and-consumer-that-uses-spring-cloud-stream-f7a98a89fcf2)
-- \[**Medium**\] [**Implementing End-to-End testing for a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/javarevisited/implementing-end-to-end-testing-for-a-kafka-producer-and-consumer-that-uses-spring-cloud-stream-fbf5e666899e)
-- \[**Medium**\] [**Configuring Distributed Tracing with Zipkin in a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/javarevisited/configuring-distributed-tracing-with-zipkin-in-a-kafka-producer-and-consumer-that-uses-spring-cloud-9f1e55468b9e)
+- \[**Medium**\] [**Implementing a Kafka Producer and Consumer using Spring Cloud Stream**](https://medium.com/@ivangfr/implementing-a-kafka-producer-and-consumer-using-spring-cloud-stream-d4b9a6a9eab1)
+- \[**Medium**\] [**Implementing Unit Tests for a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/@ivangfr/implementing-unit-tests-for-a-kafka-producer-and-consumer-that-uses-spring-cloud-stream-f7a98a89fcf2)
+- \[**Medium**\] [**Implementing End-to-End testing for a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/@ivangfr/implementing-end-to-end-testing-for-a-kafka-producer-and-consumer-that-uses-spring-cloud-stream-fbf5e666899e)
+- \[**Medium**\] [**Configuring Distributed Tracing with Zipkin in a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/@ivangfr/configuring-distributed-tracing-with-zipkin-in-a-kafka-producer-and-consumer-that-uses-spring-cloud-9f1e55468b9e)
 - \[**Medium**\] [**Using Cloudevents in a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/@ivangfr/using-cloudevents-in-a-kafka-producer-and-consumer-that-uses-spring-cloud-stream-9c51670b5566)
 
 ## Project Architecture
@@ -53,7 +53,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   
   - **Java classes from Avro Schema**
   
-    Run the following command in `spring-cloud-stream-event-sourcing-testcontainers` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
+    Run the following command in the `spring-cloud-stream-event-sourcing-testcontainers` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
     ```
     ./mvnw compile --projects event-service
     ```
@@ -65,25 +65,25 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 ## Prerequisites
 
 - [`Java 21+`](https://www.oracle.com/java/technologies/downloads/#java21)
-- [`Docker`](https://www.docker.com/)
+- Some containerization tool [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.
 
 ## Start Environment
 
-- In a terminal and inside `spring-cloud-stream-event-sourcing-testcontainers` root folder run:
+- In a terminal and inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder run:
   ```
   docker compose up -d
   ```
 
 - Wait for Docker containers to be up and running. To check it, run:
   ```
-  docker compose ps
+  docker ps -a
   ```
 
 ## Running Applications with Maven
 
 - **user-service**
 
-  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
+  - In a terminal, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder;
   
   - In order to run the application, you can pick between `JSON` or `Avro`:
     - Using `JSON`
@@ -97,7 +97,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - **event-service**
 
-  - In a new terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
+  - In a new terminal, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder;
   
   - Run the following command:
     ```
@@ -108,17 +108,12 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - ### Build Docker Images
 
-  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
+  - In a terminal, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder;
 
-  - Run the following script to build the Docker images:
-    - JVM 
-      ```
-      ./docker-build.sh
-      ```
-    - Native (it's not implemented yet)
-      ```
-      ./docker-build.sh native
-      ```
+  - Run the following script to build the Docker images: 
+    ```
+    ./build-docker-images.sh
+    ```
 
 - ### Environment Variables
    
@@ -150,7 +145,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - ### Run Docker Containers
 
-  - In a terminal, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder;
+  - In a terminal, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder;
 
   - In order to run the application's Docker container, you can pick between `JSON` or `Avro`:
     - Using `JSON`
@@ -248,7 +243,7 @@ partitions.
     ./stop-apps.sh
     ```
 
-- To stop and remove docker compose containers, networks and volumes, make sure you are inside `spring-cloud-stream-event-sourcing-testcontainers` root folder and run:
+- To stop and remove docker compose containers, networks and volumes, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder and run:
   ```
   docker compose down -v
   ```
@@ -286,7 +281,7 @@ partitions.
 
 ## Cleanup
 
-To remove the Docker images created by this project, go to a terminal and, inside `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script:
+To remove the Docker images created by this project, go to a terminal and, inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script:
 ```
 ./remove-docker-images.sh
 ```
