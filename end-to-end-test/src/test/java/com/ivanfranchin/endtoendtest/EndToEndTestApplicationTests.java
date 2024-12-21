@@ -5,11 +5,12 @@ import com.ivanfranchin.endtoendtest.dto.MessageError;
 import com.ivanfranchin.endtoendtest.dto.UpdateUserRequest;
 import com.ivanfranchin.endtoendtest.dto.UserEventResponse;
 import com.ivanfranchin.endtoendtest.dto.UserResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -24,10 +25,11 @@ import java.time.Duration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-@Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class EndToEndTestApplicationTests extends AbstractTestcontainers {
+
+    private static final Logger log = LoggerFactory.getLogger(EndToEndTestApplicationTests.class);
 
     @Autowired
     private TestRestTemplate testRestTemplate;
