@@ -130,7 +130,7 @@ class UserControllerTest {
     void testCreateUserInformingInvalidInput() throws Exception {
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateUserRequest())))
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest(null, null, null))))
                 .andDo(print());
 
         resultActions.andExpect(status().isBadRequest());
@@ -154,10 +154,7 @@ class UserControllerTest {
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setEmail("email2@test");
-        updateUserRequest.setFullName("fullName2");
-        updateUserRequest.setActive(false);
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest("email2@test", "fullName2", false);
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -167,9 +164,9 @@ class UserControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserRequest.getEmail())))
-                .andExpect(jsonPath(JSON_$_FULL_NAME, is(updateUserRequest.getFullName())))
-                .andExpect(jsonPath(JSON_$_ACTIVE, is(updateUserRequest.getActive())));
+                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserRequest.email())))
+                .andExpect(jsonPath(JSON_$_FULL_NAME, is(updateUserRequest.fullName())))
+                .andExpect(jsonPath(JSON_$_ACTIVE, is(updateUserRequest.active())));
     }
 
     @Test
@@ -178,7 +175,7 @@ class UserControllerTest {
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UpdateUserRequest())))
+                        .content(objectMapper.writeValueAsString(new UpdateUserRequest(null, null, null))))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());

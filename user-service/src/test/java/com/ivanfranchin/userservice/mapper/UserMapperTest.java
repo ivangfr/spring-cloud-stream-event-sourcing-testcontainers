@@ -31,9 +31,9 @@ class UserMapperTest {
         User user = userMapper.toUser(createUserRequest);
 
         assertThat(user.getId()).isNull();
-        assertThat(user.getEmail()).isEqualTo(createUserRequest.getEmail());
-        assertThat(user.getFullName()).isEqualTo(createUserRequest.getFullName());
-        assertThat(user.getActive()).isEqualTo(createUserRequest.getActive());
+        assertThat(user.getEmail()).isEqualTo(createUserRequest.email());
+        assertThat(user.getFullName()).isEqualTo(createUserRequest.fullName());
+        assertThat(user.getActive()).isEqualTo(createUserRequest.active());
         assertThat(user.getCreatedAt()).isNull();
         assertThat(user.getUpdatedAt()).isNull();
     }
@@ -57,10 +57,7 @@ class UserMapperTest {
     void testUpdateUserFromRequest(String newEmail, String newFullName, Boolean newActive, User expectedUser) {
         User user = new User("email@test", "fullName", true);
 
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setEmail(newEmail);
-        updateUserRequest.setFullName(newFullName);
-        updateUserRequest.setActive(newActive);
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(newEmail, newFullName, newActive);
 
         userMapper.updateUserFromRequest(updateUserRequest, user);
         assertThat(user).isEqualTo(expectedUser);

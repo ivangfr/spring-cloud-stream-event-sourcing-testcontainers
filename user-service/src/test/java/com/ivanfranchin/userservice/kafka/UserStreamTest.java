@@ -51,9 +51,7 @@ class UserStreamTest {
 
     @Test
     void testUserUpdated() throws IOException {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setEmail("email@test");
-        updateUserRequest.setActive(false);
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, "email@test", false);
 
         Message<UserEventMessage> message = userStream.userUpdated(1L, updateUserRequest);
 

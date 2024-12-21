@@ -34,7 +34,7 @@ public class CassandraConfig {
     private String password;
 
     @Bean
-    public CqlSessionFactoryBean session() {
+    CqlSessionFactoryBean session() {
         CqlSessionFactoryBean session = new CqlSessionFactoryBean();
         session.setContactPoints(contactPoints);
         session.setLocalDatacenter(localDatacenter);
@@ -46,7 +46,7 @@ public class CassandraConfig {
     }
 
     @Bean
-    public SessionFactoryInitializer sessionFactoryInitializer(SessionFactory sessionFactory) {
+    SessionFactoryInitializer sessionFactoryInitializer(SessionFactory sessionFactory) {
         SessionFactoryInitializer initializer = new SessionFactoryInitializer();
         initializer.setSessionFactory(sessionFactory);
         initializer.setKeyspacePopulator(keyspacePopulator());

@@ -49,7 +49,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        userService.validateUserExistsByEmail(createUserRequest.getEmail());
+        userService.validateUserExistsByEmail(createUserRequest.email());
         User user = userMapper.toUser(createUserRequest);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
@@ -65,7 +65,7 @@ public class UserController {
         User user = userService.validateAndGetUserById(id);
 
         String userEmail = user.getEmail();
-        String updateUserRequestEmail = updateUserRequest.getEmail();
+        String updateUserRequestEmail = updateUserRequest.email();
         if (StringUtils.hasText(updateUserRequestEmail) && !updateUserRequestEmail.equals(userEmail)) {
             userService.validateUserExistsByEmail(updateUserRequestEmail);
         }

@@ -64,7 +64,7 @@ class UserEventControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].userId", is(userEvent.getKey().getUserId().intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].datetime", Matchers.is(MyLocalDateHandler.fromDateToString(userEvent.getKey().getDatetime()))))
+                .andExpect(jsonPath("$[0].datetime", is(MyLocalDateHandler.fromDateToString(userEvent.getKey().getDatetime()))))
                 .andExpect(jsonPath("$[0].data", is(userEvent.getData())))
                 .andExpect(jsonPath("$[0].type", is(userEvent.getType())));
     }

@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @NoArgsConstructor
 @Data
@@ -33,10 +33,10 @@ public class User {
     private Boolean active;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public User(String email, String fullName, Boolean active) {
         this.email = email;
@@ -46,11 +46,11 @@ public class User {
 
     @PrePersist
     public void onPrePersist() {
-        createdAt = updatedAt = LocalDateTime.now();
+        createdAt = updatedAt = Instant.now();
     }
 
     @PreUpdate
     public void onPreUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = Instant.now();
     }
 }
