@@ -1,20 +1,16 @@
 package com.ivanfranchin.eventservice.rest;
 
-import com.ivanfranchin.eventservice.mapper.UserMapperImpl;
 import com.ivanfranchin.eventservice.model.UserEvent;
 import com.ivanfranchin.eventservice.model.UserEventKey;
 import com.ivanfranchin.eventservice.service.UserEventService;
 import com.ivanfranchin.eventservice.util.MyLocalDateHandler;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
 import java.util.Date;
@@ -30,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserEventController.class)
-@Import(UserMapperImpl.class)
 class UserEventControllerTest {
 
     @Autowired

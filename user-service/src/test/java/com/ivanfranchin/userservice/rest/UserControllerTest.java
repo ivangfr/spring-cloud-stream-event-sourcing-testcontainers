@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivanfranchin.userservice.exception.UserEmailDuplicatedException;
 import com.ivanfranchin.userservice.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.kafka.UserStream;
-import com.ivanfranchin.userservice.mapper.UserMapperImpl;
 import com.ivanfranchin.userservice.model.User;
 import com.ivanfranchin.userservice.rest.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UpdateUserRequest;
@@ -12,7 +11,6 @@ import com.ivanfranchin.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@Import(UserMapperImpl.class)
 class UserControllerTest {
 
     @Autowired

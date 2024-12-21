@@ -1,6 +1,6 @@
 package com.ivanfranchin.eventservice.kafka;
 
-import com.ivanfranchin.eventservice.mapper.UserMapper;
+import com.ivanfranchin.eventservice.model.UserEvent;
 import com.ivanfranchin.eventservice.service.UserEventService;
 import com.ivanfranchin.userservice.messages.UserEventMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,13 @@ import java.util.function.Consumer;
 public class UserStream {
 
     private final UserEventService userEventService;
-    private final UserMapper userMapper;
 
     @Bean
     Consumer<Message<UserEventMessage>> users() {
         return message -> {
             log.info("\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
             try {
-                userEventService.saveUserEvent(userMapper.createUserEvent(message));
+                userEventService.saveUserEvent(UserEvent.from(message));
             } catch (Exception e) {
                 log.error("An error occurred while saving userEvent {}", message, e);
             }

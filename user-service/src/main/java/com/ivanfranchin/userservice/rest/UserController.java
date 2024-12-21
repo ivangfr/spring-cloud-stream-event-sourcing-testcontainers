@@ -1,7 +1,6 @@
 package com.ivanfranchin.userservice.rest;
 
 import com.ivanfranchin.userservice.kafka.UserStream;
-import com.ivanfranchin.userservice.mapper.UserMapper;
 import com.ivanfranchin.userservice.model.User;
 import com.ivanfranchin.userservice.rest.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.rest.dto.UpdateUserRequest;
@@ -30,34 +29,33 @@ public class UserController {
 
     private final UserService userService;
     private final UserStream userStream;
-    private final UserMapper userMapper;
 
     @GetMapping
     public List<UserResponse> getUsers() {
         return userService.getUsers()
                 .stream()
-                .map(userMapper::toUserResponse)
+                .map(UserResponse::from)
                 .toList();
     }
 
     @GetMapping("/{id}")
     public UserResponse getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
-        return userMapper.toUserResponse(user);
+        return UserResponse.from(user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         userService.validateUserExistsByEmail(createUserRequest.email());
-        User user = userMapper.toUser(createUserRequest);
+        User user = User.from(createUserRequest);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         user = userService.saveUser(user);
         userStream.userCreated(user.getId(), createUserRequest);
         //--
 
-        return userMapper.toUserResponse(user);
+        return UserResponse.from(user);
     }
 
     @PutMapping("/{id}")
@@ -70,14 +68,14 @@ public class UserController {
             userService.validateUserExistsByEmail(updateUserRequestEmail);
         }
 
-        userMapper.updateUserFromRequest(updateUserRequest, user);
+        User.updateFrom(updateUserRequest, user);
 
         //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
         user = userService.saveUser(user);
         userStream.userUpdated(user.getId(), updateUserRequest);
         //--
 
-        return userMapper.toUserResponse(user);
+        return UserResponse.from(user);
     }
 
     @DeleteMapping("/{id}")
@@ -89,6 +87,6 @@ public class UserController {
         userStream.userDeleted(user.getId());
         //--
 
-        return userMapper.toUserResponse(user);
+        return UserResponse.from(user);
     }
 }

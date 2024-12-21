@@ -1,6 +1,5 @@
 package com.ivanfranchin.eventservice.rest;
 
-import com.ivanfranchin.eventservice.mapper.UserMapper;
 import com.ivanfranchin.eventservice.rest.dto.UserEventResponse;
 import com.ivanfranchin.eventservice.service.UserEventService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +18,13 @@ import java.util.List;
 public class UserEventController {
 
     private final UserEventService userEventService;
-    private final UserMapper userMapper;
 
     @GetMapping
     public List<UserEventResponse> getUserEvents(@RequestParam(name = "userId") Long id) {
         log.info("GET Request, id: {}", id);
         return userEventService.getUserEvents(id)
                 .stream()
-                .map(userMapper::toUserEventResponse)
+                .map(UserEventResponse::from)
                 .toList();
     }
 }
