@@ -1,6 +1,6 @@
 # spring-cloud-stream-event-sourcing-testcontainers
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application that handles `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://testcontainers.com/) for end-to-end testing.
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application that manages `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://testcontainers.com/) to perform end-to-end testing.
 
 > **Note**: In [`kubernetes-minikube-environment`](https://github.com/ivangfr/kubernetes-minikube-environment/tree/master/user-event-sourcing-kafka) repository, it's shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -45,37 +45,37 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   - **Deserialization**
   
-    Differently from `user-service`, `event-service` has no specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
+    Differently from `user-service`, `event-service` does not have specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
     
     In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
     
-    The producer (in the case `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
+    The producer (in the case, `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
   
   - **Java classes from Avro Schema**
   
     Run the following command in the `spring-cloud-stream-event-sourcing-testcontainers` root folder. It will re-generate the Java classes from the Avro schema present at `event-service/src/main/resources/avro`.
-    ```
+    ```bash
     ./mvnw compile --projects event-service
     ```
 
 - ### end-to-end-test
 
-  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
+  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers`, which will automatically start `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
   
 ## Prerequisites
 
-- [`Java 21+`](https://www.oracle.com/java/technologies/downloads/#java21)
-- Some containerization tool [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.
+- [`Java 21`](https://www.oracle.com/java/technologies/downloads/#java21) or higher;
+- A containerization tool (e.g., [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.)
 
 ## Start Environment
 
 - In a terminal and inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder run:
-  ```
+  ```bash
   docker compose up -d
   ```
 
-- Wait for Docker containers to be up and running. To check it, run:
-  ```
+- Wait for Docker containers to be up and running. To verify, run:
+  ```bash
   docker ps -a
   ```
 
@@ -87,11 +87,11 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   
   - In order to run the application, you can pick between `JSON` or `Avro`:
     - Using `JSON`
-      ```
+      ```bash
       ./mvnw clean spring-boot:run --projects user-service
       ```
     - Using `Avro`
-      ```
+      ```bash
       ./mvnw clean spring-boot:run --projects user-service -Dspring-boot.run.profiles=avro
       ```
 
@@ -100,7 +100,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   - In a new terminal, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder;
   
   - Run the following command:
-    ```
+    ```bash
     ./mvnw clean spring-boot:run --projects event-service
     ```
 
@@ -111,7 +111,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   - In a terminal, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder;
 
   - Run the following script to build the Docker images: 
-    ```
+    ```bash
     ./build-docker-images.sh
     ```
 
@@ -149,11 +149,11 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   - In order to run the application's Docker container, you can pick between `JSON` or `Avro`:
     - Using `JSON`
-      ```
+      ```bash
       ./start-apps.sh
       ```
     - Using `Avro`
-      ```
+      ```bash
       ./start-apps.sh avro
       ```
 
@@ -167,14 +167,14 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 ## Playing around
 
 1. Create a user:
-   ```
+   ```bash
    curl -i -X POST localhost:9080/api/users \
      -H  "Content-Type: application/json" \
      -d '{"email":"ivan.franchin@test.com","fullName":"Ivan Franchin","active":true}'
    ```
 
 2. Check whether the event related to the user creation was received by `event-service`:
-   ```
+   ```bash
    curl -i "localhost:9081/api/events?userId=1"
    ```
 
@@ -185,14 +185,14 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 ## Useful Commands & Links
 
 - **MySQL**
-  ```
+  ```bash
   docker exec -it -e MYSQL_PWD=secret mysql mysql -uroot --database userdb
   SELECT * FROM users;
   ```
   > Type `exit` to leave `MySQL Monitor`
 
 - **Cassandra**
-  ```
+  ```bash
   docker exec -it cassandra cqlsh
   USE ivanfranchin;
   SELECT * FROM user_events;
@@ -229,7 +229,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
   - Click on `Save` button at the bottom of the page.
 
-  The image below shows the topics present in Kafka, including the topic `com.ivanfranchin.userservice.user` with `3`
+  The image below shows the topics available in Kafka, including the topic `com.ivanfranchin.userservice.user` with `3`
 partitions.
 
   ![kafka-manager](documentation/kafka-manager.jpeg)
@@ -239,12 +239,12 @@ partitions.
 - Stop applications
   - If they were started with `Maven`, go to the terminals where they are running and press `Ctrl+C`;
   - If they were started as a Docker container, run the script below:
-    ```
+    ```bash
     ./stop-apps.sh
     ```
 
 - To stop and remove docker compose containers, networks and volumes, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder and run:
-  ```
+  ```bash
   docker compose down -v
   ```
 
@@ -254,14 +254,14 @@ partitions.
 
   - Run the command below to start the **Unit Tests**
     > **Note**: `Testcontainers` will start automatically `Cassandra` Docker container before some tests begin and will shut it down when the tests finish.
-    ```
+    ```bash
     ./mvnw clean test --projects event-service
     ```
 
 - **user-service**
 
   - Run the command below to start the **Unit Tests**
-    ```
+    ```bash
     ./mvnw clean test --projects user-service
     ```
 
@@ -271,17 +271,17 @@ partitions.
     > **Note**: `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
  
     - Using `JSON`
-      ```
+      ```bash
       ./mvnw clean test --projects end-to-end-test -DargLine="-Dspring.profiles.active=test"
       ```
     - Using `Avro`
-      ```
+      ```bash
       ./mvnw clean test --projects end-to-end-test -DargLine="-Dspring.profiles.active=test,avro"
       ```
 
 ## Cleanup
 
 To remove the Docker images created by this project, go to a terminal and, inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder, run the following script:
-```
+```bash
 ./remove-docker-images.sh
 ```
