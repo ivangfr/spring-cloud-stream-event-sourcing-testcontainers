@@ -1,7 +1,7 @@
 services:
 
   mysql:
-    image: 'mysql:9.1.0'
+    image: 'mysql:9.2.0'
     container_name: 'mysql'
     restart: 'unless-stopped'
     ports:
@@ -13,7 +13,7 @@ services:
       test: 'mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}'
 
   cassandra:
-    image: 'cassandra:5.0.2'
+    image: 'cassandra:5.0.3'
     container_name: 'cassandra'
     restart: 'unless-stopped'
     ports:
@@ -129,7 +129,7 @@ services:
       test: 'curl -f http://localhost:9000 || exit 1'
 
   zipkin:
-    image: 'openzipkin/zipkin:3.4.1'
+    image: 'openzipkin/zipkin:3.5.0'
     container_name: 'zipkin'
     restart: 'unless-stopped'
     ports:

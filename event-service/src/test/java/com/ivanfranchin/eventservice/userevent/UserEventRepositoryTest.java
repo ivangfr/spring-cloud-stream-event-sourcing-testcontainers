@@ -46,7 +46,7 @@ class UserEventRepositoryTest {
         List<UserEvent> userEvents = userEventRepository.findByKeyUserId(1L);
 
         assertThat(userEvents).hasSize(1);
-        assertThat(userEvents.get(0)).isEqualTo(userEvent);
+        assertThat(userEvents.getFirst()).isEqualTo(userEvent);
     }
 
     @Test

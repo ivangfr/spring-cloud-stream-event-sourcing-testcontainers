@@ -58,8 +58,6 @@ springdoc:
 logging:
   level:
     org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 ---
 spring:

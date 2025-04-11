@@ -47,7 +47,7 @@ class UserEventServiceImplTest {
 
         assertThat(userEvents).isNotNull();
         assertThat(userEvents.size()).isEqualTo(1);
-        assertThat(userEvents.get(0)).isEqualTo(userEvent);
+        assertThat(userEvents.getFirst()).isEqualTo(userEvent);
     }
 
     @Test

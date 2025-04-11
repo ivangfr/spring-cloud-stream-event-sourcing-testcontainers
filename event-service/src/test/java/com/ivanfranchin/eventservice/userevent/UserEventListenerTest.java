@@ -64,9 +64,9 @@ class UserEventListenerTest {
 
         assertThat(userEvents).isNotNull();
         assertThat(userEvents.size()).isEqualTo(1);
-        assertThat(userEvents.get(0).getKey().getUserId()).isEqualTo(userId);
-        assertThat(userEvents.get(0).getKey().getDatetime()).isEqualTo(datetime);
-        assertThat(userEvents.get(0).getData()).isEqualTo(userJson);
-        assertThat(userEvents.get(0).getType()).isEqualTo(eventType.name());
+        assertThat(userEvents.getFirst().getKey().getUserId()).isEqualTo(userId);
+        assertThat(userEvents.getFirst().getKey().getDatetime()).isEqualTo(datetime);
+        assertThat(userEvents.getFirst().getData()).isEqualTo(userJson);
+        assertThat(userEvents.getFirst().getType()).isEqualTo(eventType.name());
     }
 }

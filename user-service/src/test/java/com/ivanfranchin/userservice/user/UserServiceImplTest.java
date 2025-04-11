@@ -52,7 +52,7 @@ class UserServiceImplTest {
 
         assertThat(users).isNotNull();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users.get(0)).isEqualTo(user);
+        assertThat(users.getFirst()).isEqualTo(user);
     }
 
     @Test
