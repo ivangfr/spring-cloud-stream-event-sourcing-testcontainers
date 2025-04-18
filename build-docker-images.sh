@@ -11,12 +11,12 @@ EVENT_SERVICE_DOCKER_IMAGE_NAME="${DOCKER_IMAGE_PREFIX}/${EVENT_SERVICE_APP_NAME
 
 SKIP_TESTS="true"
 
-./mvnw clean compile jib:dockerBuild \
+./mvnw clean spring-boot:build-image \
   --projects "$USER_SERVICE_APP_NAME" \
   -DskipTests="$SKIP_TESTS" \
-  -Dimage="$USER_SERVICE_DOCKER_IMAGE_NAME"
+  -Dspring-boot.build-image.imageName="$USER_SERVICE_DOCKER_IMAGE_NAME"
 
-./mvnw clean compile jib:dockerBuild \
+./mvnw clean spring-boot:build-image \
   --projects "$EVENT_SERVICE_APP_NAME" \
   -DskipTests="$SKIP_TESTS" \
-  -Dimage="$EVENT_SERVICE_DOCKER_IMAGE_NAME"
+  -Dspring-boot.build-image.imageName="$EVENT_SERVICE_DOCKER_IMAGE_NAME"

@@ -30,7 +30,6 @@
     <properties>
         <java.version>21</java.version>
         <awaitility.version>4.3.0</awaitility.version>
-        <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -40,21 +39,9 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>${jib-maven-plugin.version}</version>
-            </plugin>
-        </plugins>
-    </build>
-
     <modules>
         <module>user-service</module>
         <module>event-service</module>
         <module>end-to-end-test</module>
     </modules>
-
 </project>
