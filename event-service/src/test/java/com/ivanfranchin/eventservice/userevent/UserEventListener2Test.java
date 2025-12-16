@@ -11,7 +11,7 @@ import org.springframework.cloud.stream.binder.test.InputDestination;
 import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.messaging.support.MessageBuilder;
-import org.testcontainers.containers.CassandraContainer;
+import org.testcontainers.cassandra.CassandraContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserEventListener2Test {
 
     @Container
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:5.0.3");
+    private static final CassandraContainer cassandraContainer = new CassandraContainer("cassandra:5.0.6");
 
     @Test
     void testUsers() {

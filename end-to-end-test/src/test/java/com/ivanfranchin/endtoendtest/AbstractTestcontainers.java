@@ -3,7 +3,7 @@ package com.ivanfranchin.endtoendtest;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.CassandraContainer;
+import org.testcontainers.cassandra.CassandraContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MySQLContainer;
@@ -19,9 +19,9 @@ import java.util.List;
 public abstract class AbstractTestcontainers {
 
     private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.2.0");
-    private static final CassandraContainer<?> cassandraContainer = new CassandraContainer<>("cassandra:5.0.3");
-    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.8.0"));
-    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.8.0");
+    private static final CassandraContainer cassandraContainer = new CassandraContainer("cassandra:5.0.6");
+    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.9.5"));
+    private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.9.5");
     private static final GenericContainer<?> userServiceContainer = new GenericContainer<>("ivanfranchin/user-service:1.0.0");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("ivanfranchin/event-service:1.0.0");
 

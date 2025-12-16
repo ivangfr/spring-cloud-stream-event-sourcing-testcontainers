@@ -4,8 +4,6 @@ import com.ivanfranchin.userservice.MySQLTestcontainers;
 import com.ivanfranchin.userservice.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 
@@ -14,7 +12,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 @ImportTestcontainers(MySQLTestcontainers.class)
 class UserRepositoryTest {
 
