@@ -1,12 +1,9 @@
 package com.ivanfranchin.userservice.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivanfranchin.userservice.user.event.EventType;
-import com.ivanfranchin.userservice.user.event.UserEventMessage;
-import com.ivanfranchin.userservice.user.exception.UserStreamJsonProcessingException;
 import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.event.EventType;
+import com.ivanfranchin.userservice.user.event.UserEventMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +12,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
@@ -62,10 +60,6 @@ public class UserEmitter {
     }
 
     private String writeValueAsString(Object object) {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new UserStreamJsonProcessingException(e);
-        }
+        return objectMapper.writeValueAsString(object);
     }
 }

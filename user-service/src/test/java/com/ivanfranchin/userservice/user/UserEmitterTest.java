@@ -1,6 +1,5 @@
 package com.ivanfranchin.userservice.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivanfranchin.userservice.MySQLTestcontainers;
 import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
@@ -16,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 

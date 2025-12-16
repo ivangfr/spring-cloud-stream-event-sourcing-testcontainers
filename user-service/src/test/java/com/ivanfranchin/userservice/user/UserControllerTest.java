@@ -1,18 +1,18 @@
 package com.ivanfranchin.userservice.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.user.exception.UserEmailDuplicatedException;
 import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.user.model.User;
-import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Collections;
 
