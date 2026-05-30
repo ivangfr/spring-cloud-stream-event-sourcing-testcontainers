@@ -1,6 +1,9 @@
 # spring-cloud-stream-event-sourcing-testcontainers
 
-The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application that manages `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://testcontainers.com/) to perform end-to-end testing.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ivan.franchin-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/ivan.franchin)
+
+The goal of this project is to create a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application that manages `users` using [`Event Sourcing`](https://martinfowler.com/eaaDev/EventSourcing.html). So, besides the traditional create/update/delete, whenever a user is created, updated, or deleted, an event informing of this change is sent to [`Kafka`](https://kafka.apache.org). Furthermore, we will implement another `Spring Boot` application that listens to those events and saves them in [`Cassandra`](https://cassandra.apache.org). Finally, we will use [`Testcontainers`](https://testcontainers.com/) to perform end-to-end testing.
 
 > **Note**: In [`kubernetes-minikube-environment`](https://github.com/ivangfr/kubernetes-minikube-environment/tree/master/user-event-sourcing-kafka) repository, it's shown how to deploy this project in `Kubernetes` (`Minikube`)
 
@@ -26,30 +29,40 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   `Spring Boot` Web Java application responsible for handling users. The user information is stored in [`MySQL`](https://www.mysql.com). Once a user is created, updated or deleted, an event is sent to `Kafka`.
   
-  ![user-service](documentation/user-service-swagger.jpeg)
+  - Endpoints:
+    ```
+    GET /api/users
+    GET /api/users/{id}
+    POST /api/users -d {"email": "...", "fullName": "...", "active": ...}
+    PUT /api/users/{id} -d {"email": "...", "fullName": "...", "active": ...}
+    DELETE /api/users/{id}
+    ```
 
   - **Serialization format**
 
-    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/platform/current/schema-registry/index.html) that is running as Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+  `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/platform/current/schema-registry/index.html) that is running as a Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
   
-    | Configuration                    | Format |
-    |----------------------------------|--------|
-    | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
-    | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
+  | Configuration                    | Format |
+  |----------------------------------|--------|
+  | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
+  | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
 - ### event-service
 
   `Spring Boot` Web Java application responsible for listening events from `Kafka` and saving them in `Cassandra`.
 
-  ![event-service](documentation/event-service-swagger.jpeg)
+  - Endpoints:
+    ```
+    GET /api/events?userId={userId} - Get events by user id
+    ```
 
   - **Deserialization**
   
-    Differently from `user-service`, `event-service` does not have specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html) provides a stack of `MessageConverters` that handle the conversion of many types of content-types, including `application/json`. Besides, as `event-service` has `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto configures an Apache Avro message converter for schema management.
+    Unlike `user-service`, `event-service` does not have specific Spring profile to select the deserialization format. [`Spring Cloud Stream`](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html) provides a stack of `MessageConverters` that handle the conversion of many content-types, including `application/json`. Besides, as `event-service` has a `SchemaRegistryClient` bean registered, `Spring Cloud Stream` auto-configures an Apache Avro message converter for schema management.
     
-    In order to handle different content-types, `Spring Cloud Stream` has a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
+    In order to handle different content-types, `Spring Cloud Stream` uses a _"content-type negotiation and transformation"_ strategy (more [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#content-type-management)). The precedence orders are: first, content-type present in the message header; second, content-type defined in the binding; and finally, content-type is `application/json` (default).
     
-    The producer (in the case, `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on with which `SPRING_PROFILES_ACTIVE` the `user-service` is started.
+    The producer (in the case, `user-service`) always sets the content-type in the message header. The content-type can be `application/json` or `application/*+avro`, depending on which `SPRING_PROFILES_ACTIVE` value the `user-service` is started.
   
   - **Java classes from Avro Schema**
   
@@ -60,7 +73,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - ### end-to-end-test
 
-  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers`, which will automatically start `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
+  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers`, which will automatically start `ZooKeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
   
 ## Prerequisites
 
@@ -187,6 +200,8 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - **MySQL**
   ```bash
   docker exec -it -e MYSQL_PWD=secret mysql mysql -uroot --database userdb
+  ```
+  ```sql
   SELECT * FROM users;
   ```
   > Type `exit` to leave `MySQL Monitor`
@@ -194,6 +209,8 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - **Cassandra**
   ```bash
   docker exec -it cassandra cqlsh
+  ```
+  ```sql
   USE ivanfranchin;
   SELECT * FROM user_events;
   ```
@@ -225,7 +242,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   - First, you must create a new cluster. Click on `Cluster` (dropdown button on the header) and then on `Add Cluster`
   - Type the name of your cluster in `Cluster Name` field, for example: `MyCluster`
-  - Type `zookeeper:2181` in `Cluster Zookeeper Hosts` field
+  - Type `zookeeper:2181` in `Cluster ZooKeeper Hosts` field
   - Enable checkbox `Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)`
   - Click on `Save` button at the bottom of the page.
 
@@ -243,7 +260,7 @@ partitions.
     ./stop-apps.sh
     ```
 
-- To stop and remove docker compose containers, networks and volumes, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder and run:
+- To stop and remove compose containers, networks and volumes, make sure you are inside the `spring-cloud-stream-event-sourcing-testcontainers` root folder and run:
   ```bash
   docker compose down -v
   ```
@@ -265,10 +282,10 @@ partitions.
     ./mvnw clean test --projects user-service
     ```
 
-  - Run the command below to start the End-To-End Tests
+  - Run the command below to start the End-to-End Tests
     > **Warning**: Make sure you have `user-service` and `event-service` Docker images.
     
-    > **Note**: `Testcontainers` will start automatically `Zookeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
+    > **Note**: `Testcontainers` will start automatically `ZooKeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
  
     - Using `JSON`
       ```bash
@@ -285,3 +302,13 @@ To remove the Docker images created by this project, go to a terminal and, insid
 ```bash
 ./remove-docker-images.sh
 ```
+
+## Support
+
+If you find this useful, consider buying me a coffee:
+
+<a href="https://buymeacoffee.com/ivan.franchin"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="50"></a>
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).

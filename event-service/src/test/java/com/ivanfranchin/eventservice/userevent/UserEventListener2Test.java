@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserEventListener2Test {
 
     @Container
-    private static final CassandraContainer cassandraContainer = new CassandraContainer("cassandra:5.0.6");
+    private static final CassandraContainer cassandraContainer = new CassandraContainer("cassandra:5.0.8");
 
     @Test
     void testUsers() {

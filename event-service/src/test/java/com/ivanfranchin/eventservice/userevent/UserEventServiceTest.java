@@ -19,8 +19,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
-@Import(UserEventServiceImpl.class)
-class UserEventServiceImplTest {
+@Import(UserEventService.class)
+class UserEventServiceTest {
 
     @Autowired
     private UserEventService userEventService;

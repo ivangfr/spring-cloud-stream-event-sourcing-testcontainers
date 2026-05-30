@@ -5,9 +5,9 @@ spring:
   application:
     name: event-service
   cassandra:
-    keyspace-name: ivanfranchin
+    keyspace-name: ${CASSANDRA_KEYSPACE:ivanfranchin}
     contact-points: ${CASSANDRA_HOST:localhost}:${CASSANDRA_PORT:9042}
-    local-datacenter: datacenter1
+    local-datacenter: ${CASSANDRA_LOCAL_DATACENTER:datacenter1}
     schema-action: CREATE_IF_NOT_EXISTS
     request:
       timeout: 60s

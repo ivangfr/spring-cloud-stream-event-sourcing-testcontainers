@@ -1,12 +1,22 @@
 package com.ivanfranchin.eventservice.userevent;
 
 import com.ivanfranchin.eventservice.userevent.model.UserEvent;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserEventService {
+@RequiredArgsConstructor
+@Service
+public class UserEventService {
 
-    List<UserEvent> getUserEvents(Long id);
+    private final UserEventRepository userEventRepository;
 
-    UserEvent saveUserEvent(UserEvent userEvent);
+    public List<UserEvent> getUserEvents(Long id) {
+        return userEventRepository.findByKeyUserId(id);
+    }
+
+    public UserEvent saveUserEvent(UserEvent userEvent) {
+        return userEventRepository.save(userEvent);
+    }
 }

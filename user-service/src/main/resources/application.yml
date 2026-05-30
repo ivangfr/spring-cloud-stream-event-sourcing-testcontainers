@@ -9,8 +9,8 @@ spring:
       ddl-auto: update
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/userdb?characterEncoding=UTF-8&serverTimezone=UTC
-    username: root
-    password: secret
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:secret}
   cloud:
     schema-registry-client:
       endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}

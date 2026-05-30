@@ -1,18 +1,39 @@
 package com.ivanfranchin.userservice.user;
 
+import com.ivanfranchin.userservice.user.exception.UserEmailDuplicatedException;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.user.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserService {
+@RequiredArgsConstructor
+@Service
+public class UserService {
 
-    List<User> getUsers();
+    private final UserRepository userRepository;
 
-    User saveUser(User user);
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 
-    void deleteUser(User user);
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
 
-    User validateAndGetUserById(Long id);
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
 
-    void validateUserExistsByEmail(String email);
+    public User validateAndGetUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id '%d' doesn't exist.", id)));
+    }
+
+    public void validateUserExistsByEmail(String email) {
+        userRepository.findUserByEmail(email).ifPresent(user -> {
+            throw new UserEmailDuplicatedException(String.format("User with email '%s' already exist.", email));
+        });
+    }
 }

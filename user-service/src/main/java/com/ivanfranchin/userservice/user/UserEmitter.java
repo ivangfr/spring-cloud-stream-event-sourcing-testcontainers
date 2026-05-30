@@ -29,13 +29,13 @@ public class UserEmitter {
 
     public Message<UserEventMessage> userCreated(Long id, CreateUserRequest createUserRequest) {
         UserEventMessage userEventMessage = new UserEventMessage(
-                getId(), System.currentTimeMillis(), EventType.CREATED, id, writeValueAsString(createUserRequest));
+                getId(), System.currentTimeMillis(), EventType.CREATED, id, objectMapper.writeValueAsString(createUserRequest));
         return sendToBus(id, userEventMessage);
     }
 
     public Message<UserEventMessage> userUpdated(Long id, UpdateUserRequest updateUserRequest) {
         UserEventMessage userEventMessage = new UserEventMessage(
-                getId(), System.currentTimeMillis(), EventType.UPDATED, id, writeValueAsString(updateUserRequest));
+                getId(), System.currentTimeMillis(), EventType.UPDATED, id, objectMapper.writeValueAsString(updateUserRequest));
         return sendToBus(id, userEventMessage);
     }
 
@@ -57,9 +57,5 @@ public class UserEmitter {
 
     private String getId() {
         return UUID.randomUUID().toString();
-    }
-
-    private String writeValueAsString(Object object) {
-        return objectMapper.writeValueAsString(object);
     }
 }

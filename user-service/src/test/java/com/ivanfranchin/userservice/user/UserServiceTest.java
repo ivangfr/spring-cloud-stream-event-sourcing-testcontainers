@@ -24,8 +24,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 
 @ExtendWith(SpringExtension.class)
-@Import(UserServiceImpl.class)
-class UserServiceImplTest {
+@Import(UserService.class)
+class UserServiceTest {
 
     @Autowired
     private UserService userService;
