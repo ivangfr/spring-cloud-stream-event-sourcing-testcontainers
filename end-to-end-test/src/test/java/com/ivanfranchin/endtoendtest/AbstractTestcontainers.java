@@ -15,7 +15,7 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-  private static final MySQLContainer mySQLContainer = new MySQLContainer("mysql:9.5.0");
+  private static final MySQLContainer mySQLContainer = new MySQLContainer("mysql:9.6.0");
   private static final CassandraContainer cassandraContainer =
       new CassandraContainer("cassandra:5.0.8");
   private static final ConfluentKafkaContainer kafkaContainer =
