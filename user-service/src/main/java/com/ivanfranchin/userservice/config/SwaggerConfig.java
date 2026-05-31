@@ -11,21 +11,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${spring.application.name}")
-    private String applicationName;
+  @Value("${spring.application.name}")
+  private String applicationName;
 
-    @Bean
-    OpenAPI customOpenAPI() {
-        return new OpenAPI().components(new Components()).info(new Info().title(applicationName));
-    }
+  @Bean
+  OpenAPI customOpenAPI() {
+    return new OpenAPI().components(new Components()).info(new Info().title(applicationName));
+  }
 
-    @Bean
-    GroupedOpenApi customApi() {
-        return GroupedOpenApi.builder().group("api").pathsToMatch("/api/**").build();
-    }
+  @Bean
+  GroupedOpenApi customApi() {
+    return GroupedOpenApi.builder().group("api").pathsToMatch("/api/**").build();
+  }
 
-    @Bean
-    GroupedOpenApi actuatorApi() {
-        return GroupedOpenApi.builder().group("actuator").pathsToMatch("/actuator/**").build();
-    }
+  @Bean
+  GroupedOpenApi actuatorApi() {
+    return GroupedOpenApi.builder().group("actuator").pathsToMatch("/actuator/**").build();
+  }
 }

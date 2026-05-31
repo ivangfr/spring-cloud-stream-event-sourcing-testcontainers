@@ -1,10 +1,11 @@
 package com.ivanfranchin.userservice.user;
 
-import com.ivanfranchin.userservice.user.model.User;
 import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UserResponse;
+import com.ivanfranchin.userservice.user.model.User;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -18,72 +19,68 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
-    private final UserEmitter userStream;
+  private final UserService userService;
+  private final UserEmitter userStream;
 
-    @GetMapping
-    public List<UserResponse> getUsers() {
-        return userService.getUsers()
-                .stream()
-                .map(UserResponse::from)
-                .toList();
+  @GetMapping
+  public List<UserResponse> getUsers() {
+    return userService.getUsers().stream().map(UserResponse::from).toList();
+  }
+
+  @GetMapping("/{id}")
+  public UserResponse getUserById(@PathVariable Long id) {
+    User user = userService.validateAndGetUserById(id);
+    return UserResponse.from(user);
+  }
+
+  @ResponseStatus(HttpStatus.CREATED)
+  @PostMapping
+  public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    userService.validateUserExistsByEmail(createUserRequest.email());
+    User user = User.from(createUserRequest);
+
+    // -- Saving to MySQL and sending event to Kafka is not an atomic transaction!
+    user = userService.saveUser(user);
+    userStream.userCreated(user.getId(), createUserRequest);
+    // --
+
+    return UserResponse.from(user);
+  }
+
+  @PutMapping("/{id}")
+  public UserResponse updateUser(
+      @PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+    User user = userService.validateAndGetUserById(id);
+
+    String userEmail = user.getEmail();
+    String updateUserRequestEmail = updateUserRequest.email();
+    if (StringUtils.hasText(updateUserRequestEmail) && !updateUserRequestEmail.equals(userEmail)) {
+      userService.validateUserExistsByEmail(updateUserRequestEmail);
     }
 
-    @GetMapping("/{id}")
-    public UserResponse getUserById(@PathVariable Long id) {
-        User user = userService.validateAndGetUserById(id);
-        return UserResponse.from(user);
-    }
+    User.updateFrom(updateUserRequest, user);
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        userService.validateUserExistsByEmail(createUserRequest.email());
-        User user = User.from(createUserRequest);
+    // -- Saving to MySQL and sending event to Kafka is not an atomic transaction!
+    user = userService.saveUser(user);
+    userStream.userUpdated(user.getId(), updateUserRequest);
+    // --
 
-        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
-        user = userService.saveUser(user);
-        userStream.userCreated(user.getId(), createUserRequest);
-        //--
+    return UserResponse.from(user);
+  }
 
-        return UserResponse.from(user);
-    }
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @DeleteMapping("/{id}")
+  public void deleteUser(@PathVariable Long id) {
+    User user = userService.validateAndGetUserById(id);
 
-    @PutMapping("/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
-        User user = userService.validateAndGetUserById(id);
-
-        String userEmail = user.getEmail();
-        String updateUserRequestEmail = updateUserRequest.email();
-        if (StringUtils.hasText(updateUserRequestEmail) && !updateUserRequestEmail.equals(userEmail)) {
-            userService.validateUserExistsByEmail(updateUserRequestEmail);
-        }
-
-        User.updateFrom(updateUserRequest, user);
-
-        //-- Saving to MySQL and sending event to Kafka is not an atomic transaction!
-        user = userService.saveUser(user);
-        userStream.userUpdated(user.getId(), updateUserRequest);
-        //--
-
-        return UserResponse.from(user);
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        User user = userService.validateAndGetUserById(id);
-
-        //-- Deleting from MySQL and sending event to Kafka is not an atomic transaction!
-        userService.deleteUser(user);
-        userStream.userDeleted(user.getId());
-        //--
-    }
+    // -- Deleting from MySQL and sending event to Kafka is not an atomic transaction!
+    userService.deleteUser(user);
+    userStream.userDeleted(user.getId());
+    // --
+  }
 }

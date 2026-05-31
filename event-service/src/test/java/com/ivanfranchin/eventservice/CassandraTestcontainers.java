@@ -6,7 +6,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 public class CassandraTestcontainers {
 
-    @Container
-    @ServiceConnection
-    private static final CassandraContainer cassandraContainer = new CassandraContainer("cassandra:5.0.8");
+  @Container @ServiceConnection
+  private static final CassandraContainer cassandraContainer =
+      new CassandraContainer("cassandra:5.0.8");
 }

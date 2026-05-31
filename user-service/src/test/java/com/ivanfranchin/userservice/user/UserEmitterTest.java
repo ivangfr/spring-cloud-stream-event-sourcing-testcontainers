@@ -1,9 +1,12 @@
 package com.ivanfranchin.userservice.user;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ivanfranchin.userservice.MySQLTestcontainers;
 import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.user.event.UserEventMessage;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,65 +20,61 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DisabledIf("#{environment.acceptsProfiles('avro')}")
 @SpringBootTest
 @ImportTestcontainers(MySQLTestcontainers.class)
 @Import(TestChannelBinderConfiguration.class)
 class UserEmitterTest {
 
-    @Autowired
-    private OutputDestination outputDestination;
+  @Autowired private OutputDestination outputDestination;
 
-    @Autowired
-    private UserEmitter userEmitter;
+  @Autowired private UserEmitter userEmitter;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @Test
-    void testUserCreated() throws IOException {
-        CreateUserRequest createUserRequest = new CreateUserRequest("email@test", "fullName", true);
+  @Test
+  void testUserCreated() throws IOException {
+    CreateUserRequest createUserRequest = new CreateUserRequest("email@test", "fullName", true);
 
-        Message<UserEventMessage> message = userEmitter.userCreated(1L, createUserRequest);
+    Message<UserEventMessage> message = userEmitter.userCreated(1L, createUserRequest);
 
-        Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
-        assertThat(outputMessage).isNotNull();
-        assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
-                .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        UserEventMessage userEventMessage = objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
-        assertThat(userEventMessage).isEqualTo(message.getPayload());
-    }
+    Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
+    assertThat(outputMessage).isNotNull();
+    assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
+        .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
+    UserEventMessage userEventMessage =
+        objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+    assertThat(userEventMessage).isEqualTo(message.getPayload());
+  }
 
-    @Test
-    void testUserUpdated() throws IOException {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, "email@test", false);
+  @Test
+  void testUserUpdated() throws IOException {
+    UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, "email@test", false);
 
-        Message<UserEventMessage> message = userEmitter.userUpdated(1L, updateUserRequest);
+    Message<UserEventMessage> message = userEmitter.userUpdated(1L, updateUserRequest);
 
-        Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
-        assertThat(outputMessage).isNotNull();
-        assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
-                .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        UserEventMessage userEventMessage = objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
-        assertThat(userEventMessage).isEqualTo(message.getPayload());
-    }
+    Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
+    assertThat(outputMessage).isNotNull();
+    assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
+        .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
+    UserEventMessage userEventMessage =
+        objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+    assertThat(userEventMessage).isEqualTo(message.getPayload());
+  }
 
-    @Test
-    void testUserDeleted() throws IOException {
-        Message<UserEventMessage> message = userEmitter.userDeleted(1L);
+  @Test
+  void testUserDeleted() throws IOException {
+    Message<UserEventMessage> message = userEmitter.userDeleted(1L);
 
-        Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
+    Message<byte[]> outputMessage = outputDestination.receive(0, BINDING_NAME);
 
-        assertThat(outputMessage).isNotNull();
-        assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
-                .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        UserEventMessage userEventMessage = objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
-        assertThat(userEventMessage).isEqualTo(message.getPayload());
-    }
+    assertThat(outputMessage).isNotNull();
+    assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
+        .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
+    UserEventMessage userEventMessage =
+        objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+    assertThat(userEventMessage).isEqualTo(message.getPayload());
+  }
 
-    private final static String BINDING_NAME = "com.ivanfranchin.userservice.user";
+  private static final String BINDING_NAME = "com.ivanfranchin.userservice.user";
 }

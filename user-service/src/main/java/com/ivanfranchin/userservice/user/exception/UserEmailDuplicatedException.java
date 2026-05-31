@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.CONFLICT)
 public class UserEmailDuplicatedException extends RuntimeException {
 
-    public UserEmailDuplicatedException(String message) {
-        super(message);
-    }
+  public UserEmailDuplicatedException(String message) {
+    super(message);
+  }
 }
