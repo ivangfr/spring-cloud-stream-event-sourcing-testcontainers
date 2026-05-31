@@ -76,15 +76,14 @@ public class UserController {
         return UserResponse.from(user);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public UserResponse deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
 
         //-- Deleting from MySQL and sending event to Kafka is not an atomic transaction!
         userService.deleteUser(user);
         userStream.userDeleted(user.getId());
         //--
-
-        return UserResponse.from(user);
     }
 }

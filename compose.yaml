@@ -1,7 +1,7 @@
 services:
 
   mysql:
-    image: 'mysql:9.5.0'
+    image: 'mysql:9.6.0'
     container_name: 'mysql'
     restart: 'unless-stopped'
     ports:
@@ -10,7 +10,10 @@ services:
       - 'MYSQL_ROOT_PASSWORD=secret'
       - 'MYSQL_DATABASE=userdb'
     healthcheck:
-      test: 'mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}'
+      test: ["CMD", "mysqladmin", "ping", "-u", "root", "--password=$$MYSQL_ROOT_PASSWORD"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   cassandra:
     image: 'cassandra:5.0.8'
@@ -22,6 +25,9 @@ services:
       - '9160:9160'
     healthcheck:
       test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   zookeeper:
     image: 'confluentinc/cp-zookeeper:7.9.5'
@@ -32,14 +38,18 @@ services:
     environment:
       - 'ZOOKEEPER_CLIENT_PORT=2181'
     healthcheck:
-      test: 'echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT'
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   kafka:
     image: 'confluentinc/cp-kafka:7.9.5'
     container_name: 'kafka'
     restart: 'unless-stopped'
     depends_on:
-      - 'zookeeper'
+      zookeeper:
+        condition: service_healthy
     ports:
       - '9092:9092'
       - '29092:29092'
@@ -49,14 +59,18 @@ services:
       - 'KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092'
       - 'KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1'
     healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "9092" ]
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   schema-registry:
     image: 'confluentinc/cp-schema-registry:7.9.5'
     container_name: 'schema-registry'
     restart: 'unless-stopped'
     depends_on:
-      - 'kafka'
+      kafka:
+        condition: service_healthy
     ports:
       - '8081:8081'
     environment:
@@ -65,13 +79,17 @@ services:
       - 'SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:8081'
     healthcheck:
       test: 'curl -f http://localhost:8081 || exit 1'
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   schema-registry-ui:
     image: 'landoop/schema-registry-ui:0.9.5'
     container_name: 'kafka-schema-registry-ui'
     restart: 'unless-stopped'
     depends_on:
-      - 'schema-registry'
+      schema-registry:
+        condition: service_healthy
     ports:
       - '8001:8000'
     environment:
@@ -79,14 +97,21 @@ services:
       - 'PROXY=true'
     healthcheck:
       test: 'wget --quiet --tries=1 --spider http://localhost:8000 || exit 1'
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   kafka-rest-proxy:
     image: 'confluentinc/cp-kafka-rest:7.9.5'
     container_name: 'kafka-rest-proxy'
     restart: 'unless-stopped'
     depends_on:
-      - 'zookeeper'
-      - 'kafka'
+      zookeeper:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
     ports:
       - '8082:8082'
     environment:
@@ -98,13 +123,17 @@ services:
       - 'KAFKA_REST_CONSUMER_REQUEST_TIMEOUT_MS=30000'
     healthcheck:
       test: 'curl -f http://localhost:8082 || exit 1'
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   kafka-topics-ui:
     image: 'landoop/kafka-topics-ui:0.9.4'
     container_name: 'kafka-topics-ui'
     restart: 'unless-stopped'
     depends_on:
-      - 'kafka-rest-proxy'
+      kafka-rest-proxy:
+        condition: service_healthy
     ports:
       - '8085:8000'
     environment:
@@ -112,13 +141,17 @@ services:
       - 'PROXY=true'
     healthcheck:
       test: 'wget --quiet --tries=1 --spider http://localhost:8000 || exit 1'
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   kafka-manager:
     image: 'hlebalbau/kafka-manager:3.0.0.5'
     container_name: 'kafka-manager'
     restart: 'unless-stopped'
     depends_on:
-      - 'zookeeper'
+      zookeeper:
+        condition: service_healthy
     ports:
       - '9000:9000'
     environment:
@@ -127,6 +160,9 @@ services:
     command: '-Dpidfile.path=/dev/null'
     healthcheck:
       test: 'curl -f http://localhost:9000 || exit 1'
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   zipkin:
     image: 'openzipkin/zipkin:3.6.1'
@@ -136,3 +172,6 @@ services:
       - '9411:9411'
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9411" ]
+      interval: 3s
+      timeout: 3s
+      retries: 5

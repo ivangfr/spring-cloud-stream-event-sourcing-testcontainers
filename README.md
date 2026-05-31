@@ -19,9 +19,63 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - \[**Medium**\] [**Configuring Distributed Tracing with Zipkin in a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/@ivangfr/configuring-distributed-tracing-with-zipkin-in-a-kafka-producer-and-consumer-that-uses-spring-cloud-9f1e55468b9e)
 - \[**Medium**\] [**Using Cloudevents in a Kafka Producer and Consumer that uses Spring Cloud Stream**](https://medium.com/@ivangfr/using-cloudevents-in-a-kafka-producer-and-consumer-that-uses-spring-cloud-stream-9c51670b5566)
 
-## Project Architecture
+## Project Overview
 
-![project-diagram](documentation/project-diagram.jpeg)
+```mermaid
+flowchart TB
+    subgraph users ["Users"]
+        HTTP["REST Clients"]
+        Browser["Browser"]
+    end
+
+    subgraph user-service ["user-service:9080\n(Spring Boot)"]
+        USRestCtrl["UserController\n/api/users"]
+        USSwagger["Swagger UI"]
+        USService["UserService"]
+        USRepo["UserRepository"]
+        USEmitter["UserEmitter"]
+    end
+
+    MySQL[("MySQL\nusers")]
+
+    subgraph event-service ["event-service:9081\n(Spring Boot)"]
+        ESRestCtrl["UserEventController\n/api/events"]
+        ESSwagger["Swagger UI"]
+        ESService["UserEventService"]
+        ESRepo["UserEventRepository"]
+        ESListener["UserEventListener"]
+    end
+
+    Cassandra[("Cassandra\nuser_events")]
+
+    subgraph infrastructure ["Infrastructure"]
+        Kafka[("Kafka\ncom.ivanfranchin.userservice.user")]
+        SchemaRegistry["Schema Registry"]
+        Zipkin["Zipkin\nDistributed Tracing"]
+    end
+
+    HTTP -->|"CRUD operations"| USRestCtrl
+    HTTP -->|"queries events"| ESRestCtrl
+    Browser -->|"accesses"| USSwagger
+    Browser -->|"accesses"| ESSwagger
+
+    USRestCtrl -->|"calls"| USService
+    USService -->|"calls"| USRepo
+    USRepo -->|"saves"| MySQL
+    USService -->|"sends events"| USEmitter
+    USEmitter -->|"publishes to"| Kafka
+
+    Kafka -->|"triggers"| ESListener
+    ESListener -->|"calls"| ESService
+
+    ESRestCtrl -->|"calls"| ESService
+    ESService -->|"calls"| ESRepo
+    ESRepo -->|"queries"| Cassandra
+    ESRepo -->|"saves"| Cassandra
+
+    USEmitter -->|"resolves schemas"| SchemaRegistry
+    ESListener -->|"resolves schemas"| SchemaRegistry
+```
 
 ## Applications
 
@@ -220,19 +274,15 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   `Zipkin` can be accessed at http://localhost:9411
 
-  ![zipkin](documentation/zipkin.jpeg)
+  ![zipkin](documentation/zipkin.png)
 
 - **Kafka Topics UI**
 
   `Kafka Topics UI` can be accessed at http://localhost:8085
 
-  ![kafka-topics-ui](documentation/kafka-topics-ui.jpeg)
-
 - **Schema Registry UI**
 
   `Schema Registry UI` can be accessed at http://localhost:8001
-
-  ![schema-registry-ui](documentation/schema-registry-ui.jpeg)
 
 - **Kafka Manager**
 
@@ -248,8 +298,6 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   The image below shows the topics available in Kafka, including the topic `com.ivanfranchin.userservice.user` with `3`
 partitions.
-
-  ![kafka-manager](documentation/kafka-manager.jpeg)
 
 ## Shutdown
 
@@ -302,6 +350,10 @@ To remove the Docker images created by this project, go to a terminal and, insid
 ```bash
 ./remove-docker-images.sh
 ```
+
+## How to optimize PNG screenshots in documentation folder
+
+\[**Medium**\] [**How I Reduce GIF and Screenshot Sizes for My Technical Articles on macOS**](https://medium.com/itnext/how-i-reduce-gif-and-screenshot-sizes-for-my-technical-articles-on-macos-7fea331afc68)
 
 ## Support
 

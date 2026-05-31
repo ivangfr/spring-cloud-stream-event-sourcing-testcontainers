@@ -167,14 +167,10 @@ class EndToEndTestApplicationTests extends AbstractTestcontainers {
     void testDeleteUser() {
         Long userId = 1L;
         String userServiceUrl = String.format("%s/users/%s", USER_SERVICE_API_URL, userId);
-        ResponseEntity<UserResponse> responseEntity = testRestTemplate.exchange(userServiceUrl, HttpMethod.DELETE, null, UserResponse.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange(userServiceUrl, HttpMethod.DELETE, null, Void.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().id()).isEqualTo(userId);
-        assertThat(responseEntity.getBody().email()).isEqualTo("email@test");
-        assertThat(responseEntity.getBody().fullName()).isEqualTo("fullName");
-        assertThat(responseEntity.getBody().active()).isEqualTo(false);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(responseEntity.getBody()).isNull();
 
         await().atMost(AT_MOST_DURATION)
                 .pollInterval(POLL_INTERVAL_DURATION)

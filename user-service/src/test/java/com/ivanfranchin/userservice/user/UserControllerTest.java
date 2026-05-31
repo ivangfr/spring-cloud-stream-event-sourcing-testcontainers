@@ -184,12 +184,7 @@ class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(delete(API_USERS_ID_URL, user.getId()))
                 .andDo(print());
 
-        resultActions.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
-                .andExpect(jsonPath(JSON_$_FULL_NAME, is(user.getFullName())))
-                .andExpect(jsonPath(JSON_$_ACTIVE, is(user.getActive())));
+        resultActions.andExpect(status().isNoContent());
     }
 
     @Test

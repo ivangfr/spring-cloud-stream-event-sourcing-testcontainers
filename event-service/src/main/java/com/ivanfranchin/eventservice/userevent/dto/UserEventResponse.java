@@ -11,20 +11,7 @@ public record UserEventResponse(Long userId,
                                 String type, String data) {
 
     public static UserEventResponse from(UserEvent userEvent) {
-        Long userId = userEventKeyUserId(userEvent);
-        Date datetime = userEventKeyDatetime(userEvent);
-        String type = userEvent.getType();
-        String data = userEvent.getData();
-        return new UserEventResponse(userId, datetime, type, data);
-    }
-
-    private static Long userEventKeyUserId(UserEvent userEvent) {
         UserEventKey key = userEvent.getKey();
-        return key == null ? null : key.getUserId();
-    }
-
-    private static Date userEventKeyDatetime(UserEvent userEvent) {
-        UserEventKey key = userEvent.getKey();
-        return key == null ? null : key.getDatetime();
+        return new UserEventResponse(key.getUserId(), key.getDatetime(), userEvent.getType(), userEvent.getData());
     }
 }

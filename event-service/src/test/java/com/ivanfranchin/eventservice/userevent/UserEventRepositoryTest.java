@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled("It was disabled because after upgrading to Spring Boot 3.2.x, it started failing")
+@Disabled("Does not work with @DataCassandraTest slice on SB 4.x; see UserEventListener2Test for working pattern")
 @DataCassandraTest
 @Import(CassandraConfig.class)
 @ImportTestcontainers(CassandraTestcontainers.class)
@@ -50,13 +50,12 @@ class UserEventRepositoryTest {
     }
 
     @Test
-    void testFindByKeyUserIdWhenThereAreTwo() throws InterruptedException {
-        UserEvent userEvent1 = createUserEvent(1L, new Date(), "type1", "data1");
+    void testFindByKeyUserIdWhenThereAreTwo() {
+        Date now = new Date();
+        UserEvent userEvent1 = createUserEvent(1L, new Date(now.getTime() - 5000), "type1", "data1");
         userEventRepository.save(userEvent1);
 
-        Thread.sleep(2000);
-
-        UserEvent userEvent2 = createUserEvent(1L, new Date(), "type2", "data2");
+        UserEvent userEvent2 = createUserEvent(1L, now, "type2", "data2");
         userEventRepository.save(userEvent2);
 
         List<UserEvent> userEvents = userEventRepository.findByKeyUserId(1L);

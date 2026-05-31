@@ -1,26 +1,24 @@
 package com.ivanfranchin.endtoendtest;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.cassandra.CassandraContainer;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.mysql.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
-import java.util.List;
 
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
     private static final MySQLContainer mySQLContainer = new MySQLContainer("mysql:9.5.0");
     private static final CassandraContainer cassandraContainer = new CassandraContainer("cassandra:5.0.8");
-    private static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.9.5"));
+    private static final ConfluentKafkaContainer kafkaContainer = new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.9.5"));
     private static final GenericContainer<?> schemaRegistryContainer = new GenericContainer<>("confluentinc/cp-schema-registry:7.9.5");
     private static final GenericContainer<?> userServiceContainer = new GenericContainer<>("ivanfranchin/user-service:1.0.0");
     private static final GenericContainer<?> eventServiceContainer = new GenericContainer<>("ivanfranchin/event-service:1.0.0");
@@ -55,7 +53,7 @@ public abstract class AbstractTestcontainers {
         // Schema Registry
         schemaRegistryContainer.withNetwork(network)
                 .withNetworkAliases("schema-registry")
-                .withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "kafka:9092")
+                .withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "kafka:9093")
                 .withEnv("SCHEMA_REGISTRY_HOST_NAME", "schema-registry")
                 .withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
                 .withExposedPorts(8081)
@@ -72,7 +70,7 @@ public abstract class AbstractTestcontainers {
                 .withNetworkAliases("user-service")
                 .withEnv("SPRING_PROFILES_ACTIVE", hasAvroAsProfilesActive() ? "test,avro" : "test")
                 .withEnv("KAFKA_HOST", "kafka")
-                .withEnv("KAFKA_PORT", "9092")
+                .withEnv("KAFKA_PORT", "9093")
                 .withEnv("SCHEMA_REGISTRY_HOST", "schema-registry")
                 .withEnv("MYSQL_HOST", "mysql")
                 .withEnv("MANAGEMENT_TRACING_ENABLED", "false")
@@ -85,7 +83,7 @@ public abstract class AbstractTestcontainers {
         eventServiceContainer.withNetwork(network)
                 .withNetworkAliases("event-service")
                 .withEnv("KAFKA_HOST", "kafka")
-                .withEnv("KAFKA_PORT", "9092")
+                .withEnv("KAFKA_PORT", "9093")
                 .withEnv("SCHEMA_REGISTRY_HOST", "schema-registry")
                 .withEnv("CASSANDRA_HOST", "cassandra")
                 .withEnv("MANAGEMENT_TRACING_ENABLED", "false")
@@ -99,7 +97,6 @@ public abstract class AbstractTestcontainers {
     }
 
     private static boolean hasAvroAsProfilesActive() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        return List.of(context.getEnvironment().getActiveProfiles()).contains("avro");
+        return System.getProperty("spring.profiles.active", "").contains("avro");
     }
 }
