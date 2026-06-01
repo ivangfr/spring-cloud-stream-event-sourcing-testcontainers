@@ -85,21 +85,21 @@ flowchart TB
   
   - Endpoints:
     ```
-    GET /api/users
-    GET /api/users/{id}
-    POST /api/users -d {"email": "...", "fullName": "...", "active": ...}
-    PUT /api/users/{id} -d {"email": "...", "fullName": "...", "active": ...}
+       GET /api/users
+       GET /api/users/{id}
+      POST /api/users      -d {"email": "...", "fullName": "...", "active": ...}
+       PUT /api/users/{id} -d {"email": "...", "fullName": "...", "active": ...}
     DELETE /api/users/{id}
     ```
 
   - **Serialization format**
 
-  `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/platform/current/schema-registry/index.html) that is running as a Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
+    `user-service` can use [`JSON`](https://www.json.org) or [`Avro`](https://avro.apache.org) format to serialize data to the `binary` format used by `Kafka`. If we choose `Avro`, both services will benefit by the [`Schema Registry`](https://docs.confluent.io/platform/current/schema-registry/index.html) that is running as a Docker container. The serialization format to be used is defined by the value set to the environment variable `SPRING_PROFILES_ACTIVE`.
   
-  | Configuration                    | Format |
-  |----------------------------------|--------|
-  | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
-  | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
+    | Configuration                    | Format |
+    |----------------------------------|--------|
+    | `SPRING_PROFILES_ACTIVE=default` | `JSON` |
+    | `SPRING_PROFILES_ACTIVE=avro`    | `Avro` |
 
 - ### event-service
 
