@@ -1,5 +1,6 @@
 package com.ivanfranchin.userservice.user.dto;
 
+import com.ivanfranchin.userservice.user.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,4 +9,9 @@ import jakarta.validation.constraints.NotNull;
 public record CreateUserRequest(
     @Schema(example = "ivan.franchin@test.com") @NotBlank @Email String email,
     @Schema(example = "Ivan Franchin") @NotBlank String fullName,
-    @Schema(example = "true") @NotNull Boolean active) {}
+    @Schema(example = "true") @NotNull Boolean active) {
+
+  public User toDomain() {
+    return new User(email, fullName, active);
+  }
+}

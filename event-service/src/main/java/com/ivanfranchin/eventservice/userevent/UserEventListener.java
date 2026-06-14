@@ -1,6 +1,5 @@
 package com.ivanfranchin.eventservice.userevent;
 
-import com.ivanfranchin.eventservice.userevent.model.UserEvent;
 import com.ivanfranchin.userservice.messages.UserEventMessage;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class UserEventListener {
       log.info(
           "\n---\nHeaders: {}\n\nPayload: {}\n---", message.getHeaders(), message.getPayload());
       try {
-        userEventService.saveUserEvent(UserEvent.from(message));
+        userEventService.saveUserEvent(message);
       } catch (Exception e) {
         log.error("An error occurred while saving userEvent {}", message, e);
       }

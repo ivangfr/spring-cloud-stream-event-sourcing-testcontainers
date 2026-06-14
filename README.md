@@ -127,7 +127,7 @@ flowchart TB
 
 - ### end-to-end-test
 
-  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers`, which will automatically start `ZooKeeper`, `Kafka`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
+  `Spring Boot` Web Java application used to perform end-to-end tests on `user-service` and `event-service`. It uses `Testcontainers`, which will automatically start `ZooKeeper`, `Kafka`, `Schema Registry`, `MySQL`, `Cassandra`, `user-service` and `event-service` Docker containers before the tests begin and will shut them down when the tests finish.
   
 ## Prerequisites
 
@@ -223,6 +223,8 @@ flowchart TB
       ```bash
       ./start-apps.sh avro
       ```
+
+  > The `start-apps.sh` script sources [`scripts/my-functions.sh`](scripts/my-functions.sh) for container log-waiting utilities.
 
 ## Applications URLs
 

@@ -42,7 +42,7 @@ public class UserController {
   @PostMapping
   public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
     userService.validateUserExistsByEmail(createUserRequest.email());
-    User user = User.from(createUserRequest);
+    User user = createUserRequest.toDomain();
 
     // -- Saving to MySQL and sending event to Kafka is not an atomic transaction!
     user = userService.saveUser(user);
@@ -63,7 +63,7 @@ public class UserController {
       userService.validateUserExistsByEmail(updateUserRequestEmail);
     }
 
-    User.updateFrom(updateUserRequest, user);
+    updateUserRequest.applyTo(user);
 
     // -- Saving to MySQL and sending event to Kafka is not an atomic transaction!
     user = userService.saveUser(user);
