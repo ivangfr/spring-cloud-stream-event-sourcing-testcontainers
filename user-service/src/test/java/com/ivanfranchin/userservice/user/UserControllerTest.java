@@ -29,14 +29,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private JsonMapper jsonMapper;
 
   @MockitoBean private UserService userService;
 
@@ -107,7 +107,7 @@ class UserControllerTest {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createUserRequest)))
+                    .content(jsonMapper.writeValueAsString(createUserRequest)))
             .andDo(print());
 
     resultActions
@@ -127,7 +127,7 @@ class UserControllerTest {
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        objectMapper.writeValueAsString(new CreateUserRequest(null, null, null))))
+                        jsonMapper.writeValueAsString(new CreateUserRequest(null, null, null))))
             .andDo(print());
 
     resultActions.andExpect(status().isBadRequest());
@@ -144,7 +144,7 @@ class UserControllerTest {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(getDefaultCreateUserRequest())))
+                    .content(jsonMapper.writeValueAsString(getDefaultCreateUserRequest())))
             .andDo(print());
 
     resultActions.andExpect(status().isConflict());
@@ -163,7 +163,7 @@ class UserControllerTest {
             .perform(
                 put(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions
@@ -185,7 +185,7 @@ class UserControllerTest {
                 put(API_USERS_ID_URL, 1)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        objectMapper.writeValueAsString(new UpdateUserRequest(null, null, null))))
+                        jsonMapper.writeValueAsString(new UpdateUserRequest(null, null, null))))
             .andDo(print());
 
     resultActions.andExpect(status().isNotFound());

@@ -13,7 +13,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ import tools.jackson.databind.ObjectMapper;
 public class UserEmitter {
 
   private final StreamBridge streamBridge;
-  private final ObjectMapper objectMapper;
+  private final JsonMapper jsonMapper;
 
   @Value("${spring.cloud.stream.bindings.users-out-0.content-type}")
   private String streamOutMimeType;
@@ -33,7 +33,7 @@ public class UserEmitter {
             System.currentTimeMillis(),
             EventType.CREATED,
             id,
-            objectMapper.writeValueAsString(createUserRequest));
+            jsonMapper.writeValueAsString(createUserRequest));
     return sendToBus(id, userEventMessage);
   }
 
@@ -44,7 +44,7 @@ public class UserEmitter {
             System.currentTimeMillis(),
             EventType.UPDATED,
             id,
-            objectMapper.writeValueAsString(updateUserRequest));
+            jsonMapper.writeValueAsString(updateUserRequest));
     return sendToBus(id, userEventMessage);
   }
 

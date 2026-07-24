@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @DisabledIf("#{environment.acceptsProfiles('avro')}")
 @SpringBootTest
@@ -30,7 +30,7 @@ class UserEmitterTest {
 
   @Autowired private UserEmitter userEmitter;
 
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private JsonMapper jsonMapper;
 
   @Test
   void testUserCreated() throws IOException {
@@ -43,7 +43,7 @@ class UserEmitterTest {
     assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
         .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
     UserEventMessage userEventMessage =
-        objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+        jsonMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
     assertThat(userEventMessage).isEqualTo(message.getPayload());
   }
 
@@ -58,7 +58,7 @@ class UserEmitterTest {
     assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
         .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
     UserEventMessage userEventMessage =
-        objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+        jsonMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
     assertThat(userEventMessage).isEqualTo(message.getPayload());
   }
 
@@ -72,7 +72,7 @@ class UserEmitterTest {
     assertThat(outputMessage.getHeaders().get(MessageHeaders.CONTENT_TYPE))
         .isEqualTo(MediaType.APPLICATION_JSON_VALUE);
     UserEventMessage userEventMessage =
-        objectMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
+        jsonMapper.readValue(outputMessage.getPayload(), UserEventMessage.class);
     assertThat(userEventMessage).isEqualTo(message.getPayload());
   }
 
