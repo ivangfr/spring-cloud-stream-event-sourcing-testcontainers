@@ -8,7 +8,7 @@ public class MySQLTestcontainers {
 
   @Container @ServiceConnection
   private static final MySQLContainer mySQLContainer =
-      new MySQLContainer("mysql:9.6.0")
+      new MySQLContainer("mysql:9.7.1")
           .withUrlParam("characterEncoding", "UTF-8")
           .withUrlParam("serverTimezone", "UTC");
 }

@@ -25,7 +25,7 @@
         <url/>
     </scm>
     <properties>
-        <spring-cloud.version>2025.1.1</spring-cloud.version>
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
         <spring-cloud-schema-registry-client.version>1.1.5</spring-cloud-schema-registry-client.version>
         <springdoc-openapi.version>3.0.3</springdoc-openapi.version>
     </properties>
